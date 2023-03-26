@@ -86,11 +86,11 @@
 **Updating docker-compose.yml:**
 1. Add your microservice and give your buildpath and the ports you want your microservice to be exposed on.
     Example:
-       ```bash
+     ```bash
         exampeleservice:
             build: ./exampleservice
             ports:
               - "port:port"
             env_file:
               - .env
-        ```
+     ```
