@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['microservices/src/authservice'] 
+        dir: ['src/authservice'] 
 
     steps:
       - uses: actions/checkout@v3
