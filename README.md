@@ -26,12 +26,12 @@
     command - npm install dependencies_name
     All the dependencies should be updated in your package.json file.
     Make sure to update the script under package.json as:
-       ```bash
+      ```bash
         "scripts": {
           "start": "node index.js",
           "test": "jest"
         },
-        ```
+      ```
 5. Create three files inside your directory, namely index.js, test.js and Dockerfile. 
     index.js - This will have your logic of your microservices.
     test.js  - This will have your test case to test the microservices based on jest framework.
@@ -65,7 +65,7 @@ Updating api-gateway:
       serviceEndpoints:
         exampleservice:
           url: "http://exampleservice:port"
-       ```
+      ```
           
 4. Under pipeline, update your service pipeline and link serviceEndpoint with apiEndpoint.
     Example:
@@ -81,5 +81,5 @@ Updating api-gateway:
                   serviceEndpoint: exampleservice
                   changeOrigin: true
                   
-             ```
+      ```
             
