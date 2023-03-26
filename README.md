@@ -37,7 +37,7 @@
           "test": "jest"
         },
       ```
-5. Create three files inside your directory, namely index.js, test.js and Dockerfile. 
+5. Create three files inside your directory, namely **index.js**, **test.js** and **Dockerfile**. 
     index.js - This will have your logic of your microservices.
     test.js  - This will have your test case to test the microservices based on jest framework.
     Dockerfile should have the following code:
@@ -51,11 +51,11 @@
       CMD ["npm", "start"]
       ```
 
-6. Once you are done developing and testing your microservic, you should update the docker-compose.yml file and the api-gateway to handle your microservice.
+6. Once you are done developing and testing your microservice, you should update the **docker-compose.yml** file and the **api-gateway** to handle your microservice.
 
 
 **Updating api-gateway:**
-1. Open the gateway.config.yml file under config directory of api-gateway.
+1. Open the **gateway.config.yml** file under config directory of api-gateway.
 2. Under apiEndpoints add your microservice by deving the host and paths.
     Example:
      ```bash
@@ -65,7 +65,9 @@
           paths: "/exampleService"
       ```
 3. Under serviceEndpoint add your microservice url:
+
     Example:
+    
      ```bash
       serviceEndpoints:
         exampleservice:
