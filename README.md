@@ -2,7 +2,9 @@
 **Steps to run the microservices:**
 1. Make sure you have node.js and docker installed in your local PC. 
     If not, please use the below links to download and install:
+    
     Node.js - https://nodejs.org/en/download
+    
     Docker - https://www.docker.com/products/docker-desktop/
 
 2. Clone the repository to your local.
