@@ -1,9 +1,10 @@
 const axios = require("axios");
 const express = require("express");
+require("dotenv").config({ path: "../.env" });
+
 const app = express();
 const port = 3000;
-
-const AUTH_API_URL = "https://api.taiga.io/api/v1/auth";
+const AUTH_API_URL = `${process.env.TAIGA_API_BASE_URL}/auth`;
 app.use(express.json());
 
 async function authenticateUser(username, password) {

@@ -1,0 +1,63 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: "/ip"
+  authservice:
+    host: localhost
+    paths: "/authenticate"
+  projectservice:
+    host: localhost
+    paths: "/createProject"
+serviceEndpoints:
+  httpbin:
+    url: "https://httpbin.org"
+  authservice:
+    url: "http://authservice:3000"
+  projectservice:
+    url: "http://projectservice:3001"
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin
+              changeOrigin: true
+  authPipeline:
+    apiEndpoints:
+      - authservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: authservice
+              changeOrigin: true
+
+  projectPipeline:
+    apiEndpoints:
+      - projectservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: projectservice
+              changeOrigin: true

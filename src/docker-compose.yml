@@ -4,14 +4,20 @@ services:
     build: ./authservice
     ports:
       - "3000:3000"
+    env_file:
+      - .env
   projectservice:
     build: ./projectservice
     ports:
       - "3001:3001"
+    env_file:
+      - .env
   api-gateway:
     build: ./api-gateway
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     depends_on:
       - authservice
       - projectservice

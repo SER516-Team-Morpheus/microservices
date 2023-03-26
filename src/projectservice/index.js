@@ -1,10 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+require("dotenv").config({ path: "../.env" });
 
 const app = express();
 const port = 3001;
 
-const PROJECT_API_URL = "https://api.taiga.io/api/v1/projects";
+const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`;
 app.use(express.json());
 
 async function createProject(name, description, token) {
@@ -43,7 +44,7 @@ app.post("/createProject", async (req, res) => {
       message: "Error creating project",
     });
   }
-  return res.send(projectData);
+  return res.status(201).send(projectData);
 });
 
 // Start the server
@@ -52,3 +53,5 @@ app.listen(port, () => {
     `Create Project microservice running at http://localhost:${port}`
   );
 });
+
+module.exports = app;
