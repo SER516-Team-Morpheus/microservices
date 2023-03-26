@@ -24,7 +24,7 @@
     npm init
     ```
 3. The above command should create a package.json file.
-4. Install the required dependencies like express, axios, dotenv, jest which will be required to develop the microservices.
+4. Install the required dependencies like **express, axios, dotenv, jest ** which will be required to develop the microservices.
     command - npm install dependencies_name
     All the dependencies should be updated in your package.json file.
     Make sure to update the script under package.json as:
