@@ -1,4 +1,4 @@
-# microservices
+# Running microservices
 **Steps to run the microservices:**
 1. Make sure you have node.js and docker installed in your local PC. 
     If not, please use the below links to download and install:
@@ -49,7 +49,7 @@
 6. Once you are done developing and testing your microservic, you should update the docker-compose.yml file and the api-gateway to handle your microservice.
 
 
-**Updating api-gateway:
+**Updating api-gateway:**
 1. Open the gateway.config.yml file under config directory of api-gateway.
 2. Under apiEndpoints add your microservice by deving the host and paths.
     Example:
@@ -83,7 +83,7 @@
                   
       ```
 
-**Updating docker-compose.yml:
+**Updating docker-compose.yml:**
 1. Add your microservice and give your buildpath and the ports you want your microservice to be exposed on.
     Example:
         ```bash
