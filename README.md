@@ -37,9 +37,15 @@
           "test": "jest"
         },
       ```
-5. Create three files inside your directory, namely **index.js**, **test.js** and **Dockerfile**. 
-    index.js - This will have your logic of your microservices.
+5. Create files inside your directory, namely **index.js**, **logic.js**, **test.js** and **Dockerfile**. 
+
+    index.js - This will have your endpoints of your microservices.
+    
+    logic.js - This will have the logic of the endpoints.
+    
     test.js  - This will have your test case to test the microservices based on jest framework.
+    
+    
     Dockerfile should have the following code:
      ```bash
       FROM node:14
