@@ -10,7 +10,7 @@
 2. Clone the repository to your local.
 3. Make sure docker is running.
 4. Open terminal and go to your {project}/src folder.
-5. Run docker-compose up to build your imange and the container.
+5. Run docker-compose up to build your image and the container.
 6. Once the image are built, you can test the microservices using the api-gateway, or you will be able to hit the microservice directly.
 
 # Devlopment of microservices
