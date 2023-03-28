@@ -1,37 +1,38 @@
 const express = require("express");
-const axios = require("axios");
-require("dotenv").config({ path: "../.env" });
+const { getProject, createProject } = require("./logic");
 
 const app = express();
-const port = 3001;
+const port = 3002;
 
-const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`;
 app.use(express.json());
 
-async function createProject(name, description, token) {
-  try {
-    const response = await axios.post(
-      PROJECT_API_URL,
-      {
-        name,
-        description,
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+// Endpoint for getting all project
+app.get("/getProject", async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const projectData = await getProject(token);
+  const result = [];
+  projectData.forEach((item) => {
+    result.push({
+      id: item.id,
+      name: item.name,
+    });
+  });
+  return res.send(result);
+});
 
-    if (response.data.id) {
-      return { success: true, projectId: response.data.id };
-    } else {
-      return {
-        success: false,
-        message: "Something went wrong will creating project",
-      };
-    }
-  } catch (error) {
-    console.error(error);
-    return { success: false, message: "Error creating project" };
-  }
-}
+//Endpoint for getting project by ID
+app.get("/getProjectById", async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const projectData = await getProjectById(token);
+  const result = [];
+  projectData.forEach((item) => {
+    result.push({
+      id: item.id,
+      name: item.name,
+    });
+  });
+  return res.send(result);
+});
 
 // Endpoint for creating a new project
 app.post("/createProject", async (req, res) => {

@@ -9,8 +9,8 @@
 
 2. Clone the repository to your local.
 3. Make sure docker is running.
-4. Open terminal and go to your root folder.
-5. Run docker-compose up to build your imange and the container.
+4. Open terminal and go to your {project}/src folder.
+5. Run docker-compose up to build your image and the container.
 6. Once the image are built, you can test the microservices using the api-gateway, or you will be able to hit the microservice directly.
 
 # Devlopment of microservices
@@ -37,9 +37,15 @@
           "test": "jest"
         },
       ```
-5. Create three files inside your directory, namely **index.js**, **test.js** and **Dockerfile**. 
-    index.js - This will have your logic of your microservices.
+5. Create files inside your directory, namely **index.js**, **logic.js**, **test.js** and **Dockerfile**. 
+
+    index.js - This will have your endpoints of your microservices.
+    
+    logic.js - This will have the logic of the endpoints.
+    
     test.js  - This will have your test case to test the microservices based on jest framework.
+    
+    
     Dockerfile should have the following code:
      ```bash
       FROM node:14
