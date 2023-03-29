@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Project Microservice
+  version: 1.0.0
+  description: Documentation for Project Microservice.
+  contact:
+    name: Team Morpheus
+    email: skuma251@asu.edu
+servers:
+  - url: http://localhost:3002
+  - url: http://localhost:8080
+paths:
+  /createProject:
+    post:
+      summary: Performing post operation to create new project.
+      description: create project operations on project.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: test
+                description:
+                  type: string
+                  example: test project
+              required:
+                - name
+                - description
+      responses:
+        "200":
+          description: Project successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Test project successfully created.
+                  projectId:
+                    type: number
+                    example: 712121
+        "500":
+          description: Error creating project.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error creating userstory
+      tags:
+        - project

@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  userstoryservice:
+    host: localhost
+    paths: "/createUserstory"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -20,6 +23,8 @@ serviceEndpoints:
     url: "http://authservice:3001"
   projectservice:
     url: "http://projectservice:3002"
+  userstoryservice:
+    url: "http://userstoryservice:3003"
 policies:
   - basic-auth
   - cors
@@ -60,4 +65,15 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: projectservice
+              changeOrigin: true
+
+  userstoryPipeline:
+    apiEndpoints:
+      - userstoryservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: userstoryservice
               changeOrigin: true

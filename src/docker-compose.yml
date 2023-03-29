@@ -12,6 +12,12 @@ services:
       - "3002:3002"
     env_file:
       - .env
+  userstoryservice:
+    build: ./userstoryservice
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env
   api-gateway:
     build: ./api-gateway
     ports:
@@ -21,3 +27,4 @@ services:
     depends_on:
       - authservice
       - projectservice
+      - userstoryservice
