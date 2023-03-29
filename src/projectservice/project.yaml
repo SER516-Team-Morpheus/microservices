@@ -1,19 +1,19 @@
 openapi: 3.0.0
 info:
-  title: User story Microservice
+  title: Project Microservice
   version: 1.0.0
-  description: Documentation for User story Microservice
+  description: Documentation for Project Microservice.
   contact:
     name: Team Morpheus
     email: skuma251@asu.edu
 servers:
-  - url: http://localhost:3003
+  - url: http://localhost:3002
   - url: http://localhost:8080
 paths:
-  /createUserstory:
+  /createProject:
     post:
-      summary: Performing post operation to create user story.
-      description: Post operations on user story.
+      summary: Performing post operation to create new project.
+      description: create project operations on project.
       requestBody:
         required: true
         content:
@@ -21,18 +21,18 @@ paths:
             schema:
               type: object
               properties:
-                project:
-                  type: number
-                  example: 711904
-                subject:
+                name:
                   type: string
-                  example: Test User story
+                  example: test
+                description:
+                  type: string
+                  example: test project
               required:
-                - project
-                - subjectcd
+                - name
+                - description
       responses:
         "200":
-          description: User story successfully created.
+          description: Project successfully created.
           content:
             application/json:
               schema:
@@ -43,12 +43,12 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Test User story successfully created.
-                  userstoryId:
+                    example: Test project successfully created.
+                  projectId:
                     type: number
-                    example: 4498807
+                    example: 712121
         "500":
-          description: Error creating user story
+          description: Error creating project.
           content:
             application/json:
               schema:
@@ -61,4 +61,4 @@ paths:
                     type: string
                     example: Error creating userstory
       tags:
-        - user story
+        - project
