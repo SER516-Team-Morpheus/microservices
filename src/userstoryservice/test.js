@@ -23,7 +23,7 @@ describe("User story Microservice", () => {
           "Authorization",
           "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwMTUzMDU3LCJqdGkiOiIxNDY3MzFlMGEzMzg0MjMzYmI0MDdiYWM3YTczNzYxOSIsInVzZXJfaWQiOjU1OTIxNX0.RzYvAwZTNYI-tm2J4Fz0FOOBxIcXvzEWolA38a5p-jQ"
         )
-        .send({ project: 71190, subject: "test user story" });
+        .send({ project: 7119, subject: "test user story" });
       expect(response.status).toBe(500);
     });
   });
