@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: User story Microservice
+  version: 1.0.0
+  description: Documentation for User story Microservice
+  contact:
+    name: Team Morpheus
+    email: skuma251@asu.edu
+servers:
+  - url: http://localhost:3003
+  - url: http://localhost:8080
+paths:
+  /createUserstory:
+    post:
+      summary: Performing different operation on user story.
+      description: Different operations on user story
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project:
+                  type: number
+                  example: 711904
+                subject:
+                  type: string
+                  example: Test User story
+              required:
+                - project
+                - subjectcd
+      responses:
+        "200":
+          description: User story successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Test User story successfully created.
+                  userstoryId:
+                    type: number
+                    example: 4498807
+        "500":
+          description: Error creating user story
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error creating userstory
+      tags:
+        - user story
