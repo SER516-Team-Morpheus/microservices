@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: Authenticate Microservice
+  version: 1.0.0
+  description: Documentation for Authenticate Microservice
+  contact:
+    name: Team Morpheus
+    email: skuma251@asu.edu
+servers:
+  - url: http://localhost:3001
+  - url: http://localhost:8080
+paths:
+  /authenticate:
+    post:
+      summary: Authenticate user based on the username and password
+      description: Authenticate user and return an authentication token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      tags:
+        - authentication
