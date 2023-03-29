@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: User story Microservice
   version: 1.0.0
-  description: Documentation for User story Microservice
+  description: Documentation for User story Microservice.
   contact:
     name: Team Morpheus
     email: skuma251@asu.edu
