@@ -10,7 +10,7 @@ app.use(express.json());
 app.get("/getProjectBySlug", async (req, res) => {
   const { username, password, name } = req.body;
   const token = await getToken(username, password);
-  const slugName = username.toLowerCase() + "-" + name;
+  const slugName = username.toLowerCase() + "-" + name.toLowerCase();
   const projectData = await getProjectBySlug(token, slugName);
   if (!projectData.success) {
     return res.status(404).send(projectData);
@@ -22,7 +22,7 @@ app.get("/getProjectBySlug", async (req, res) => {
 app.post("/createProject", async (req, res) => {
   const { username, password, name, description } = req.body;
   const token = await getToken(username, password);
-  const slugName = username.toLowerCase() + "-" + name;
+  const slugName = username.toLowerCase() + "-" + name.toLowerCase();
   const checkProjectName = await getProjectBySlug(token, slugName);
   if (!checkProjectName.success) {
     const projectData = await createProject(name, description, token);

@@ -29,6 +29,7 @@ async function getProjectBySlug(token, slugName) {
     const response = await axios.get(PROJECT_SLUG_URL, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(response);
     if (response.data.id) {
       return {
         success: true,
@@ -44,6 +45,7 @@ async function getProjectBySlug(token, slugName) {
       };
     }
   } catch (error) {
+    console.log(error);
     return { success: false, message: "Error getting project by name" };
   }
 }
