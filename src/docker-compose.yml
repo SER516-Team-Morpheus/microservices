@@ -18,6 +18,12 @@ services:
       - "3003:3003"
     env_file:
       - .env
+  memberservice:
+    build: ./memberservice
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env      
   api-gateway:
     build: ./api-gateway
     ports:
@@ -28,3 +34,4 @@ services:
       - authservice
       - projectservice
       - userstoryservice
+      - memberservice
