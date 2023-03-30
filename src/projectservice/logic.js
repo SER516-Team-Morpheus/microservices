@@ -2,30 +2,49 @@ const axios = require("axios");
 require("dotenv").config({ path: "../.env" });
 
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`;
+const TOKEN_API_URL = `${process.env.AUTHENTICATE_URL}`;
 
-// Function to get the projects
-async function getProject(token) {
+//Function to get auth token from authenticate api
+async function getToken(username, password) {
   try {
-    const response = await axios.get(PROJECT_API_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+    const response = await axios.post(TOKEN_API_URL, {
+      type: "normal",
+      username,
+      password,
     });
-    return response.data;
+    if (response.data.token) {
+      return response.data.token;
+    } else {
+      return { auth_token: "NULL" };
+    }
   } catch (error) {
-    console.error(error);
-    return { success: false, message: "Error creating project" };
+    return { auth_token: "NULL" };
   }
 }
 
-// Function to get the projects by ID
-async function getProject(token) {
+// Function to get the projects by slug name
+async function getProjectBySlug(token, slugName) {
+  PROJECT_SLUG_URL = PROJECT_API_URL + "/by_slug?slug=" + slugName;
   try {
-    const response = await axios.get(PROJECT_API_URL, {
+    const response = await axios.get(PROJECT_SLUG_URL, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return response.data;
+    if (response.data.id) {
+      return {
+        success: true,
+        projectId: response.data.id,
+        projectName: response.data.name,
+        slugName: response.data.slug,
+        description: response.data.description,
+      };
+    } else {
+      return {
+        success: false,
+        message: "No project found",
+      };
+    }
   } catch (error) {
-    console.error(error);
-    return { success: false, message: "Error creating project" };
+    return { success: false, message: "Error getting project by name" };
   }
 }
 
@@ -42,7 +61,13 @@ async function createProject(name, description, token) {
     );
 
     if (response.data.id) {
-      return { success: true, projectId: response.data.id };
+      return {
+        success: true,
+        projectId: response.data.id,
+        projectName: response.data.name,
+        slugName: response.data.slug,
+        description: response.data.description,
+      };
     } else {
       return {
         success: false,
@@ -56,6 +81,7 @@ async function createProject(name, description, token) {
 }
 
 module.exports = {
-  getProject,
+  getProjectBySlug,
   createProject,
+  getToken,
 };
