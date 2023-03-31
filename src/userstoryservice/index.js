@@ -1,11 +1,14 @@
 const express = require("express");
-const { createUserstory } = require("./logic");
-const {updateUserstory} = require("./logic")
+const { createUserstory} = require("./logic");
+const {updateUserstory} = require("./logic");
+const {getToken} = require("./logic");
+const {getUserStoryDetails} = require("./logic");
 
 const app = express();
 const port = 3003;
 
 app.use(express.json());
+
 
 // Endpoint for creating a new user story
 app.post("/createUserstory", async (req, res) => {
@@ -20,6 +23,20 @@ app.post("/createUserstory", async (req, res) => {
   return res.status(201).send(userstoryData);
 });
 
+//Endpoint for getting  all user stories details
+app.get("/getAllUserStoryDetails", async (req, res) => {
+  const { username, password, projectname,userstoryname } = req.body;
+  const token = await getToken(username, password);
+  const slugName = username.toLowerCase() + "-" + projectname.toLowerCase();
+  const userstoryDetails = await getUserStoryDetails(token, slugName,userstoryname);
+  if (!userstoryDetails.success) {
+    return res.status(500).send({
+      userstoryDetails,
+    });
+  }
+  return res.status(201).send(userstoryDetails);
+});
+
 // Endpoint for updating a user story
 app.patch("/updateUserstory", async (req, res) => {
   const userstoryId  = req.body.id;
@@ -28,21 +45,16 @@ app.patch("/updateUserstory", async (req, res) => {
   if(req.body.description !== undefined) {
     parameters.description = req.body.description;
   }
-  if(req.body.assigned_to !== undefined) {
+  /*if(req.body.assigned_to !== undefined) {
     parameters.assigned_to = req.body.assigned_to;
-  }
+  }*/
   if(req.body.is_closed !== undefined) {
     parameters.is_closed = req.body.is_closed;
   }
   if(req.body.tags !== undefined) {
     parameters.tags = req.body.tags;
     }
-  if(req.body.points !== undefined) {
-    parameters.points = req.body.points;
-  }
   parameters.version = version;
-
-
   const token = req.headers.authorization.split(" ")[1];
   const userstoryData = await updateUserstory(userstoryId, parameters, token);
   if (!userstoryData.success) {

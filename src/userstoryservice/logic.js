@@ -2,6 +2,25 @@ const axios = require("axios");
 require("dotenv").config({ path: "../.env" });
 
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`;
+const TOKEN_API_URL = `${process.env.TAIGA_API_BASE_URL}/auth`;
+
+//Function to get auth token from authenticate api
+async function getToken(username, password) {
+  try {
+    const response = await axios.post(TOKEN_API_URL, {
+      type: "normal",
+      username,
+      password,
+    });
+    if (response.data.auth_token) {
+      return response.data.auth_token;
+    } else {
+      return { auth_token: "NULL" };
+    }
+  } catch (error) {
+    return { auth_token: "NULL" };
+  }
+}
 
 // Function to create new user story
 async function createUserstory(project, subject, token) {
@@ -42,7 +61,6 @@ async function updateUserstory(userstoryId, parameters, token) {
       ,
       { headers: { Authorization: `Bearer ${token}`} }
     );
-    console.log("_______________");
     console.log(response);
     if (response.data.id) {
       return {
@@ -63,7 +81,53 @@ async function updateUserstory(userstoryId, parameters, token) {
 }
 
 
+async function getUserStoryDetails(token, slugName, userstoryName){
+
+  try {
+    const USERSTORY_DETAILS_API_URL = USERSTORY_API_URL + "?project__slug=" + slugName
+    const response = await axios.get(
+      USERSTORY_DETAILS_API_URL,
+      { headers: { Authorization: `Bearer ${token}`} }
+    );
+      
+      var parameters = {};
+      for (let i = 0; i < response.data.length; i++) {
+        if(response.data[i].subject === userstoryName)
+        {
+          parameters.id = response.data[i].id;
+          parameters.version = response.data[i].version;
+          parameters.ref = response.data[i].ref;
+
+        }
+
+      }
+      if(parameters.id)
+      {
+        return {
+          success: true,
+          message: `successfully fetched details`,
+          parameters
+        };
+      }
+      else
+      {
+        return {
+          success: false,
+          message: "User Story not found",
+        };
+        }
+  }
+  catch(error)
+  {
+    return { success: false, message: "Error fetching userstories details" };
+  }
+
+}
+
+
 module.exports = {
   createUserstory,
-  updateUserstory
+  updateUserstory,
+  getToken,
+  getUserStoryDetails
 };
