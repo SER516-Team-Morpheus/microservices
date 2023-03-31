@@ -61,7 +61,7 @@ async function updateUserstory(userstoryId, parameters, token) {
       ,
       { headers: { Authorization: `Bearer ${token}`} }
     );
-    console.log(response);
+   // console.log(response);
     if (response.data.id) {
       return {
         success: true,
@@ -71,12 +71,12 @@ async function updateUserstory(userstoryId, parameters, token) {
     } else {
       return {
         success: false,
-        message: "Something went wrong while creating userstory",
+        message: "Something went wrong while updating userstory",
       };
     }
   } catch (error) {
     console.error(error);
-    return { success: false, message: "Error creating userstory" };
+    return { success: false, message: "Error updating userstory" };
   }
 }
 

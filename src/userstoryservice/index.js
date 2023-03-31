@@ -39,31 +39,83 @@ app.get("/getAllUserStoryDetails", async (req, res) => {
 
 // Endpoint for updating a user story
 app.patch("/updateUserstory", async (req, res) => {
-  const userstoryId  = req.body.id;
-  const version = req.body.version;
-  var parameters = {};
-  if(req.body.description !== undefined) {
-    parameters.description = req.body.description;
+  const username = req.body.username;
+  const password = req.body.password;
+  const projectname = req.body.projectname;
+  const userstoryname = req.body.userstoryname;
+
+  const token = await getToken(username, password);
+  const slugName = username.toLowerCase() + "-" + projectname.toLowerCase();
+  const userstoryDetails = await getUserStoryDetails(token, slugName,userstoryname);
+  if (!userstoryDetails.success) {
+    return res.status(500).send({
+      userstoryDetails
+    });
   }
+  else
+  {
+    const userstoryId  = userstoryDetails.parameters.id;
+    const version = userstoryDetails.parameters.version;
+    var parameters = {};
+    if(req.body.description !== undefined) {
+      parameters.description = req.body.description;
+    }
   /*if(req.body.assigned_to !== undefined) {
     parameters.assigned_to = req.body.assigned_to;
   }*/
-  if(req.body.is_closed !== undefined) {
-    parameters.is_closed = req.body.is_closed;
-  }
-  if(req.body.tags !== undefined) {
-    parameters.tags = req.body.tags;
+    if(req.body.is_closed !== undefined) {
+      parameters.is_closed = req.body.is_closed;
     }
-  parameters.version = version;
-  const token = req.headers.authorization.split(" ")[1];
-  const userstoryData = await updateUserstory(userstoryId, parameters, token);
-  if (!userstoryData.success) {
-    return res.status(500).send({
-      userstoryData,
+    if(req.body.tags !== undefined) {
+      parameters.tags = req.body.tags;
+    }
+    var points = {}
+    if(req.body.points !== undefined) {
+      var roles = {
+        "UX" : 4339586,
+        "Design":4339587,
+        "Front":4339588,
+        "Back": 4339589      
+      }
+      var userpoint={
+        "?" : 0,
+        "0" : 1,
+        "1/2":2,
+        "1":3,
+        "2":4,
+        "3":5,
+        "5":6,
+        "8":7,
+        "10":8,
+        "13":9,
+        "20":10,
+        "40":11
+      }
+
+      for(var key in req.body.points) {
+        var value = req.body.points[key];
+        var newKey = roles[key];
+        var newValue = userpoint[value];
+        points[newKey] = 8615602 + newValue
+      
+      }
+
+      parameters.points = points;
+    }
+    parameters.version = version;
+
+    const userstoryData = await updateUserstory(userstoryId, parameters, token);
+    console.log(userstoryData);
+    if (!userstoryData.success) {
+      return res.status(500).send({
+        userstoryData,
     });
-  }
-  return res.status(201).send(userstoryData);
+    }
+   return res.status(201).send(userstoryData);
+
+}
 });
+
 
 // Start the server
 app.listen(port, () => {
