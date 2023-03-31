@@ -1,0 +1,1 @@
+//This will have your test case to test the microservices based on jest framework.
