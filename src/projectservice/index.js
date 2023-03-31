@@ -6,6 +6,16 @@ const port = 3002;
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  next();
+});
+
 //Endpoint for getting project by slug name
 app.get("/getProjectBySlug", async (req, res) => {
   const { username, password, name } = req.body;

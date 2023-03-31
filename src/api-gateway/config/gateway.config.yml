@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  getProjectByslug:
+    host: localhost
+    paths: /getProjectByslug
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
@@ -59,6 +62,7 @@ pipelines:
   projectPipeline:
     apiEndpoints:
       - projectservice
+      - getProjectByslug
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
