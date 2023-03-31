@@ -27,4 +27,33 @@ describe("User story Microservice", () => {
       expect(response.status).toBe(500);
     });
   });
+
+
+  describe("GET /getAllUserStoryDetails", () => {
+    it("should return a 201 response with the user story id", async () => {
+      const response = await request(app)
+        .get("/getAllUserStoryDetails")
+        .set("Accept", "application/json")
+        .send({
+          username: "SERtestuser",
+          password: "testuser",
+          projectname:"testProject",
+          userstoryname:"test US3"
+      });
+      expect(response.status).toBe(201);
+      expect(response.body.parameters).toBeDefined();
+    });
+    it("should return a 500 response with the user story id", async () => {
+      const response = await request(app)
+        .get("/getAllUserStoryDetails")
+        .set("Accept", "application/json")
+        .send({
+          username: "SERtestuser",
+          password: "testuser",
+          projectname:"testProject",
+          userstoryname:"test USTest"
+      });
+      expect(response.status).toBe(500);
+    });
+  });
 });
