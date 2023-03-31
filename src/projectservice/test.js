@@ -26,7 +26,7 @@ describe("Project Microservice", () => {
         .set("Accept", "application/json")
         .send({
           username: "SERtestuser",
-          password: "testuser",
+          password: "tetuser",
           name: "Project",
           description: "testProject",
         });
