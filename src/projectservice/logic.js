@@ -45,7 +45,6 @@ async function getProjectBySlug(token, slugName) {
       };
     }
   } catch (error) {
-    console.log(error);
     return { success: false, message: "Error getting project by name" };
   }
 }
@@ -58,6 +57,7 @@ async function createProject(name, description, token) {
       {
         name,
         description,
+        is_private: false,
       },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -77,7 +77,6 @@ async function createProject(name, description, token) {
       };
     }
   } catch (error) {
-    console.error(error);
     return { success: false, message: "Error creating project" };
   }
 }
