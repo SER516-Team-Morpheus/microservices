@@ -26,8 +26,8 @@ describe("Project Microservice", () => {
         .set("Accept", "application/json")
         .send({
           username: "SERtestuser",
-          password: "testuser",
-          name: "newtestProject",
+          password: "tetuser",
+          name: "Project",
           description: "testProject",
         });
       expect(response.status).toBe(500);
