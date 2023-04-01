@@ -62,3 +62,142 @@ paths:
                     example: Error creating userstory
       tags:
         - user story
+        
+  /updateUserstory:
+    post:
+      summary: Performing post operation to update a given user story.
+      description: Post operations on user story.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                projectname:
+                  type: string
+                  description: Project name
+                  example: testProject
+                userstoryname:
+                  type: string
+                  description: UserStory name
+                  example: test US3
+                tags:
+                  type: object
+                  description: tags to be associated with the user story
+                  example: ["new-feature", "low-priority"]
+                storypoints:
+                  type: object
+                  description: role name and associated sotry points
+                  example: { "UX": 1, "Backend" : 5}
+                description:
+                  type: string
+                  description: description to be added to user story
+                  example: "This is a testing user story"
+
+
+              required:
+                - username
+                - password
+                - projectname
+                - userstoryname
+      responses:
+        "200":
+          description: User story details successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: User Story with  id 4505087 successfully updated
+                  userstoryId:
+                    type: number
+                    example: 4505087
+        "500":
+          description: Error updating user story
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Something went wrong while updating userstory or UserStory not found 
+      tags:
+        - user story update
+  
+  /getUserStoryBySlug:
+    get:
+      summary: Get UserStory details by slug name
+      description: Get userstory details by providing the username, password, project name and userstory name in the request body. Slug name will be formed by combining the username and project name.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Taiga username
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Taiga password
+          schema:
+            type: string
+        - name: projectname
+          in: query
+          required: true
+          description: Project name
+          schema:
+            type: string
+        - name: userstory name
+          in: query
+          required: true
+          description: UserStory name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: successfully fetched details
+                  parameters:
+                    type: object
+                    example: { "id": 4505087,"version": 24, "ref": 5}
+
+        "404":
+          description: UserStory not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: User Story not found
+      tags:
+        - get user story details
