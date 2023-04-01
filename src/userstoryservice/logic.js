@@ -65,7 +65,7 @@ async function updateUserstory(userstoryId, parameters, token) {
     if (response.data.id) {
       return {
         success: true,
-        message: `User Story with ${userstoryId} successfully updates`,
+        message: `User Story with id ${userstoryId} successfully updated`,
         userstoryId: response.data.id,
       };
     } else {

@@ -16,6 +16,13 @@ apiEndpoints:
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
+  updateuserstory:
+    host: localhost
+    paths: "/updateUserstory"
+  getuserstoriesdetails:
+    host: localhost
+    paths: "/getAllUserStoryDetails"
+
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -70,6 +77,8 @@ pipelines:
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
+      - updateuserstory
+      - getuserstoriesdetails
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
