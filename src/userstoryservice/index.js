@@ -14,20 +14,19 @@ app.use(express.json());
 
 // Endpoint for creating a new user story
 app.post("/createUserstory", async (req, res) => {
-  const { username, password, name, subject } = req.body;
+  const { username, password, projectName, subject } = req.body;
   const token = await getToken(username, password);
-  const projectData = await getProjectBySlug(username, password, name);
+  const projectData = await getProjectBySlug(username, password, projectName);
   if (!projectData.success) {
-    res.status(500).send(projectData);
+    return res.status(500).send(projectData);
   }
   const projectId = projectData.projectId;
   const userstoryData = await createUserstory(projectId, subject, token);
-  if (!userstoryData.success) {
-    return res.status(500).send({
-      userstoryData,
-    });
+  if (userstoryData.success) {
+    return res.status(201).send(userstoryData);
+  } else {
+    return res.status(500).send(userstoryData);
   }
-  return res.status(201).send(userstoryData);
 });
 
 //Endpoint for getting  all user stories details

@@ -19,7 +19,6 @@ app.use((req, res, next) => {
 //Endpoint for getting project by slug name
 app.get("/getProjectBySlug", async (req, res) => {
   const { username, password, name } = req.query;
-  console.log(username, password, name);
   const token = await getToken(username, password);
   const slugName = `${username.toLowerCase()}-${name.toLowerCase()}`;
   const projectData = await getProjectBySlug(token, slugName);

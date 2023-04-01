@@ -4,19 +4,19 @@ const http = require("http");
 require("dotenv").config({ path: "../.env" });
 
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`;
-const TOKEN_API_URL = `${process.env.TAIGA_API_BASE_URL}/auth`;
-const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`;
+const AUTH_URL = `${process.env.AUTHENTICATE_URL}`;
+const PROJECT_API_URL = `${process.env.GET_PROJECT_BY_SLUG_URL}`;
 
 //Function to get auth token from authenticate api
 async function getToken(username, password) {
   try {
-    const response = await axios.post(TOKEN_API_URL, {
+    const response = await axios.post(AUTH_URL, {
       type: "normal",
       username,
       password,
     });
-    if (response.data.auth_token) {
-      return response.data.auth_token;
+    if (response.data.token) {
+      return response.data.token;
     } else {
       return { auth_token: "NULL" };
     }
@@ -26,17 +26,18 @@ async function getToken(username, password) {
 }
 
 // Function to get the projects by slug name
-async function getProjectBySlug(username, password, name) {
-  PROJECT_SLUG_URL =
-    "http://localhost:3002/getProjectByslug?username=" +
+async function getProjectBySlug(username, password, projectName) {
+  const PROJECT_SLUG_URL =
+    PROJECT_API_URL +
+    "?username=" +
     username +
     "&password=" +
     password +
     "&name=" +
-    name;
+    projectName;
+  console.log(PROJECT_SLUG_URL);
   try {
     const response = await axios.get(PROJECT_SLUG_URL);
-    console.log(response);
     if (response.data.success) {
       return {
         success: true,
