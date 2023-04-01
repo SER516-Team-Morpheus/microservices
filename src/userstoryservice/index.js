@@ -1,20 +1,27 @@
 const express = require("express");
-const { createUserstory} = require("./logic");
-const {updateUserstory} = require("./logic");
-const {getToken} = require("./logic");
-const {getUserStoryDetails} = require("./logic");
+const {
+  getProjectBySlug,
+  getToken,
+  createUserstory,
+  updateUserstory,
+  getUserStoryDetails,
+} = require("./logic");
 
 const app = express();
 const port = 3003;
 
 app.use(express.json());
 
-
 // Endpoint for creating a new user story
 app.post("/createUserstory", async (req, res) => {
-  const { project, subject } = req.body;
-  const token = req.headers.authorization.split(" ")[1];
-  const userstoryData = await createUserstory(project, subject, token);
+  const { username, password, name, subject } = req.body;
+  const token = await getToken(username, password);
+  const projectData = await getProjectBySlug(username, password, name);
+  if (!projectData.success) {
+    res.status(500).send(projectData);
+  }
+  const projectId = projectData.projectId;
+  const userstoryData = await createUserstory(projectId, subject, token);
   if (!userstoryData.success) {
     return res.status(500).send({
       userstoryData,
@@ -25,10 +32,14 @@ app.post("/createUserstory", async (req, res) => {
 
 //Endpoint for getting  all user stories details
 app.get("/getAllUserStoryDetails", async (req, res) => {
-  const { username, password, projectname,userstoryname } = req.body;
+  const { username, password, projectname, userstoryname } = req.body;
   const token = await getToken(username, password);
   const slugName = username.toLowerCase() + "-" + projectname.toLowerCase();
-  const userstoryDetails = await getUserStoryDetails(token, slugName,userstoryname);
+  const userstoryDetails = await getUserStoryDetails(
+    token,
+    slugName,
+    userstoryname
+  );
   if (!userstoryDetails.success) {
     return res.status(500).send({
       userstoryDetails,
@@ -43,61 +54,61 @@ app.patch("/updateUserstory", async (req, res) => {
   const password = req.body.password;
   const projectname = req.body.projectname;
   const userstoryname = req.body.userstoryname;
-
   const token = await getToken(username, password);
   const slugName = username.toLowerCase() + "-" + projectname.toLowerCase();
-  const userstoryDetails = await getUserStoryDetails(token, slugName,userstoryname);
+  const userstoryDetails = await getUserStoryDetails(
+    token,
+    slugName,
+    userstoryname
+  );
   if (!userstoryDetails.success) {
     return res.status(500).send({
-      userstoryDetails
+      userstoryDetails,
     });
-  }
-  else
-  {
-    const userstoryId  = userstoryDetails.parameters.id;
+  } else {
+    const userstoryId = userstoryDetails.parameters.id;
     const version = userstoryDetails.parameters.version;
     var parameters = {};
-    if(req.body.description !== undefined) {
+    if (req.body.description !== undefined) {
       parameters.description = req.body.description;
     }
-  /*if(req.body.assigned_to !== undefined) {
+    /*if(req.body.assigned_to !== undefined) {
     parameters.assigned_to = req.body.assigned_to;
   }*/
-    if(req.body.is_closed !== undefined) {
+    if (req.body.is_closed !== undefined) {
       parameters.is_closed = req.body.is_closed;
     }
-    if(req.body.tags !== undefined) {
+    if (req.body.tags !== undefined) {
       parameters.tags = req.body.tags;
     }
-    var points = {}
-    if(req.body.points !== undefined) {
+    var points = {};
+    if (req.body.points !== undefined) {
       var roles = {
-        "UX" : 4339586,
-        "Design":4339587,
-        "Front":4339588,
-        "Back": 4339589      
-      }
-      var userpoint={
-        "?" : 0,
-        "0" : 1,
-        "1/2":2,
-        "1":3,
-        "2":4,
-        "3":5,
-        "5":6,
-        "8":7,
-        "10":8,
-        "13":9,
-        "20":10,
-        "40":11
-      }
+        UX: 4339586,
+        Design: 4339587,
+        Front: 4339588,
+        Back: 4339589,
+      };
+      var userpoint = {
+        "?": 0,
+        0: 1,
+        "1/2": 2,
+        1: 3,
+        2: 4,
+        3: 5,
+        5: 6,
+        8: 7,
+        10: 8,
+        13: 9,
+        20: 10,
+        40: 11,
+      };
 
-      for(var key in req.body.points) {
+      for (var key in req.body.points) {
         var value = req.body.points[key];
         var newKey = roles[key];
         var newValue = userpoint[value];
-        points[newKey] = 8615602 + newValue
-      
+        points[newKey] = 8615602 + newValue;
       }
 
       parameters.points = points;
@@ -109,13 +120,11 @@ app.patch("/updateUserstory", async (req, res) => {
     if (!userstoryData.success) {
       return res.status(500).send({
         userstoryData,
-    });
+      });
     }
-   return res.status(201).send(userstoryData);
-
-}
+    return res.status(201).send(userstoryData);
+  }
 });
-
 
 // Start the server
 app.listen(port, () => {
