@@ -76,7 +76,6 @@ async function createProject(name, description, token) {
       };
     }
   } catch (error) {
-    console.log(error);
     return { success: false, message: "Error creating project" };
   }
 }
