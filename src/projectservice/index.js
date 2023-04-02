@@ -18,9 +18,9 @@ app.use((req, res, next) => {
 
 //Endpoint for getting project by slug name
 app.get("/getProjectBySlug", async (req, res) => {
-  const { username, password, name } = req.body;
+  const { username, password, name } = req.query;
   const token = await getToken(username, password);
-  const slugName = username.toLowerCase() + "-" + name.toLowerCase();
+  const slugName = `${username.toLowerCase()}-${name.toLowerCase()}`;
   const projectData = await getProjectBySlug(token, slugName);
   if (!projectData.success) {
     return res.status(404).send(projectData);
