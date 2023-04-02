@@ -19,6 +19,9 @@ apiEndpoints:
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
+  taskservice:
+    host: localhost
+    paths: "/createTask"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -28,6 +31,8 @@ serviceEndpoints:
     url: "http://projectservice:3002"
   userstoryservice:
     url: "http://userstoryservice:3003"
+  taskservice:
+    url: "http://taskservice:3004"
 policies:
   - basic-auth
   - cors
@@ -80,4 +85,15 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: userstoryservice
+              changeOrigin: true
+  
+  taskPipeline:
+    apiEndpoints:
+      - taskservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: taskservice
               changeOrigin: true

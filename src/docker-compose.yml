@@ -18,6 +18,12 @@ services:
       - "3003:3003"
     env_file:
       - .env
+  taskservice:
+    build: ./taskservice 
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env
   api-gateway:
     build: ./api-gateway
     ports:
