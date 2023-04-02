@@ -28,7 +28,7 @@ serviceEndpoints:
     url: "http://projectservice:3002"
   userstoryservice:
     url: "http://userstoryservice:3003"
-  memeberservice:
+  memberservice:
     url: "http://memberservice:3004"
 policies:
   - basic-auth
