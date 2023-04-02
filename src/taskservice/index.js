@@ -31,7 +31,7 @@ app.post("/createTask", async (req, res) => {
   const userstoryDetails = await getUserStoryDetails(token, slugName,userstoryname);
   if(userstoryDetails.success == false)
   {
-     return res.status(201).send({"message" : "Error in getting user story details"})
+     return res.status(500).send({"message" : "Error in getting user story details"})
   }
   else{
     const taskData = await createTask(userstoryDetails.parameters.projectid, userstoryDetails.parameters.id, subject, token);
