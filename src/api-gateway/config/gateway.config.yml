@@ -13,9 +13,19 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  getProjectByslug:
+    host: localhost
+    paths: /getProjectByslug
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
+  updateuserstory:
+    host: localhost
+    paths: "/updateUserstory"
+  getuserstoriesdetails:
+    host: localhost
+    paths: "/getAllUserStoryDetails"
+
   memberservice:
     host: localhost
     paths: "/createMember"  
@@ -64,6 +74,7 @@ pipelines:
   projectPipeline:
     apiEndpoints:
       - projectservice
+      - getProjectByslug
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -75,6 +86,8 @@ pipelines:
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
+      - updateuserstory
+      - getuserstoriesdetails
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:

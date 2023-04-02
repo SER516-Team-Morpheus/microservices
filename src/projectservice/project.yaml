@@ -9,11 +9,72 @@ info:
 servers:
   - url: http://localhost:3002
   - url: http://localhost:8080
+
 paths:
+  /getProjectBySlug:
+    get:
+      summary: Get project by slug name
+      description: Get project data by providing the username, password, and project name in the request body. Slug name will be formed by combining the username and project name.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Taiga username
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Taiga password
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: true
+          description: Project name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  projectId:
+                    type: number
+                    example: 715454
+                  projectName:
+                    type: string
+                    example: testProject
+                  slugName":
+                    type: string
+                    example: sertestuser-testproject
+                  description:
+                    type: string
+                    example: testProject
+
+        "404":
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error getting project by name
+
   /createProject:
     post:
-      summary: Performing post operation to create new project.
-      description: create project operations on project.
+      summary: Create new project.
+      description: Create a new project by providing the username, password, project name, and description in the request body..
       requestBody:
         required: true
         content:
@@ -21,17 +82,29 @@ paths:
             schema:
               type: object
               properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
                 name:
                   type: string
-                  example: test
+                  description: Project name
+                  example: testProject
                 description:
                   type: string
+                  description: Project description
                   example: test project
               required:
+                - username
+                - password
                 - name
                 - description
       responses:
-        "200":
+        "201":
           description: Project successfully created.
           content:
             application/json:
@@ -41,12 +114,18 @@ paths:
                   success:
                     type: boolean
                     example: true
-                  message:
-                    type: string
-                    example: Test project successfully created.
                   projectId:
                     type: number
-                    example: 712121
+                    example: 715454
+                  projectName:
+                    type: string
+                    example: testProject
+                  slugName":
+                    type: string
+                    example: sertestuser-testproject
+                  description:
+                    type: string
+                    example: testProject
         "500":
           description: Error creating project.
           content:
