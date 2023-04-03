@@ -3,6 +3,30 @@ require("dotenv").config({ path: "../.env" });
 
 const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships`;
 
+const AUTH_URL = `${process.env.AUTHENTICATE_URL}`;
+
+//Function to get auth token from authenticate api
+async function getToken(username, password) {
+  try {
+    const response = await axios.post(AUTH_URL, {
+      type: "normal",
+      username,
+      password,
+    });
+    console.log("debugtoken2");
+    console.log(response);
+    if (response.data.token) {
+      // console.log("hey" + response.data);
+      return response.data.token;
+    } else {
+      return { auth_token: "NULL" };
+    }
+  } catch (error) {
+    console.log("error found : ");
+    console.log(error);
+    return { auth_token: "NULL" };
+  }
+}
 
 // Function to get the roles
 async function getRoleId(token, projectId) {
@@ -29,7 +53,7 @@ async function createMember(username, project, role, token) {
           role,
           username,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` }  }
       );
   
       if (response.data.id) {
@@ -45,8 +69,24 @@ async function createMember(username, project, role, token) {
       return { success: false, message: "Error creating member" };
     }
   }
+
+async function getMembers(token, projectId){
+  const MEMBERS_API_URL = `${MEMBER_API_URL}?project=${projectId}`;
+  try {
+    const response = await axios.get(MEMBERS_API_URL, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    
+    return { success: true, body: response.data };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Error getting roles" };
+  }
+}
   
   module.exports = {
     getRoleId,
     createMember,
+    getToken,
+    getMembers,
   };

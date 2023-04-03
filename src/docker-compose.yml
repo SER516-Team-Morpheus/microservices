@@ -29,7 +29,9 @@ services:
     ports:
       - "3004:3004"
     env_file:
-      - .env      
+      - .env    
+    networks:
+      - my-network    
   api-gateway:
     build: ./api-gateway
     ports:
@@ -42,6 +44,7 @@ services:
       - authservice
       - projectservice
       - userstoryservice
+      - memberservice
 networks:
   my-network:
-      - memberservice
+
