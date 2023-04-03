@@ -21,16 +21,18 @@ app.use((req, res, next) => {
 app.post("/createMember", async (req, res) => {
     const { username, password, member, projectId } = req.body;
     const token = await getToken(username, password);
-    console.log("debugtoken");
-    console.log(token);
     const roleId = await getRoleId(token, projectId);
     const memberData = await createMember(member, projectId, roleId, token);
+    console.log("This is member",memberData);
     if (!memberData.success) {
+      console.log("faildebug")
       return res.status(500).send({
         success: false,
         message: "Error creating member",
       });
     }
+    console.log("successdebug")
+
     return res.status(201).send(memberData);
   });
   
@@ -40,7 +42,7 @@ app.get("/getMembers", async (req, res) => {
   const token = await getToken(username, password);
   const memberData = await getMembers(token, projectId);
   if(memberData.success){
-  const result = memberData.body.map(member => ({
+  const result = memberData.data.map(member => ({
     id: member.id,
     email: member.email,
     full_name: member.full_name,

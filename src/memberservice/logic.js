@@ -13,17 +13,12 @@ async function getToken(username, password) {
       username,
       password,
     });
-    console.log("debugtoken2");
-    console.log(response);
     if (response.data.token) {
-      // console.log("hey" + response.data);
       return response.data.token;
     } else {
       return { auth_token: "NULL" };
     }
   } catch (error) {
-    console.log("error found : ");
-    console.log(error);
     return { auth_token: "NULL" };
   }
 }
@@ -38,7 +33,6 @@ async function getRoleId(token, projectId) {
       const firstObject = response.data[0];
       return firstObject.id;
     } catch (error) {
-      console.error(error);
       return { success: false, message: "Error getting roles" };
     }
   }
@@ -55,7 +49,6 @@ async function createMember(username, project, role, token) {
         },
         { headers: { Authorization: `Bearer ${token}` }  }
       );
-  
       if (response.data.id) {
         return { success: true, memberId: response.data.id };
       } else {
@@ -65,7 +58,6 @@ async function createMember(username, project, role, token) {
         };
       }
     } catch (error) {
-      console.error(error);
       return { success: false, message: "Error creating member" };
     }
   }
@@ -77,9 +69,8 @@ async function getMembers(token, projectId){
       headers: { Authorization: `Bearer ${token}` },
     });
     
-    return { success: true, body: response.data };
+    return { success: true, data: response.data };
   } catch (error) {
-    console.error(error);
     return { success: false, message: "Error getting roles" };
   }
 }
