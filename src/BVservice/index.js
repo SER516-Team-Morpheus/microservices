@@ -13,7 +13,7 @@ app.use(express.json());
 app.post("/AddBV", async (req, res) => {
   const { name, project } = req.body;
   const token = req.headers.authorization.split(" ")[1];
-  const projectData = await addBV(name, project, token);
+  const projectData = await AddBV(name, project, token);
   if (!projectData.success) {
     return res.status(500).send({
       success: false,
@@ -30,7 +30,7 @@ app.post("/AddBV", async (req, res) => {
 // Start the server
 app.listen(port, () => {
   console.log(
-    `Create Project microservice running at http://localhost:${port}`
+    `Business value microservice running at http://localhost:${port}`
   );
 });
 
