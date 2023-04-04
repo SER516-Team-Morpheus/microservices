@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  BVservice:
+    host: localhost
+    paths: "/AddBV"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
