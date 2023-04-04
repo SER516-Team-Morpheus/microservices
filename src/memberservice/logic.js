@@ -74,10 +74,29 @@ async function getMembers(token, projectId){
     return { success: false, message: "Error getting roles" };
   }
 }
+// Function to delete a member
+async function deleteMember(memberId, projectId, token) {
+  const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships/${memberId}?project=${projectId}`;
+  try {
+    const response = await axios.delete(
+      MEMBER_API_URL,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
   
   module.exports = {
     getRoleId,
     createMember,
     getToken,
     getMembers,
+    deleteMember
   };

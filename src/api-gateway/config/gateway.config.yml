@@ -31,7 +31,10 @@ apiEndpoints:
     paths: "/createMember" 
   getMembers:
     host: localhost  
-    paths: "/getMembers" 
+    paths: "/getMembers"
+  deleteMembers:
+    host: localhost
+    paths: "/deleteMember/:id"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
