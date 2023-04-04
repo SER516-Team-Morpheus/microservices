@@ -31,7 +31,15 @@ services:
     env_file:
       - .env    
     networks:
-      - my-network    
+      - my-network   
+  sprintservice:
+    build: ./sprintservice
+    ports:
+      - "3010:3010"
+    env_file:
+      - .env    
+    networks:
+      - my-network   
   api-gateway:
     build: ./api-gateway
     ports:

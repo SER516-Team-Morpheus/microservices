@@ -8,14 +8,14 @@ const sprint = {
     "disponibility": 30,
     "estimated_finish": "2014-11-04",
     "estimated_start": "2014-10-20",
-    "name": "Sprint-Test4",
+    "name": "Sprint-Test5",
     "order": 1,
     "project": projectID,
-    "slug": "sprint-Test4",
+    "slug": "sprint-Test5",
     "watchers": []
 }
 let createdSprintID = "";
-const patch = { "name": 'new testing (Do Not Use)' };
+const patch = { "name": 'new-testing (Do Not Use)' };
 
 describe("Fetch Sprints", () => {
     describe('GET /sprints', () => {
@@ -52,11 +52,11 @@ describe("Fetch Sprints", () => {
 });
 
 describe("Fetch Sprint by ID", () => {
-    describe('GET /sprints/:sprintId', () => {
+    describe('GET /sprintByID/:sprintId', () => {
         it('should return 200 and sprint data if sprint is found', async () => {
             // call the endpoint with a valid sprint ID and the token
             const response = await request(app)
-                .get('/sprints/' + sprintID)
+                .get('/sprintByID/' + sprintID)
                 .send({ username, password })
                 .expect(200);
 
@@ -72,7 +72,7 @@ describe("Fetch Sprint by ID", () => {
         it('should return 500 if an error occurs while retrieving the sprint', async () => {
             // call the endpoint with a non-existent sprint ID and the token
             const response = await request(app)
-                .get('/sprints/dummy')
+                .get('/sprintByID/dummy')
                 .send({ username, password })
                 .expect(500);
 
@@ -83,10 +83,10 @@ describe("Fetch Sprint by ID", () => {
 });
 
 describe('Create Sprint', () => {
-    describe('POST /sprints', () => {
+    describe('POST /createSprint', () => {
         it('should return 201 and created sprint if request is valid', async () => {
             const response = await request(app)
-                .post('/sprints')
+                .post('/createSprint')
                 .send({ sprint, username, password })
                 .expect(201);
             expect(response.body).toHaveProperty('name', sprint.name);
@@ -97,7 +97,7 @@ describe('Create Sprint', () => {
 
         it('should return 500 if error occurs while same name sent in sprint object', async () => {
             const response = await request(app)
-                .post('/sprints')
+                .post('/createSprint')
                 .send({ sprint, username, password })
                 .expect(500);
             expect(response.body).toEqual({ error: 'Error creating sprint' });
@@ -106,17 +106,17 @@ describe('Create Sprint', () => {
 });
 
 describe('Edit Sprint', () => {
-    describe('PATCH /sprints/:sprintId', () => {
+    describe('PATCH /editSprint/:sprintId', () => {
         it('should return 201 if patch is successful', async () => {
             const response = await request(app)
-                .patch(`/sprints/${createdSprintID}`)
+                .patch(`/editSprint/${createdSprintID}`)
                 .send({ username, password, patch });
             expect(response.body.name).toEqual(patch.name);
         });
 
         it('should return 500 if an error occurs during patching', async () => {
             const response = await request(app)
-                .patch(`/sprints/dummy`)
+                .patch(`/editSprint/dummy`)
                 .send({ patch, username, password })
                 .expect(500);
             expect(response.body).toEqual({ error: 'Error editing sprint' });
@@ -125,10 +125,10 @@ describe('Edit Sprint', () => {
 });
 
 describe("Delete Sprints", () => {
-    describe("DELETE /sprints/:sprintId", () => {
+    describe("DELETE /deleteSprint/:sprintId", () => {
         it("should return 201 and acknowledgement if sprint is successfully deleted", async () => {
             const response = await request(app)
-                .delete(`/sprints/${createdSprintID}`)
+                .delete(`/deleteSprint/${createdSprintID}`)
                 .send({ username, password });
 
             expect(response.status).toBe(201);
@@ -142,7 +142,7 @@ describe("Delete Sprints", () => {
 
         it("should return 500 if there is an error deleting the sprint", async () => {
             const response = await request(app)
-                .delete(`/sprints/${createdSprintID}`)
+                .delete(`/deleteSprint/${createdSprintID}`)
                 .send({ username, password });
 
             expect(response.status).toBe(500);

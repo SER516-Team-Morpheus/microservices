@@ -35,6 +35,24 @@ apiEndpoints:
   deleteMembers:
     host: localhost
     paths: "/deleteMember/:id"
+
+  sprintservice:
+    host: localhost
+    paths: "/sprints" 
+  sprintByID:
+    host: localhost  
+    paths: "/sprintByID/:sprintId"
+  createSprint:
+    host: localhost
+    paths: "/createSprint"
+  editSprint:
+    host: localhost  
+    paths: "/editSprint/:sprintId"
+  deleteSprint:
+    host: localhost
+    paths: "/deleteSprint/:sprintId"
+
+
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -46,6 +64,8 @@ serviceEndpoints:
     url: "http://userstoryservice:3003"
   memberservice:
     url: "http://memberservice:3004"
+  sprintservice:
+    url: "http://sprintservice:3010"
 policies:
   - basic-auth
   - cors
@@ -111,4 +131,19 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: memberservice
+              changeOrigin: true      
+
+  sprintPipeline:
+    apiEndpoints:
+      - sprintservice
+      - sprintByID
+      - createSprint
+      - editSprint
+      - deleteSprint
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: sprintservice
               changeOrigin: true              

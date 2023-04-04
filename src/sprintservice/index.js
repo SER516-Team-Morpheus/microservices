@@ -37,7 +37,7 @@ app.get('/sprints', async (req, res) => {
   }
 });
 
-app.get('/sprints/:sprintId', async (req, res) => {
+app.get('/sprintByID/:sprintId', async (req, res) => {
   let token = req.body.token;
   if (!token) {
     const { username, password } = req.body;
@@ -52,7 +52,7 @@ app.get('/sprints/:sprintId', async (req, res) => {
   }
 });
 
-app.post('/sprints', async (req, res) => {
+app.post('/createSprint', async (req, res) => {
   let token = req.body.token;
   if (!token) {
     const { username, password } = req.body;
@@ -67,7 +67,7 @@ app.post('/sprints', async (req, res) => {
   }
 });
 
-app.patch('/sprints/:sprintId', async (req, res) => {
+app.patch('/editSprint/:sprintId', async (req, res) => {
   let token = req.body.token;
   if (!token) {
     const { username, password } = req.body;
@@ -83,7 +83,7 @@ app.patch('/sprints/:sprintId', async (req, res) => {
   }
 });
 
-app.delete('/sprints/:sprintId', async (req, res) => {
+app.delete('/deleteSprint/:sprintId', async (req, res) => {
   let token = req.body.token;
   if (!token) {
     const { username, password } = req.body;
@@ -105,8 +105,11 @@ app.delete('/sprints/:sprintId', async (req, res) => {
 
 
 const port = 3010;
+// Start the server
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(
+    `Sprint microservice running at http://localhost:${port}`
+  );
 });
 
 module.exports = app;
