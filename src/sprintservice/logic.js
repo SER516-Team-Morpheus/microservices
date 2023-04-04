@@ -32,7 +32,6 @@ async function getAllSprints(token, projectId) {
     const sprints = response.data;
     return sprints;
   } catch (error) {
-    console.error(error);
     throw new Error('Error retrieving sprints');
   }
 }
@@ -47,7 +46,6 @@ async function getSprintById(token, sprintId) {
     const sprint = response.data;
     return sprint;
   } catch (error) {
-    console.error(error);
     throw new Error('Error retrieving sprint');
   }
 }
@@ -61,7 +59,6 @@ async function createSprint(token, sprint) {
     const response = await axios.post(`${taigaBaseUrl}/milestones`, sprint, { headers });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw new Error('Error creating sprint');
   }
 }
@@ -75,7 +72,6 @@ async function editSprint(token, sprintId, patch) {
     const response = await axios.patch(`${taigaBaseUrl}/milestones/${sprintId}`, patch, { headers });
     return response.data;
   } catch (error) {
-    console.error(error);
     throw new Error('Error editing sprint');
   }
 }
@@ -89,7 +85,6 @@ async function deleteSprint(token, sprintId) {
     const response = await axios.delete(`${taigaBaseUrl}/milestones/${sprintId}`, { headers });
     return response.status;
   } catch (error) {
-    console.error(error);
     throw new Error(error.response.data._error_message);
   }
 }

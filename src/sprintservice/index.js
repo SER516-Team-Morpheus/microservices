@@ -8,7 +8,7 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
   next();
 });
 
@@ -27,14 +27,13 @@ app.get('/sprints', async (req, res) => {
   }
   const projectID = req.body.projectID;
   if (!projectID) {
-    return res.status(500).json({ error: 'Project ID is not sent in request body.' });
+    return res.status(500).json({ error: 'Project ID is not sent in request body.', "success": false });
   }
   try {
     const sprints = await getAllSprints(token, projectID);
-    res.status(200).json(sprints);
+    res.status(200).send({ "sprints": sprints, "success": true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error retrieving sprints.' });
+    res.status(500).json({ error: 'Error retrieving sprints.', "success": false });
   }
 });
 
@@ -46,11 +45,10 @@ app.get('/sprints/:sprintId', async (req, res) => {
   }
   const { sprintId } = req.params;
   try {
-    const sprint = await getSprintById(token, sprintId);
-    res.status(200).json(sprint);
+    const sprints = await getSprintById(token, sprintId);
+    res.status(200).send({ "sprints": sprints, "success": true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error retrieving sprint' });
+    res.status(500).json({ error: 'Error retrieving sprint', "success": false });
   }
 });
 
@@ -65,7 +63,6 @@ app.post('/sprints', async (req, res) => {
     const createdSprint = await createSprint(token, sprint);
     res.status(201).json(createdSprint);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Error creating sprint' });
   }
 });
@@ -82,7 +79,6 @@ app.patch('/sprints/:sprintId', async (req, res) => {
     const editedSprint = await editSprint(token, sprintId, patch);
     res.status(201).json(editedSprint);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Error editing sprint' });
   }
 });
@@ -103,7 +99,6 @@ app.delete('/sprints/:sprintId', async (req, res) => {
     }
     res.status(201).send(ack);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -112,4 +107,6 @@ app.delete('/sprints/:sprintId', async (req, res) => {
 const port = 3010;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-}); 
+});
+
+module.exports = app;
