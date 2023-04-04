@@ -1,7 +1,7 @@
 const express = require("express");
-const { createTask } = require("./logic");
-const { getUserStoryDetails } = require("./logic");
-const { getToken } = require("./logic")
+//const { createTask } = require("./logic");
+//const { getUserStoryDetails } = require("./logic");
+const { getToken, getTaskDetails,getUserStoryDetails,createTask } = require("./logic")
 
 const app = express();
 const port = 3004;
@@ -42,6 +42,22 @@ app.post("/createTask", async (req, res) => {
     }
     return res.status(201).send(taskData);
   }
+});
+
+app.post("/updateTask", async (req, res) => {
+
+  const username = req.body.username;
+  const password = req.body.password;
+  const projectname = req.body.projectname;
+  const userstoryname = req.body.userstoryname;
+  const taskname = req.body.taskname;
+
+  const token = await getToken(username, password);
+  const slugName = username.toLowerCase() + "-" + projectname.toLowerCase();
+  const taskDetails = await getTaskDetails(token, slugName,taskname);
+  console.log(taskDetails);
+
+
 });
 
 // Start the server

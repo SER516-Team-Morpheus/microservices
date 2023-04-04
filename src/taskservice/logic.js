@@ -94,8 +94,50 @@ async function createTask(project, user_story, subject, token) {
   }
 }
 
+async function getTaskDetails(token, slugName, taskname){
+  try{
+    const TASK_DETAILS_API_URL = TASK_API_URL + "?project__slug=" + slugName
+    const response = await axios.get(
+                    TASK_DETAILS_API_URL,
+                      { headers: { Authorization: `Bearer ${token}`} }
+                    );
+    var parameters = {};
+    console.log(response.data.length);
+    for (let i = 0; i < response.data.length; i++) {
+      console.log(response.data[i].subject);
+      if(response.data[i].subject === taskname)
+        {
+            parameters.id = response.data[i].id;
+            parameters.user_story = response.data[i].user_story;
+
+        }
+      
+      }
+        if(parameters.id)
+        {
+          return {
+            success: true,
+            message: `successfully fetched details`,
+            parameters
+          };
+        }
+        else
+        {
+          return {
+            success: false,
+            message: "Task not found",
+          };
+          }
+
+  }catch (error) {
+    return { success: false, message: "Error fetching task" };
+  }
+
+}
+
 module.exports = {
   createTask,
   getToken,
-  getUserStoryDetails
+  getUserStoryDetails,
+  getTaskDetails
 };
