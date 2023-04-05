@@ -27,7 +27,7 @@ describe("Project Microservice", () => {
         .send({
           username: "SERtestuser",
           password: "tetuser",
-          name: "Project",
+          name: "testProject",
           description: "testProject",
         });
       expect(response.status).toBe(500);
@@ -42,7 +42,7 @@ describe("Project Microservice", () => {
       const response = await request(app)
         .get("/getProjectBySlug")
         .set("Accept", "application/json")
-        .send({
+        .query({
           username: "SERtestuser",
           password: "testuser",
           name: "testProject",
@@ -58,10 +58,38 @@ describe("Project Microservice", () => {
       const response = await request(app)
         .get("/getProjectBySlug")
         .set("Accept", "application/json")
-        .send({
+        .query({
           username: "SERtestuser",
           password: "testuser",
           name: "gibberish",
+        });
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toBeDefined();
+    });
+  });
+
+  // test case for getProject
+  describe("GET /getProject", () => {
+    it("should return a 200 response", async () => {
+      const response = await request(app)
+        .get("/getProject")
+        .set("Accept", "application/json")
+        .query({
+          username: "SERtestuser",
+          password: "testuser",
+        });
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.projects).toBeDefined();
+    });
+    it("should return a 404 response", async () => {
+      const response = await request(app)
+        .get("/getProject")
+        .set("Accept", "application/json")
+        .query({
+          username: "SERtestuser",
+          password: "testuse",
         });
       expect(response.status).toBe(404);
       expect(response.body.success).toBe(false);

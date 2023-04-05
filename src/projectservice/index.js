@@ -28,7 +28,7 @@ app.get("/getProject", async (req, res) => {
   const token = await getToken(username, password);
   const memberData = await getMember(token);
   if (!memberData.success) {
-    return res.status(500).send(memberData);
+    return res.status(404).send(memberData);
   }
   memberId = memberData.memberId;
   const getProjectData = await getProjectList(token, memberId);

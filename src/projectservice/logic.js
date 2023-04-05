@@ -2,7 +2,7 @@ const axios = require("axios");
 require("dotenv").config({ path: "../.env" });
 
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`;
-const AUTH_URL = `${process.env.AUTHENTICATE_URL}`;
+const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`;
 const MEMBER_URL = `${process.env.TAIGA_API_BASE_URL}/users/me`;
 
 //Function to get auth token from authenticate api
@@ -13,8 +13,8 @@ async function getToken(username, password) {
       username,
       password,
     });
-    if (response.data.token) {
-      return response.data.token;
+    if (response.data.auth_token) {
+      return response.data.auth_token;
     } else {
       return { auth_token: "NULL" };
     }
@@ -41,7 +41,7 @@ async function getMember(token) {
       };
     }
   } catch (error) {
-    return { success: false, message: "Error getting member." };
+    return { success: false, message: error.response.data };
   }
 }
 
@@ -67,7 +67,7 @@ async function getProjectList(token, memberId) {
     } else {
       return {
         success: false,
-        message: "No project found.",
+        message: "Authentication issue.",
       };
     }
   } catch (error) {
