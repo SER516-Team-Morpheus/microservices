@@ -1,4 +1,4 @@
-//This will have your endpoints of your microservices.
+// This will have your endpoints of your microservices.
 const express = require('express');
 const bodyParser = require('body-parser');
 const logic = require('./logic');
@@ -11,18 +11,20 @@ const port = 3005;
 app.use(express.json());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Origin', '*');
   res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
   );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
 });
 
 // Endpoint for creating a role
 app.post('/roles', async (req, res, next) => {
-  const { name, project, order, computable, permissions } = req.body;
+  const {
+    name, project, order, computable, permissions,
+  } = req.body;
 
   try {
     const role = await logic.createRoles(name, project, order, computable, permissions);
@@ -35,7 +37,9 @@ app.post('/roles', async (req, res, next) => {
 // Endpoint for updating a role
 app.patch('/roles/:roleId', async (req, res, next) => {
   const { roleId } = req.params;
-  const { name, order, computable, permissions } = req.body;
+  const {
+    name, order, computable, permissions,
+  } = req.body;
 
   try {
     const role = await logic.updateRole(roleId, name, order, computable, permissions);
@@ -45,7 +49,7 @@ app.patch('/roles/:roleId', async (req, res, next) => {
   }
 });
 
-//// Endpoint for geting a role
+// Endpoint for geting a role
 app.get('/roles/:roleId', async (req, res, next) => {
   const { roleId } = req.params;
 
@@ -59,9 +63,7 @@ app.get('/roles/:roleId', async (req, res, next) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(
-      `Add roles microservice running at http://localhost:${port}`
-    );
-  });
-  
-  module.exports = app;
+  console.log('Add roles microservice running at http://localhost:${port}'
+  );
+});
+module.exports = app;
