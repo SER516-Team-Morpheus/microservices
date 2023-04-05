@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice'] 
+        dir: ['src/authservice', 'src/projectservice', 'src/userstoryservice'] 
 
     steps:
       - uses: actions/checkout@v3
@@ -26,6 +26,6 @@ jobs:
       - name: Installing dependencies
         working-directory: ${{ matrix.dir }}
         run : npm install
-      - name: Do something with the matrix value
+      - name: Running unit test cases
         working-directory: ${{ matrix.dir }}
         run: npm run test
