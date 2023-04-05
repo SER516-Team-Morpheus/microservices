@@ -1,5 +1,11 @@
 const express = require("express");
-const { getToken, getProjectBySlug, createProject } = require("./logic");
+const {
+  getToken,
+  getProjectBySlug,
+  getMember,
+  getProjectList,
+  createProject,
+} = require("./logic");
 
 const app = express();
 const port = 3002;
@@ -14,6 +20,22 @@ app.use((req, res, next) => {
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   next();
+});
+
+//Endpoint for getting project under a member account
+app.get("/getProject", async (req, res) => {
+  const { username, password } = req.query;
+  const token = await getToken(username, password);
+  const memberData = await getMember(token);
+  if (!memberData.success) {
+    return res.status(500).send(memberData);
+  }
+  memberId = memberData.memberId;
+  const getProjectData = await getProjectList(token, memberId);
+  if (!getProjectData.success) {
+    return res.status(404).send(getProjectData);
+  }
+  return res.send(getProjectData);
 });
 
 //Endpoint for getting project by slug name
@@ -50,9 +72,7 @@ app.post("/createProject", async (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(
-    `Create Project microservice running at http://localhost:${port}`
-  );
+  console.log(`Project microservice running at http://localhost:${port}`);
 });
 
 module.exports = app;
