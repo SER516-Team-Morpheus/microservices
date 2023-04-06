@@ -52,6 +52,41 @@ app.get('/sprintByID/:sprintId', async (req, res) => {
   }
 });
 
+
+/* Open If REQUIRED in Future */
+// async function getSprintByName(sprintName, token, projectID) {
+//   try {
+//     const sprints = await getAllSprints(token, projectID);
+//     const foundSprint = sprints.find(sprint => sprint.name === sprintName);
+//     if (foundSprint) {
+//       return { "sprint": foundSprint, "success": true };
+//     } else {
+//       return {
+//         error: "No Sprint By This Name: " + sprintName,
+//         "success": false
+//       }
+//     }
+//   } catch (error) {
+//     return error;
+//   }
+// };
+
+// app.get('/sprintByName', async (req, res) => {
+//   let token = req.body.token;
+//   if (!token) {
+//     const { username, password } = req.body;
+//     token = await getToken(username, password);
+//   }
+//   const { sprintName, projectID } = req.body;
+//   try {
+//     sprint = await getSprintByName(sprintName, token, projectID);
+
+//     res.status(200).send(sprint);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Error retrieving sprint', "success": false });
+//   }
+// });
+
 app.post('/createSprint', async (req, res) => {
   let token = req.body.token;
   if (!token) {

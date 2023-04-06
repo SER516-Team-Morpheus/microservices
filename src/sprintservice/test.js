@@ -1,17 +1,17 @@
 const request = require('supertest');
 const app = require('./index.js');
-const username = "SERtestuser";
+const username = "taigatestser516";
 const password = "testuser";
-const sprintID = "344482";
-const projectID = '721626';
+const sprintID = "344632";
+const projectID = '722202';
 const sprint = {
     "disponibility": 30,
-    "estimated_finish": "2014-11-04",
-    "estimated_start": "2014-10-20",
-    "name": "Sprint-Test5",
+    "estimated_finish": "2023-05-29",
+    "estimated_start": "2023-05-25",
+    "name": "Sprint 3",
     "order": 1,
     "project": projectID,
-    "slug": "sprint-Test5",
+    "slug": "sprint-3",
     "watchers": []
 }
 let createdSprintID = "";
