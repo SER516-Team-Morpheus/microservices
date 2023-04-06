@@ -4,6 +4,8 @@ require("dotenv").config({ path: "../.env" });
 const TASK_API_URL = `${process.env.TAIGA_API_BASE_URL}/tasks`;
 const TOKEN_API_URL = `${process.env.TAIGA_API_BASE_URL}/auth`;
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`
+const TASK_UPDATE_API_URL=`${process.env.TAIGA_API_BASE_URL}/task-statuses`;
+
 
 //Function to get auth token from authenticate api
 async function getToken(username, password) {
@@ -102,13 +104,13 @@ async function getTaskDetails(token, slugName, taskname){
                       { headers: { Authorization: `Bearer ${token}`} }
                     );
     var parameters = {};
-    console.log(response.data.length);
     for (let i = 0; i < response.data.length; i++) {
-      console.log(response.data[i].subject);
       if(response.data[i].subject === taskname)
         {
             parameters.id = response.data[i].id;
             parameters.user_story = response.data[i].user_story;
+            parameters.version = response.data[i].version;
+            parameters.status_id = response.data[i].status;
 
         }
       
@@ -135,9 +137,35 @@ async function getTaskDetails(token, slugName, taskname){
 
 }
 
+async function updateTaskDetails(token, taskId,parameters){
+  try{
+    const TASK_UPDATE_API_URL = TASK_API_URL + "/" + taskId;
+    const response = await axios.patch(TASK_UPDATE_API_URL, parameters, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (response.data.id) {
+      return {
+        success: true,
+        message: `Task with id ${taskId} successfully updated`,
+        taskId: response.data.id,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Something went wrong while updating task",
+      };
+    }
+
+  }
+  catch (error) {
+    return { success: false, message: "Error updating the task" };
+  }
+}
+
 module.exports = {
   createTask,
   getToken,
   getUserStoryDetails,
-  getTaskDetails
+  getTaskDetails,
+  updateTaskDetails
 };
