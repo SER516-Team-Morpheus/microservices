@@ -1,5 +1,5 @@
 {
-  "name": "sprint-service",
+  "name": "sprintservice",
   "version": "1.0.0",
   "description": "Sprint service will handle sprint creation service.",
   "main": "index.js",
