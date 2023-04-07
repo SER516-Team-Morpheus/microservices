@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Epic Microservice
+  version: 1.0.0
+  description: Documentation for Epic Microservice.
+  contact:
+    name: Vidhin
+    email: vidhin@asu.edu
+servers:
+  - url: http://localhost:3006
+  - url: http://localhost:8080
+
+paths:
+  /createEpic:
+    post:
+      summary: Create new Epic.
+      description: Create a new Epic by providing the username, password, project_id, Epic name, and description in the request body..
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                project_id:
+                  type: number
+                  description: Project id in which epic is to be created
+                  example: 722556
+                name:
+                  type: string
+                  description: Epic name
+                  example: testEpic
+                description:
+                  type: string
+                  description: Epic description
+                  example: test Epic description
+              required:
+                - username
+                - password
+                - project_id
+                - name
+                - description
+      responses:
+        "201":
+          description: Epic successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  EpicId:
+                    type: number
+                    example: 187831
+                  EpicName:
+                    type: string
+                    example: testEpic
+                  description:
+                    type: string
+                    example: testEpic description
+        "500":
+          description: Error creating Epic.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error creating Epic
+      tags:
+        - Epic
