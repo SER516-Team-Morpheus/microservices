@@ -18,9 +18,9 @@ app.use((req, res, next) => {
 
 // Endpoint for creating a new epic
 app.post("/createEpic", async (req, res) => {
-  const { username, password, project_slug, name, description } = req.body;
+  const { username, password, project_id, name, description } = req.body;
   const token = await getToken(username, password);
-  const epicData = await createEpic(token, project_slug, name, description);
+  const epicData = await createEpic(name, project_id, description, token);
   if (!epicData.success) {
     return res.status(500).send(epicData);
   }

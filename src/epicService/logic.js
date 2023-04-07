@@ -38,12 +38,10 @@ async function createEpic(
         subject: name,
         project,
         description,
-        due_date: dueDate,
-        watchers: watchers,
       },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-
+    console.log(response.data);
     if (response.data.id) {
       return {
         success: true,
@@ -58,6 +56,7 @@ async function createEpic(
       };
     }
   } catch (error) {
+    console.log(error);
     return { success: false, message: "Error creating epic" };
   }
 }
