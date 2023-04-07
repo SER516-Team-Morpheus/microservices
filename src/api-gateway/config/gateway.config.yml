@@ -29,6 +29,15 @@ apiEndpoints:
     host: localhost
     paths: "/createEpic"
 
+  memberservice:
+    host: localhost
+    paths: "/createMember" 
+  getMembers:
+    host: localhost  
+    paths: "/getMembers"
+  deleteMembers:
+    host: localhost
+    paths: "/deleteMember/:id"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -40,6 +49,8 @@ serviceEndpoints:
     url: "http://userstoryservice:3003"
   epicService:
     url: "http://epicService:3006"
+  memberservice:
+    url: "http://memberservice:3004"
 policies:
   - basic-auth
   - cors
@@ -106,4 +117,14 @@ pipelines:
           - action:
               serviceEndpoint: epicService
               changeOrigin: true
-
+  
+  memberPipeline:
+    apiEndpoints:
+      - memberservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: memberservice
+              changeOrigin: true
