@@ -25,6 +25,9 @@ apiEndpoints:
   getuserstoriesdetails:
     host: localhost
     paths: "/getAllUserStoryDetails"
+  epicService:
+    host: localhost
+    paths: "/createEpic"
 
 serviceEndpoints:
   httpbin:
@@ -35,6 +38,8 @@ serviceEndpoints:
     url: "http://projectservice:3002"
   userstoryservice:
     url: "http://userstoryservice:3003"
+  epicService:
+    url: "http://epicService:3006"
 policies:
   - basic-auth
   - cors
@@ -90,3 +95,15 @@ pipelines:
           - action:
               serviceEndpoint: userstoryservice
               changeOrigin: true
+  
+  epicPipeline:
+    apiEndpoints:
+      - epicSerice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: epicService
+              changeOrigin: true
+
