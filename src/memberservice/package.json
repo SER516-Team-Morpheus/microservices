@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
-    "test": "jest --forceExit"
+    "start" : "NODE_ENV=dev node index.js",
+    "start-test": "NODE_ENV=test node index.js",
+    "test": "NODE_ENV=test jest"
   },
   "author": "",
   "license": "ISC",

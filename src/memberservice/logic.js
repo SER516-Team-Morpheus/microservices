@@ -1,5 +1,12 @@
 const axios = require("axios");
-require("dotenv").config({ path: "../.env" });
+const dotenv = require("dotenv");
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '../.env.test' });
+  console.log("Test env");
+} else {
+  console.log("Dev env");
+  dotenv.config({ path: '../.env.dev' });
+}
 
 const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships`;
 
@@ -7,6 +14,7 @@ const AUTH_URL = `${process.env.AUTHENTICATE_URL}`;
 
 //Function to get auth token from authenticate api
 async function getToken(username, password) {
+  console.log(AUTH_URL, "Auth url");
   try {
     const response = await axios.post(AUTH_URL, {
       type: "normal",
