@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ ]
+    branches: [develop, main ]
   pull_request:
-    branches: [ ]
+    branches: [ develop,main]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice', 'src/projectservice', 'src/userstoryservice'] 
+        dir: ['src/authservice', 'src/taskservice'] 
 
     steps:
       - uses: actions/checkout@v3
