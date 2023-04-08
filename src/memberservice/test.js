@@ -44,7 +44,7 @@ describe('Member Microservice', () => {
           projectId: 720797
         })
       expect(response.status).toBe(201)
-      expect(response.body.body).toBeDefined()
+      expect(response.body.data).toBeDefined()
     })
     it('should return a 500 response ', async () => {
       const response = await request(app)

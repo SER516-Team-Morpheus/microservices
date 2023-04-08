@@ -25,14 +25,20 @@ async function getToken (username, password) {
 }
 
 // Function to get the roles
-async function getRoleId (token, projectId) {
+async function getRoleId (username, password, projectId) {
+  const response1 = await axios.post(AUTH_API_URL, {
+    type: 'normal',
+    username,
+    password
+  })
+  const authToken = response1.data.auth_token
   const ROLES_API_URL = `${process.env.TAIGA_API_BASE_URL}/roles?project=${projectId}`
   try {
     const response = await axios.get(ROLES_API_URL, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${authToken}` }
     })
     const firstObject = response.data[0]
-    return firstObject.id
+    return { roleID: firstObject.id, token: authToken }
   } catch (error) {
     return { success: false, message: 'Error getting roles' }
   }
@@ -63,7 +69,13 @@ async function createMember (username, project, role, token) {
   }
 }
 
-async function getMembers (token, projectId) {
+async function getMembers (username, password, projectId) {
+  const response1 = await axios.post(AUTH_API_URL, {
+    type: 'normal',
+    username,
+    password
+  })
+  const token = response1.data.auth_token
   const MEMBERS_API_URL = `${MEMBER_API_URL}?project=${projectId}`
   try {
     const response = await axios.get(MEMBERS_API_URL, {

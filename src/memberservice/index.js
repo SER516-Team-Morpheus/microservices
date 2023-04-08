@@ -19,9 +19,8 @@ app.use((req, res, next) => {
 // Endpoint for creating a new member
 app.post('/createMember', async (req, res) => {
   const { username, password, member, projectId } = req.body
-  const token = await getToken(username, password)
-  const roleId = await getRoleId(token, projectId)
-  const memberData = await createMember(member, projectId, roleId, token)
+  const roleData = await getRoleId(username, password, projectId)
+  const memberData = await createMember(member, projectId, roleData.roleID, roleData.token)
   if (!memberData.success) {
     return res.status(500).send({
       success: false,
@@ -35,8 +34,7 @@ app.post('/createMember', async (req, res) => {
 // Endpoint for getting  all members details
 app.get('/getMembers', async (req, res) => {
   const { username, password, projectId } = req.body
-  const token = await getToken(username, password)
-  const memberData = await getMembers(token, projectId)
+  const memberData = await getMembers(username, password, projectId)
   if (memberData.success) {
     const result = memberData.data.map(member => ({
       id: member.id,
@@ -44,7 +42,7 @@ app.get('/getMembers', async (req, res) => {
       full_name: member.full_name,
       role: member.role_name
     }))
-    return res.status(201).send({ success: true, body: result })
+    return res.status(201).send({ success: true, data: result })
   }
   return res.status(500).send(memberData)
 })
