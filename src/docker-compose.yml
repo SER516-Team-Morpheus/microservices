@@ -25,7 +25,7 @@ services:
   taskservice:
     build: ./taskservice 
     ports:
-      - "3004:3004"
+      - "3005:3005"
     env_file:
       - .env
     networks:
@@ -51,6 +51,7 @@ services:
       - projectservice
       - userstoryservice
       - memberservice
+      - taskservice
 networks:
   my-network:
 

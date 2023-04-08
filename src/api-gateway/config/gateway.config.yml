@@ -108,6 +108,13 @@ pipelines:
   taskPipeline:
     apiEndpoints:
       - taskservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: taskservice
+              changeOrigin: true
   memberPipeline:
     apiEndpoints:
       - memberservice
@@ -116,7 +123,6 @@ pipelines:
       # - key-auth:
       - proxy:
           - action:
-              serviceEndpoint: taskservice
-              changeOrigin: true
               serviceEndpoint: memberservice
-              changeOrigin: true              
+              changeOrigin: true
+                 
