@@ -24,13 +24,15 @@ apiEndpoints:
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
+  taskservice:
+    host: localhost
+    paths: "/createTask"
   updateuserstory:
     host: localhost
     paths: "/updateUserstory"
   getuserstoriesdetails:
-    host: localhost
+    host: localhost 
     paths: "/getAllUserStoryDetails"
-
   memberservice:
     host: localhost
     paths: "/createMember"
@@ -49,6 +51,8 @@ serviceEndpoints:
     url: "http://projectservice:3002"
   userstoryservice:
     url: "http://userstoryservice:3003"
+  taskservice:
+    url: "http://taskservice:3005"
   memberservice:
     url: "http://memberservice:3004"
 policies:
@@ -107,7 +111,16 @@ pipelines:
           - action:
               serviceEndpoint: userstoryservice
               changeOrigin: true
-
+  taskPipeline:
+    apiEndpoints:
+      - taskservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: taskservice
+              changeOrigin: true
   memberPipeline:
     apiEndpoints:
       - memberservice
@@ -118,3 +131,4 @@ pipelines:
           - action:
               serviceEndpoint: memberservice
               changeOrigin: true
+
