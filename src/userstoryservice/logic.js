@@ -1,6 +1,4 @@
 const axios = require("axios");
-const request = require("request");
-const http = require("http");
 require("dotenv").config({ path: "../.env" });
 
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`;

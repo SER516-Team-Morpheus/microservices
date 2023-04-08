@@ -15,7 +15,12 @@ apiEndpoints:
     paths: "/createProject"
   getProjectByslug:
     host: localhost
-    paths: /getProjectByslug
+    paths: "/getProjectByslug"
+    appendQueryString: true
+  getProject:
+    host: localhost
+    paths: "/getProject"
+    appendQueryString: true
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
@@ -28,9 +33,9 @@ apiEndpoints:
 
   memberservice:
     host: localhost
-    paths: "/createMember" 
+    paths: "/createMember"
   getMembers:
-    host: localhost  
+    host: localhost
     paths: "/getMembers"
   deleteMembers:
     host: localhost
@@ -81,6 +86,7 @@ pipelines:
     apiEndpoints:
       - projectservice
       - getProjectByslug
+      - getProject
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -111,4 +117,4 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: memberservice
-              changeOrigin: true              
+              changeOrigin: true
