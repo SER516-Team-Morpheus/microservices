@@ -2,7 +2,8 @@ const axios = require("axios");
 require("dotenv").config({ path: "../.env" });
 
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`;
-const AUTH_URL = `${process.env.AUTHENTICATE_URL}`;
+const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`;
+const MEMBER_URL = `${process.env.TAIGA_API_BASE_URL}/users/me`;
 
 //Function to get auth token from authenticate api
 async function getToken(username, password) {
@@ -12,13 +13,66 @@ async function getToken(username, password) {
       username,
       password,
     });
-    if (response.data.token) {
-      return response.data.token;
+    if (response.data.auth_token) {
+      return response.data.auth_token;
     } else {
       return { auth_token: "NULL" };
     }
   } catch (error) {
     return { auth_token: "NULL" };
+  }
+}
+
+//Function to get member id
+async function getMember(token) {
+  try {
+    const response = await axios.get(MEMBER_URL, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (response.data.id) {
+      return {
+        success: true,
+        memberId: response.data.id,
+      };
+    } else {
+      return {
+        success: false,
+        message: "No member found.",
+      };
+    }
+  } catch (error) {
+    return { success: false, message: error.response.data };
+  }
+}
+
+//Function to get the list of project for a member
+async function getProjectList(token, memberId) {
+  GET_MEMBER_PROJECT = PROJECT_API_URL + "?member=" + memberId;
+  try {
+    const response = await axios.get(GET_MEMBER_PROJECT, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const newResponse = [];
+    for (let i = 0; i < response.data.length; i++) {
+      const { name, description } = response.data[i];
+      newResponse.push({ name, description });
+    }
+
+    if (newResponse.length) {
+      return {
+        success: true,
+        projects: newResponse,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Authentication issue.",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Error getting project details." };
   }
 }
 
@@ -82,6 +136,8 @@ async function createProject(name, description, token) {
 
 module.exports = {
   getProjectBySlug,
+  getMember,
+  getProjectList,
   createProject,
   getToken,
 };

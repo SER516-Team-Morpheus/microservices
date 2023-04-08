@@ -18,7 +18,6 @@ app.post(
     changeOrigin: true,
   })
 );
-console.log("test");
 
 // Project microservice
 app.post(
