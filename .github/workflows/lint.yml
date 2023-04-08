@@ -23,6 +23,9 @@ jobs:
       - name: Installing dependencies
         working-directory: ${{ matrix.dir }}
         run : npm install
+      - name: Configuring Environment
+        working-directory: ${{ matrix.dir }}
+        run : npm init @eslint/config
       - name: Code Linting
         working-directory: ${{ matrix.dir }}
         run: npm run lint
