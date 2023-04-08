@@ -29,3 +29,6 @@ jobs:
       - name: Running unit test cases
         working-directory: ${{ matrix.dir }}
         run: npm run test
+      - name: Running ES lint
+        working-directory: ${{ matrix.dir }}
+        run: npm run lint
