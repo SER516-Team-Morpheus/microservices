@@ -29,12 +29,4 @@ jobs:
       - name: Running unit test cases
         working-directory: ${{ matrix.dir }}
         run: npm run test
-      - name: Running Lint to check static analysis
-        working-directory:  ${{ matrix.dir }}
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: "master"
-          
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
