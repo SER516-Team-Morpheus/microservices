@@ -24,4 +24,5 @@ jobs:
         working-directory: ${{ matrix.dir }}
         run : npm install
       - name: Code Linting
+        working-directory: ${{ matrix.dir }}
         run: npm run lint
