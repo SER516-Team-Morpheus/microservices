@@ -1,5 +1,5 @@
 const express = require("express");
-const { getToken, getProjectBySlug, createProject } = require("./logic");
+const { getToken, getProjectBySlug, createProject, editProject, deleteProject } = require("./logic");
 
 const app = express();
 const port = 3002;
@@ -46,6 +46,45 @@ app.post("/createProject", async (req, res) => {
     message: "Same project name already exist!",
     sol: "Try different project name.",
   });
+});
+
+// Endpoint for deleting a project
+app.delete('/deleteProject/:projectID', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    const { username, password } = req.body;
+    token = await getToken(username, password);
+  }
+  const projectID = req.params.projectID
+  console.log(projectID,token)
+  try {
+    const status = await deleteProject( projectID,token);
+    const ack = {
+      "projectID": projectID,
+      "status": "Deleted Successfully",
+      "TaigaAPIResponseStatus": status
+    }
+    res.status(201).send(ack);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//Endpoint for Updating a Project
+app.patch('/updateProject/:projectID', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    const { username, password } = req.body;
+    token = await getToken(username, password);
+  }
+  const projectID = req.params.projectID;
+  const patch = req.body.patch;
+  try {
+    const editedSprint = await editProject(token, projectID, patch);
+    res.status(201).json(editedSprint);
+  } catch (error) {
+    res.status(500).json({ error: 'Error editing project' });
+  }
 });
 
 // Start the server

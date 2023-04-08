@@ -12,8 +12,8 @@ async function getToken(username, password) {
       username,
       password,
     });
-    if (response.data.token) {
-      return response.data.token;
+    if (response.data.auth_token) {
+      return response.data.auth_token;
     } else {
       return { auth_token: "NULL" };
     }
@@ -80,8 +80,48 @@ async function createProject(name, description, token) {
   }
 }
 
+// Function to delete project
+async function deleteProject(projectID, token) {
+  try {
+    const DELETE_URL = PROJECT_API_URL + "/" + projectID
+    const response = await axios.delete(
+      DELETE_URL,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.status == 204) {
+      return {
+        success: true,
+        message: "Project Deleted Successfully"
+      };
+    } else {
+      return {
+        success: false,
+        message: "Something went wrong will deleting project",
+      };
+    }
+  } catch (error) {
+    return { success: false, message: "Error deleting project" };
+  }
+}
+
+//
+async function editProject(token, projectID, patch) {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`
+    };
+    const response = await axios.patch(`${PROJECT_API_URL}/${projectID}`, patch, { headers });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error editing project');
+  }
+}
 module.exports = {
   getProjectBySlug,
   createProject,
   getToken,
+  deleteProject,
+  editProject
 };

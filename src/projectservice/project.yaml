@@ -141,3 +141,102 @@ paths:
                     example: Error creating userstory
       tags:
         - project
+
+  \deleteProject
+    post:
+        summary: Delete a project.
+        description: Deletes a project by providing the projectID and token.
+        requestBody:
+          required: none
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: taiga token
+                    example: ddjdkldld33833
+                  projectID:
+                    type: number
+                    description: Taiga project id
+                    example: 12
+                required:
+                  - token
+                  - projectID
+        responses:
+          "201":
+            description: Project successfully deleted.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: number
+                      example: 200
+          "500":
+            description: Error deleting project.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: Error deleting project
+
+  \editProject
+    post:
+        summary: edit a project.
+        description: Edits a project describe by providing the projectID ,token and request body contains patch.
+        requestBody:
+          required: yes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: taiga token
+                    example: ddjdkldld33833
+                  projectID:
+                    type: number
+                    description: Taiga project id
+                    example: 12
+                  patch:
+                    type: string
+                    description: project description which user want to change with
+                    example: This Project Description
+                required:
+                  - token
+                  - projectID
+                  - patch
+        responses:
+          "201":
+            description: Project successfully edited.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: number
+                      example: 200
+          "500":
+            description: Error editing project.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: Error editing project                      
