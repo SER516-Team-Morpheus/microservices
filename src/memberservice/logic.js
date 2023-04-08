@@ -3,26 +3,7 @@ require('dotenv').config({ path: '../.env' })
 
 const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships`
 
-const AUTH_URL = `${process.env.AUTHENTICATE_URL}`
 const AUTH_API_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
-
-// Function to get auth token from authenticate api
-async function getToken (username, password) {
-  try {
-    const response = await axios.post(AUTH_URL, {
-      type: 'normal',
-      username,
-      password
-    })
-    if (response.data.token) {
-      return response.data.token
-    } else {
-      return { auth_token: 'NULL' }
-    }
-  } catch (error) {
-    return { auth_token: 'NULL' }
-  }
-}
 
 // Function to get the roles
 async function getRoleId (username, password, projectId) {
@@ -88,7 +69,13 @@ async function getMembers (username, password, projectId) {
   }
 }
 // Function to delete a member
-async function deleteMember (memberId, projectId, token) {
+async function deleteMember (username, password, memberId) {
+  const response1 = await axios.post(AUTH_API_URL, {
+    type: 'normal',
+    username,
+    password
+  })
+  const token = response1.data.auth_token
   const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships/${memberId}`
   try {
     const response = await axios.delete(
@@ -138,7 +125,6 @@ async function updateMember (username, password, roleId, memberId) {
 module.exports = {
   getRoleId,
   createMember,
-  getToken,
   getMembers,
   deleteMember,
   updateMember

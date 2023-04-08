@@ -1,5 +1,5 @@
 const express = require('express')
-const { createMember, getRoleId, getToken, getMembers, deleteMember, updateMember } = require('./logic')
+const { createMember, getRoleId, getMembers, deleteMember, updateMember } = require('./logic')
 
 const app = express()
 const port = 3004
@@ -49,14 +49,10 @@ app.get('/getMembers', async (req, res) => {
 
 // Endpoint for deleting a member
 app.delete('/deleteMember/:id', async (req, res) => {
-  const { username, password, projectId } = req.body
-  const token = await getToken(username, password)
+  const { username, password } = req.body
   const memberId = req.params.id
-
-  const memberData = await deleteMember(memberId, projectId, token)
-
+  const memberData = await deleteMember(username, password, memberId)
   if (!memberData.success) {
-    console.log('faildebug')
     return res.status(500).send({
       success: false,
       message: 'Error deleting member'

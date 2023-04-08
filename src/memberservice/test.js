@@ -2,6 +2,7 @@ const request = require('supertest')
 const app = require('./index')
 
 describe('Member Microservice', () => {
+  let memberCreated
   describe('POST /createMember', () => {
     it('should return a 201 response', async () => {
       const response = await request(app)
@@ -16,6 +17,7 @@ describe('Member Microservice', () => {
       expect(response.status).toBe(201)
       expect(response.body.success).toBe(true)
       expect(response.body.memberId).toBeDefined()
+      memberCreated = response.body.memberId
     })
     it('should return a 500 response', async () => {
       const response = await request(app)
@@ -56,6 +58,32 @@ describe('Member Microservice', () => {
           projectId: 720
         })
       expect(response.status).toBe(500)
+    })
+  })
+
+  describe('DELETE /deleteMember/:id', () => {
+    it('should return a 201 response', async () => {
+      const response = await request(app)
+        .delete(`/deleteMember/${memberCreated}`)
+        .set('Accept', 'application/json')
+        .send({
+          username: 'sambhavv14asu',
+          password: 'Wisdommarrt_01'
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.success).toBe(true)
+    })
+    it('should return a 500 response', async () => {
+      const response = await request(app)
+        .delete('/deleteMember/xyz')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'sambhavv14asu',
+          password: 'Wisdommarrt_01'
+        })
+      expect(response.status).toBe(500)
+      expect(response.body.success).toBe(false)
+      expect(response.body.message).toBeDefined()
     })
   })
 
