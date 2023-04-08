@@ -23,15 +23,12 @@ app.post("/createMember", async (req, res) => {
     const token = await getToken(username, password);
     const roleId = await getRoleId(token, projectId);
     const memberData = await createMember(member, projectId, roleId, token);
-    console.log("This is member",memberData);
     if (!memberData.success) {
-      console.log("faildebug")
       return res.status(500).send({
         success: false,
         message: "Error creating member",
       });
     }
-    console.log("successdebug")
 
     return res.status(201).send(memberData);
   });
@@ -61,7 +58,6 @@ app.delete("/deleteMember/:id", async (req, res) => {
   const memberId = req.params.id;
 
   const memberData = await deleteMember(memberId, projectId, token);
-  console.log("This is member",memberData);
 
   if (!memberData.success) {
     console.log("faildebug")
@@ -70,10 +66,28 @@ app.delete("/deleteMember/:id", async (req, res) => {
       message: "Error deleting member",
     });
   }
-  console.log("successdebug")
 
   return res.status(201).send({ success: true, message: "Member successfully deleted" });
 });
+
+//editing the role of a member
+app.patch("/editMemberRole", async (req, res) => {
+  const { username, password, roleId,memberId } = req.body;
+  const token = await getToken(username, password);
+  const memberData = await getMembers(token, projectId);
+  if(memberData.success){
+  const result = memberData.data.map(member => ({
+    id: member.id,
+    email: member.email,
+    full_name: member.full_name,
+    role: member.role_name,
+  }));
+  return res.status(201).send({ success: true, body: result });
+}
+  return res.status(500).send(memberData);
+
+});
+
   // Start the server
   app.listen(port, () => {
     console.log(
