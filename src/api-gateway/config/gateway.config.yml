@@ -26,8 +26,17 @@ apiEndpoints:
     host: localhost
     paths: "/updateUserstory"
   getuserstoriesdetails:
+    host: localhost 
+    paths: "/getAllUserStoryDetails"
+  memberservice:
     host: localhost
-    paths: "/getAllUserStoryDetails"   
+    paths: "/createMember" 
+  getMembers:
+    host: localhost  
+    paths: "/getMembers"
+  deleteMembers:
+    host: localhost
+    paths: "/deleteMember/:id"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -38,7 +47,9 @@ serviceEndpoints:
   userstoryservice:
     url: "http://userstoryservice:3003"
   taskservice:
-    url: "http://taskservice:3004"
+    url: "http://taskservice:3005"
+  memberservice:
+    url: "http://memberservice:3004"
 policies:
   - basic-auth
   - cors
@@ -94,10 +105,12 @@ pipelines:
           - action:
               serviceEndpoint: userstoryservice
               changeOrigin: true
-  
   taskPipeline:
     apiEndpoints:
       - taskservice
+  memberPipeline:
+    apiEndpoints:
+      - memberservice
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -105,3 +118,5 @@ pipelines:
           - action:
               serviceEndpoint: taskservice
               changeOrigin: true
+              serviceEndpoint: memberservice
+              changeOrigin: true              
