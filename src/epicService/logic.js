@@ -2,8 +2,7 @@ const axios = require('axios')
 require('dotenv').config({ path: '../.env' })
 
 const EPIC_API_URL = `${process.env.TAIGA_API_BASE_URL}/epics`
-const AUTH_URL = `${process.env.AUTHENTICATE_URL}`
-
+const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
 // Function to get auth token from authenticate api
 async function getToken (username, password) {
   try {
@@ -12,8 +11,8 @@ async function getToken (username, password) {
       username,
       password
     })
-    if (response.data.token) {
-      return response.data.token
+    if (response.data.auth_token) {
+      return response.data.auth_token
     } else {
       return { auth_token: 'NULL' }
     }
@@ -27,9 +26,7 @@ async function createEpic (
   name,
   project,
   description,
-  token,
-  dueDate = null,
-  watchers = []
+  token
 ) {
   try {
     const response = await axios.post(
@@ -56,7 +53,7 @@ async function createEpic (
       }
     }
   } catch (error) {
-    console.log(error)
+    console.error(error.response.data)
     return { success: false, message: 'Error creating epic' }
   }
 }
