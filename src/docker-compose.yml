@@ -12,8 +12,8 @@ services:
       - "3002:3002"
     env_file:
       - .env
-  AddRolesService:
-    build: ./addrolesservice
+  addroleservice:
+    build: ./addroleservice
     ports:
       - "3005:3005"
     env_file:

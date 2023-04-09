@@ -13,9 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
-  AddRolesService:
+  addroleservice:
     host: localhost
-    paths: "/addrolesservice"
+    paths: "/addroleservice"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -23,8 +23,8 @@ serviceEndpoints:
     url: "http://authservice:3001"
   projectservice:
     url: "http://projectservice:3002"
-  AddRolesService:
-    url: "http://addrolesservice:3005"
+  addroleservice:
+    url: "http://addroleservice:3005"
 policies:
   - basic-auth
   - cors
@@ -69,11 +69,11 @@ pipelines:
 
 projectPipeline:
     apiEndpoints:
-      - AddRolesService
+      - addroleservice
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
       - proxy:
           - action:
-              serviceEndpoint: AddRolesService
+              serviceEndpoint: addroleservice
               changeOrigin: true
