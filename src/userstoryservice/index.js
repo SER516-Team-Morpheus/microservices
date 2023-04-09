@@ -111,10 +111,10 @@ app.patch('/updateUserstory', async (req, res) => {
     const points = {}
     if (req.body.points !== undefined) {
       const roles = {
-        UX: 4339586,
-        Design: 4339587,
-        Front: 4339588,
-        Back: 4339589
+        UX: 4449977,
+        Design: 4449978,
+        Front: 4449979,
+        Back: 4449980
       }
       const userpoint = {
         '?': 0,
@@ -135,7 +135,7 @@ app.patch('/updateUserstory', async (req, res) => {
         const value = req.body.points[key]
         const newKey = roles[key]
         const newValue = userpoint[value]
-        points[newKey] = 8615602 + newValue
+        points[newKey] = 8835979 + newValue
       }
 
       parameters.points = points
