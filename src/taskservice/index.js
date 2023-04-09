@@ -7,7 +7,6 @@ const {
 
 
 const app = express()
-const port = 3005
 
 app.use(express.json())
 
@@ -114,7 +113,7 @@ app.delete('/deleteTask', async (req, res) => {
   return res.status(201).send(taskDeleteData)
 })
 
-
+const port = 3005
 // Start the server
 app.listen(port, () => {
   console.log(`Task microservice running at http://localhost:${port}`)
