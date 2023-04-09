@@ -21,21 +21,21 @@ app.use((req, res, next) => {
 })
 
 // Endpoint for creating a role
-app.post('/roles', async (req, res, next) => {
+app.post('/createroles', async (req, res, next) => {
   const {
     name, project, order, computable, permissions
   } = req.body
 
   try {
     const role = await logic.createRoles(name, project, order, computable, permissions)
-    res.status(201).json(role)
+    res.status(200).json(role)
   } catch (error) {
     next(error)
   }
 })
 
 // Endpoint for updating a role
-app.patch('/roles/:roleId', async (req, res, next) => {
+app.patch('/updateroles/:roleId', async (req, res, next) => {
   const { roleId } = req.params
   const {
     name, order, computable, permissions
@@ -50,7 +50,7 @@ app.patch('/roles/:roleId', async (req, res, next) => {
 })
 
 // Endpoint for geting a role
-app.get('/roles/:roleId', async (req, res, next) => {
+app.get('/getroles/:roleId', async (req, res, next) => {
   const { roleId } = req.params
 
   try {
