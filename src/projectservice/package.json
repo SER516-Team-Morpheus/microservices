@@ -1,5 +1,5 @@
 {
-  "name": "projectService",
+  "name": "projectservice",
   "version": "1.0.0",
   "description": "Project service to handle all request related to projects",
   "main": "index.js",
