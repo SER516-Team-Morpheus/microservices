@@ -2,16 +2,16 @@ const request = require('supertest')
 const app = require('./index.js')
 const username = 'taigatestser516'
 const password = 'testuser'
-const sprintID = '344632'
+let sprintID = ''
 const projectID = '722202'
 const sprint = {
   disponibility: 30,
   estimated_finish: '2023-05-29',
   estimated_start: '2023-05-25',
-  name: 'Sprint 3',
+  name: 'Sprints Unit Test',
   order: 1,
   project: projectID,
-  slug: 'sprint-3',
+  slug: 'sprints-unit-test',
   watchers: []
 }
 let createdSprintID = ''
@@ -19,6 +19,54 @@ let createdSprint2ID = ''
 let sprintName = ''
 let sprint2Name = ''
 const patch = { name: 'new-testing (Do Not Use)' }
+
+describe('Create Sprint', () => {
+  describe('POST /createSprint', () => {
+    it('should return 201 and created sprint if request is valid', async () => {
+      const response = await request(app)
+        .post('/createSprint')
+        .send({ sprint, username, password })
+        .expect(201)
+      expect(response.body).toHaveProperty('name', sprint.name)
+      expect(response.body).toHaveProperty('id')
+      createdSprintID = response.body.id
+      sprintName = response.body.name
+      sprintID = response.body.id
+    })
+    it('should return 201 and created sprint if request is valid', async () => {
+      const response = await request(app)
+        .post('/createSprint')
+        .send({
+          sprint: {
+            disponibility: 30,
+            estimated_finish: '2023-05-29',
+            estimated_start: '2023-05-25',
+            name: 'Sprints R Unit Test',
+            order: 1,
+            project: projectID,
+            slug: 'sprints-r-unit-test',
+            watchers: []
+          },
+          username,
+          password
+
+        })
+        .expect(201)
+      expect(response.body).toHaveProperty('name', 'Sprints R Unit Test')
+      expect(response.body).toHaveProperty('id')
+      createdSprint2ID = response.body.id
+      sprint2Name = response.body.name
+    })
+
+    it('should return 500 if error occurs while same name sent in sprint object', async () => {
+      const response = await request(app)
+        .post('/createSprint')
+        .send({ sprint, username, password })
+        .expect(500)
+      expect(response.body).toEqual({ error: 'Error creating sprint' })
+    })
+  })
+})
 
 // eslint-disable-next-line no-undef
 describe('Fetch Sprints', () => {
@@ -102,53 +150,6 @@ describe('Fetch Sprint by ID', () => {
   })
 })
 
-describe('Create Sprint', () => {
-  describe('POST /createSprint', () => {
-    it('should return 201 and created sprint if request is valid', async () => {
-      const response = await request(app)
-        .post('/createSprint')
-        .send({ sprint, username, password })
-        .expect(201)
-      expect(response.body).toHaveProperty('name', sprint.name)
-      expect(response.body).toHaveProperty('id')
-      createdSprintID = response.body.id
-      sprintName = response.body.name
-    })
-    it('should return 201 and created sprint if request is valid', async () => {
-      const response = await request(app)
-        .post('/createSprint')
-        .send({
-          sprint: {
-            disponibility: 30,
-            estimated_finish: '2023-05-29',
-            estimated_start: '2023-05-25',
-            name: 'Sprint R',
-            order: 1,
-            project: projectID,
-            slug: 'sprint-r',
-            watchers: []
-          },
-          username,
-          password
-
-        })
-        .expect(201)
-      expect(response.body).toHaveProperty('name', 'Sprint R')
-      expect(response.body).toHaveProperty('id')
-      createdSprint2ID = response.body.id
-      sprint2Name = response.body.name
-    })
-
-    it('should return 500 if error occurs while same name sent in sprint object', async () => {
-      const response = await request(app)
-        .post('/createSprint')
-        .send({ sprint, username, password })
-        .expect(500)
-      expect(response.body).toEqual({ error: 'Error creating sprint' })
-    })
-  })
-})
-
 describe('Fetch Sprint by Name', () => {
   describe('GET /sprintByName', () => {
     it('should return 200 and sprint data if sprint is found', async () => {
@@ -163,7 +164,7 @@ describe('Fetch Sprint by Name', () => {
       expect(response.body).toBeDefined()
       expect(response.body.success).toBe(true)
       expect(response.body.sprint).toBeDefined()
-      expect(response.body.sprint.name).toBe('Sprint 3')
+      expect(response.body.sprint.name).toBe('Sprints Unit Test')
     })
 
     it('should return 500 if an error occurs while retrieving the sprint', async () => {
