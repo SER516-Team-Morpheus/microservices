@@ -20,7 +20,7 @@ async function authenticateUser(username, password) {
       return { success: false, message: "Invalid credentials" };
     }
   } catch (error) {
-    console.error(error);
+    console.log(error.response.data);
     return { success: false, message: "Error authenticating user" };
   }
 }
