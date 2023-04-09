@@ -14,7 +14,7 @@ paths:
   /createEpic:
     post:
       summary: Create new Epic.
-      description: Create a new Epic by providing the username, password, project_id, Epic name, and description in the request body..
+      description: Create a new Epic by providing the username, password, projectId, Epic name, and description in the request body..
       requestBody:
         required: true
         content:
@@ -30,7 +30,7 @@ paths:
                   type: string
                   description: Taiga password
                   example: testuser
-                project_id:
+                projectId:
                   type: number
                   description: Project id in which epic is to be created
                   example: 722556
@@ -45,7 +45,7 @@ paths:
               required:
                 - username
                 - password
-                - project_id
+                - projectId
                 - name
                 - description
       responses:
