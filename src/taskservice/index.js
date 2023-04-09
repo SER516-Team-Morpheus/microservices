@@ -2,7 +2,7 @@ const express = require('express');
 // const { createTask } = require("./logic");
 // const { getUserStoryDetails } = require("./logic");
 const {
-  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails,
+  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask
 } = require('./logic');
 
 const app = express();
@@ -89,6 +89,30 @@ app.post('/updateTask', async (req, res) => {
   }
   return res.status(201).send(taskUpdateData);
 });
+
+app.delete('/deleteTask', async (req, res) => {
+  const {
+    username, password, projectname, taskname
+  } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+  const taskDetails = await getTaskDetails(token, slugName, taskname)
+  if (!taskDetails.success) {
+    return res.status(500).send({
+      taskDetails
+    })
+  }
+  const taskId = taskDetails.parameters.id
+
+  const taskDeleteData = await deleteTask(token, taskId)
+  if (!taskDeleteData.success) {
+    return res.status(500).send({
+      taskDeleteData
+    })
+  }
+  return res.status(201).send(taskDeleteData)
+})
+
 
 // Start the server
 app.listen(port, () => {
