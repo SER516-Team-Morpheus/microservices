@@ -1,5 +1,5 @@
 // This will have the logic of the endpoints.
-const fetch = require('node-fetch');
+//const fetch = require('node-fetch');
 const axios = require('axios');
 // const dotenv = import("dotenv");
 
@@ -35,8 +35,7 @@ async function createRoles(name, project, order, computable, permissions, token)
     permissions,
   };
 
-  const response = await fetch(ROLE_API_URL, {
-    method: 'POST',
+  const response = await axios.post(ROLE_API_URL, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
@@ -75,8 +74,7 @@ async function updateRole(roleId, name, order, computable, permissions, token) {
     data.permissions = permissions;
   }
 
-  const response = await fetch(ROLE_UPDATE_API_URL, {
-    method: 'PATCH',
+  const response = await axios.patch(ROLE_UPDATE_API_URL, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
@@ -97,7 +95,7 @@ async function updateRole(roleId, name, order, computable, permissions, token) {
 // get roles details
 async function getRoleDetails(roleId, token) {
   const ROLE_DETAILS_API_URL = ROLE_API_URL + "/" + roleId;
-  const response = await fetch(ROLE_DETAILS_API_URL, {
+  const response = await axios.get(ROLE_DETAILS_API_URL, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
