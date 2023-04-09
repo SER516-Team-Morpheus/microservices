@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "test": "jest",
+    "test": "jest --forceExit",
     "lint": "eslint ."
   },
   "author": "Vidhin <vidhin@asu.edu>",
