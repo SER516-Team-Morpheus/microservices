@@ -22,6 +22,12 @@ services:
       - "3003:3003"
     env_file:
       - .env
+  taskservice:
+    build: ./taskservice 
+    ports:
+      - "3005:3005"
+    env_file:
+      - .env
     networks:
       - my-network
   epicService:
@@ -53,6 +59,7 @@ services:
       - projectservice
       - userstoryservice
       - memberservice
+      - taskservice
 networks:
   my-network:
 
