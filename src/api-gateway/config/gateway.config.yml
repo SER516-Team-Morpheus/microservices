@@ -42,6 +42,32 @@ apiEndpoints:
   deleteMembers:
     host: localhost
     paths: "/deleteMember/:id"
+
+  sprintservice:
+    host: localhost
+    paths: "/sprints" 
+  sprintByID:
+    host: localhost  
+    paths: "/sprintByID/:sprintId"
+  createSprint:
+    host: localhost
+    paths: "/createSprint"
+  editSprint:
+    host: localhost  
+    paths: "/editSprint/:sprintId"
+  deleteSprint:
+    host: localhost
+    paths: "/deleteSprint/:sprintId"
+  sprintByName:
+    host: localhost
+    paths: "/sprintByName"
+  editSprintByName:
+    host: localhost
+    paths: "/editSprintByName"
+  deleteSprintByName:
+    host: localhost
+    paths: "/deleteSprintByName"
+
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -55,6 +81,8 @@ serviceEndpoints:
     url: "http://taskservice:3005"
   memberservice:
     url: "http://memberservice:3004"
+  sprintservice:
+    url: "http://sprintservice:3010"
 policies:
   - basic-auth
   - cors
@@ -130,5 +158,24 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: memberservice
-              changeOrigin: true
+              changeOrigin: true      
+
+  sprintPipeline:
+    apiEndpoints:
+      - sprintservice
+      - sprintByID
+      - createSprint
+      - editSprint
+      - deleteSprint
+      - sprintByName
+      - editSprintByName
+      - deleteSprintByName
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: sprintservice
+              changeOrigin: true              
+
 
