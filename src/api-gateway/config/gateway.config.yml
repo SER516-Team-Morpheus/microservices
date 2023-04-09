@@ -58,7 +58,15 @@ apiEndpoints:
   deleteSprint:
     host: localhost
     paths: "/deleteSprint/:sprintId"
-
+  sprintByName:
+    host: localhost
+    paths: "/sprintByName"
+  editSprintByName:
+    host: localhost
+    paths: "/editSprintByName"
+  deleteSprintByName:
+    host: localhost
+    paths: "/deleteSprintByName"
 
 serviceEndpoints:
   httpbin:
@@ -159,6 +167,9 @@ pipelines:
       - createSprint
       - editSprint
       - deleteSprint
+      - sprintByName
+      - editSprintByName
+      - deleteSprintByName
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
