@@ -41,7 +41,7 @@ async function createEpic (
       },
       { headers: { Authorization: `Bearer ${token}` } }
     )
-    console.log(response.data)
+    // console.log(response.data)
     if (response.data.id) {
       return {
         success: true,
