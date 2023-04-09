@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/taskservice'] 
+        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice'] 
 
     steps:
       - uses: actions/checkout@v3
