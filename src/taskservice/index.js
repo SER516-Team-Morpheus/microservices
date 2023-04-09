@@ -65,13 +65,13 @@ app.post('/updateTask', async (req, res) => {
   const parameters = {};
   if (req.body.status !== undefined) {
     const status = {
-      new: 3572652,
-      'in progress': 3572653,
-      'ready for test': 3572654,
-      closed: 3572655,
-      done: 3572655,
-      'needs info': 3572656,
-    };
+      new: 3664464,
+      'in progress': 3664465,
+      'ready for test': 3664466,
+      closed: 3664467,
+      done: 3664734,
+      'needs info': 3664468
+    }
     parameters.status = status[req.body.status.toLowerCase()];
   }
   if (req.body.description !== undefined) {
