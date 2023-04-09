@@ -24,7 +24,7 @@ serviceEndpoints:
   projectservice:
     url: "http://projectservice:3002"
   addroleservice:
-    url: "http://addroleservice:3005"
+    url: "http://addroleservice:3008"
 policies:
   - basic-auth
   - cors

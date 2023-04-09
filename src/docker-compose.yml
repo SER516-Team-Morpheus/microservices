@@ -19,7 +19,7 @@ services:
   addroleservice:
     build: ./addroleservice
     ports:
-      - "3005:3005"
+      - "3008:3008"
     env_file:
       - .env
     networks:
