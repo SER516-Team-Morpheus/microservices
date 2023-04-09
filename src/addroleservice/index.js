@@ -63,7 +63,6 @@ app.get('/roles/:roleId', async (req, res, next) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log('Add roles microservice running at http://localhost:${port}'
-  );
+  console.log(`Create Member addroleservice running at http://localhost:${port}`);
 });
 module.exports = app;
