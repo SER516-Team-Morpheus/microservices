@@ -59,11 +59,11 @@ describe('Task Microservices', () => {
           userstoryname: 'test US3',
           taskname: 'TASK1-Customer',
           description: 'Testing personal data',
-          status: 'In Progress',
-        });
-      expect(response.status).toBe(500);
-    });
-  });
+          status: 'In Progress'
+        })
+      expect(response.status).toBe(500)
+    })
+  })
   describe('DELETE /deleteTask', () => {
     it('should return a 201 response with the taskid and deletion message', async () => {
       const response = await request(app)
@@ -93,4 +93,4 @@ describe('Task Microservices', () => {
       expect(response.status).toBe(500)
     })
   })
-});
+})

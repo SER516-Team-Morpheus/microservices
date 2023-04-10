@@ -3,8 +3,7 @@ const express = require('express')
 // const { getUserStoryDetails } = require("./logic");
 const {
   getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask
-} = require('./logic');
-
+} = require('./logic')
 
 const app = express()
 
@@ -72,7 +71,7 @@ app.post('/updateTask', async (req, res) => {
       done: 3664734,
       'needs info': 3664468
     }
-    parameters.status = status[req.body.status.toLowerCase()];
+    parameters.status = status[req.body.status.toLowerCase()]
   }
   if (req.body.description !== undefined) {
     parameters.description = req.body.description
