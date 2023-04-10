@@ -43,7 +43,7 @@ describe('Task Microservices', () => {
           userstoryname: 'test US3',
           taskname: 'TASK1-TESTCASE',
           description: 'Testing personal data',
-          status: 'In Progress'
+          status: 'Ready for Test'
         })
       expect(response.status).toBe(201)
       expect(response.body.taskId).toBeDefined()
