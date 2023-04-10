@@ -115,8 +115,8 @@ async function updateMember (username, password, roleId, memberId) {
         }
       }
     )
-
-    return { success: true, data: response.data }
+    const data1 = { memberId: response.data.id, roleId: response.data.role, memberName: response.data.full_name, roleName: response.data.role_name }
+    return { success: true, data: data1 }
   } catch (error) {
     return { success: false, message: 'Error editing member role' }
   }
