@@ -20,10 +20,36 @@ services:
     build: ./addroleservice
     ports:
       - "3008:3008"
+  userstoryservice:
+    build: ./userstoryservice
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env
+  taskservice:
+    build: ./taskservice 
+    ports:
+      - "3005:3005"
     env_file:
       - .env
     networks:
       - my-network
+  memberservice:
+    build: ./memberservice
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env    
+    networks:
+      - my-network   
+  sprintservice:
+    build: ./sprintservice
+    ports:
+      - "3010:3010"
+    env_file:
+      - .env    
+    networks:
+      - my-network   
   api-gateway:
     build: ./api-gateway
     ports:
@@ -35,6 +61,10 @@ services:
     depends_on:
       - authservice
       - projectservice
+      - userstoryservice
+      - memberservice
+      - taskservice
       - addroleservice
 networks:
   my-network:
+

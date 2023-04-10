@@ -1,21 +1,18 @@
-name: Node.js CI
+name: Lint CI
 
 on:
   push:
-    branches: [develop, main ]
+    branches: [develop, master ]
   pull_request:
-    branches: [ develop, main]
+    branches: [ develop, master]
 
 jobs:
-  build:
-
+  linting:
     runs-on: ubuntu-latest
-      
-
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/addroleservice'] 
+        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice'] 
 
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +23,9 @@ jobs:
       - name: Installing dependencies
         working-directory: ${{ matrix.dir }}
         run : npm install
-      - name: Running unit test cases
+      - name: Configuring Environment
         working-directory: ${{ matrix.dir }}
-        run: npm run test
-
+        run : npm init @eslint/config
+      - name: Code Linting
+        working-directory: ${{ matrix.dir }}
+        run: npm run lint

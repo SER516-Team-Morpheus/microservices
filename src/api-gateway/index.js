@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 app.post(
   "/authenticate",
   createProxyMiddleware({
-    target: "http://localhost:3000/authenticate",
+    target: "http://localhost:3001/authenticate",
     changeOrigin: true,
   })
 );
@@ -23,7 +23,7 @@ app.post(
 app.post(
   "/createProject",
   createProxyMiddleware({
-    target: "http://localhost:3001/createProject",
+    target: "http://localhost:3002/createProject",
     changeOrigin: true,
   })
 );

@@ -16,6 +16,60 @@ apiEndpoints:
   addroleservice:
     host: localhost
     paths: "/addroleservice"
+  getProjectByslug:
+    host: localhost
+    paths: "/getProjectByslug"
+    appendQueryString: true
+  getProject:
+    host: localhost
+    paths: "/getProject"
+    appendQueryString: true
+  userstoryservice:
+    host: localhost
+    paths: "/createUserstory"
+  taskservice:
+    host: localhost
+    paths: "/createTask"
+  updateuserstory:
+    host: localhost
+    paths: "/updateUserstory"
+  getuserstoriesdetails:
+    host: localhost 
+    paths: "/getAllUserStoryDetails"
+  memberservice:
+    host: localhost
+    paths: "/createMember"
+  getMembers:
+    host: localhost
+    paths: "/getMembers"
+  deleteMembers:
+    host: localhost
+    paths: "/deleteMember/:id"
+
+  sprintservice:
+    host: localhost
+    paths: "/sprints" 
+  sprintByID:
+    host: localhost  
+    paths: "/sprintByID/:sprintId"
+  createSprint:
+    host: localhost
+    paths: "/createSprint"
+  editSprint:
+    host: localhost  
+    paths: "/editSprint/:sprintId"
+  deleteSprint:
+    host: localhost
+    paths: "/deleteSprint/:sprintId"
+  sprintByName:
+    host: localhost
+    paths: "/sprintByName"
+  editSprintByName:
+    host: localhost
+    paths: "/editSprintByName"
+  deleteSprintByName:
+    host: localhost
+    paths: "/deleteSprintByName"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -25,6 +79,14 @@ serviceEndpoints:
     url: "http://projectservice:3002"
   addroleservice:
     url: "http://addroleservice:3008"
+  userstoryservice:
+    url: "http://userstoryservice:3003"
+  taskservice:
+    url: "http://taskservice:3005"
+  memberservice:
+    url: "http://memberservice:3004"
+  sprintservice:
+    url: "http://sprintservice:3010"
 policies:
   - basic-auth
   - cors
@@ -59,6 +121,8 @@ pipelines:
   projectPipeline:
     apiEndpoints:
       - projectservice
+      - getProjectByslug
+      - getProject
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -67,13 +131,59 @@ pipelines:
               serviceEndpoint: projectservice
               changeOrigin: true
 
-projectPipeline:
+  projectPipeline:
     apiEndpoints:
       - addroleservice
+  userstoryPipeline:
+    apiEndpoints:
+      - userstoryservice
+      - updateuserstory
+      - getuserstoriesdetails
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
       - proxy:
           - action:
+              serviceEndpoint: userstoryservice
+              changeOrigin: true
               serviceEndpoint: addroleservice
               changeOrigin: true
+  taskPipeline:
+    apiEndpoints:
+      - taskservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: taskservice
+              changeOrigin: true
+  memberPipeline:
+    apiEndpoints:
+      - memberservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: memberservice
+              changeOrigin: true      
+
+  sprintPipeline:
+    apiEndpoints:
+      - sprintservice
+      - sprintByID
+      - createSprint
+      - editSprint
+      - deleteSprint
+      - sprintByName
+      - editSprintByName
+      - deleteSprintByName
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: sprintservice
+              changeOrigin: true              
+
