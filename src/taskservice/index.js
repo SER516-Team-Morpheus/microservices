@@ -2,11 +2,10 @@ const express = require('express')
 // const { createTask } = require("./logic");
 // const { getUserStoryDetails } = require("./logic");
 const {
-  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails
+  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask
 } = require('./logic')
 
 const app = express()
-const port = 3005
 
 app.use(express.json())
 
@@ -71,6 +70,7 @@ app.post('/updateTask', async (req, res) => {
       closed: statusId + 3,
       done: statusId + 4,
       'needs info': statusId + 5
+
     }
     parameters.status = status[req.body.status.toLowerCase()]
   }
@@ -90,6 +90,30 @@ app.post('/updateTask', async (req, res) => {
   return res.status(201).send(taskUpdateData)
 })
 
+app.delete('/deleteTask', async (req, res) => {
+  const {
+    username, password, projectname, taskname
+  } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+  const taskDetails = await getTaskDetails(token, slugName, taskname)
+  if (!taskDetails.success) {
+    return res.status(500).send({
+      taskDetails
+    })
+  }
+  const taskId = taskDetails.parameters.id
+
+  const taskDeleteData = await deleteTask(token, taskId)
+  if (!taskDeleteData.success) {
+    return res.status(500).send({
+      taskDeleteData
+    })
+  }
+  return res.status(201).send(taskDeleteData)
+})
+
+const port = 3005
 // Start the server
 app.listen(port, () => {
   console.log(`Task microservice running at http://localhost:${port}`)

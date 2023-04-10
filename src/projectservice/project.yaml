@@ -50,6 +50,9 @@ paths:
                         description:
                           type: string
                           example: description of the project
+                        id:
+                          type: number
+                          example: 720797  
         "404":
           description: Error response from the API
           content:
