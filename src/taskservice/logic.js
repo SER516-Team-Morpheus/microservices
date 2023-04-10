@@ -98,7 +98,19 @@ async function getTaskDetails (token, slugName, taskname) {
         parameters.id = response.data[i].id
         parameters.user_story = response.data[i].user_story
         parameters.version = response.data[i].version
-        parameters.status_id = response.data[i].status
+        if (response.data[i].status_extra_info.name.toLowerCase() === 'new') {
+          parameters.status_id = response.data[i].status
+        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'in progress') {
+          parameters.status_id = response.data[i].status - 1
+        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'ready for test') {
+          parameters.status_id = response.data[i].status - 2
+        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'closed') {
+          parameters.status_id = response.data[i].status - 3
+        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'needs info') {
+          parameters.status_id = response.data[i].status - 4
+        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'done') {
+          parameters.status_id = response.data[i].status - 5
+        }
       }
     }
     if (parameters.id) {
@@ -140,10 +152,34 @@ async function updateTaskDetails (token, taskId, parameters) {
   }
 }
 
+async function deleteTask (token, taskId) {
+  try {
+    const TASK_DELETE_API_URL = `${TASK_API_URL}/${taskId}`
+    const response = await axios.delete(TASK_DELETE_API_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    // eslint-disable-next-line eqeqeq
+    if (response.status == 204) {
+      return {
+        success: true,
+        message: `Task with id ${taskId} successfully deleted`,
+        taskId
+      }
+    }
+    return {
+      success: false,
+      message: 'Something went wrong while deleting task'
+    }
+  } catch (error) {
+    return { success: false, message: 'Error deleting the task' }
+  }
+}
+
 module.exports = {
   createTask,
   getToken,
   getUserStoryDetails,
   getTaskDetails,
-  updateTaskDetails
+  updateTaskDetails,
+  deleteTask
 }

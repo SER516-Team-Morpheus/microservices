@@ -27,6 +27,9 @@ apiEndpoints:
   taskservice:
     host: localhost
     paths: "/createTask"
+  deleteTask:
+    host: localhost
+    paths: "/deleteTask"
   updateuserstory:
     host: localhost
     paths: "/updateUserstory"
@@ -46,6 +49,9 @@ apiEndpoints:
   deleteMembers:
     host: localhost
     paths: "/deleteMember/:id"
+  editMemberRole:
+    host: localhost
+    paths: "/editMemberRole"  
 
   sprintservice:
     host: localhost
@@ -159,6 +165,7 @@ pipelines:
   taskPipeline:
     apiEndpoints:
       - taskservice
+      - deleteTask
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -170,6 +177,9 @@ pipelines:
   memberPipeline:
     apiEndpoints:
       - memberservice
+      - getMembers
+      - deleteMembers
+      - editMemberRole
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
