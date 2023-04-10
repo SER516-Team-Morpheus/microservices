@@ -14,7 +14,7 @@ describe('Project Microservice', () => {
           username: 'SERtestuser',
           password: 'testuser',
           name: projectName,
-          description: 'testProject',
+          description: 'testProject'
         })
       expect(response.status).toBe(201)
       expect(response.body.success).toBe(true)
