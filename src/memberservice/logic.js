@@ -1,9 +1,9 @@
 const axios = require('axios')
 require('dotenv').config({ path: '../.env' })
 
-const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships`
+const MEMBER_API_URL = `https://api.taiga.io/api/v1/memberships`
 
-const AUTH_API_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
+const AUTH_API_URL = `https://api.taiga.io/api/v1/auth`
 
 // Function to get the roles
 async function getRoleId (username, password, projectId) {
@@ -13,7 +13,7 @@ async function getRoleId (username, password, projectId) {
     password
   })
   const authToken = response1.data.auth_token
-  const ROLES_API_URL = `${process.env.TAIGA_API_BASE_URL}/roles?project=${projectId}`
+  const ROLES_API_URL = `https://api.taiga.io/api/v1/roles?project=${projectId}`
   try {
     const response = await axios.get(ROLES_API_URL, {
       headers: { Authorization: `Bearer ${authToken}` }
@@ -76,7 +76,7 @@ async function deleteMember (username, password, memberId) {
     password
   })
   const token = response1.data.auth_token
-  const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships/${memberId}`
+  const MEMBER_API_URL = `https://api.taiga.io/api/v1/memberships/${memberId}`
   try {
     const response = await axios.delete(
       MEMBER_API_URL,
@@ -101,7 +101,7 @@ async function updateMember (username, password, roleId, memberId) {
     password
   })
   const authToken = response1.data.auth_token
-  const MEMBER_API_URL = `${process.env.TAIGA_API_BASE_URL}/memberships/${memberId}`
+  const MEMBER_API_URL = `https://api.taiga.io/api/v1/memberships/${memberId}`
   try {
     const response = await axios.patch(
       MEMBER_API_URL,
