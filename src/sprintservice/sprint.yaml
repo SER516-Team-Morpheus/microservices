@@ -357,7 +357,7 @@ paths:
         - sprint microservice
 
   /editSprint:
-    post:
+    patch:
       summary: Edit Sprint.
       description: Edit a sprint by providing the username, password, sprint name, projectID, and patch object in the request body..
       requestBody:
@@ -473,7 +473,7 @@ paths:
         - sprint microservice
 
   /deleteSprint:
-    post:
+    delete:
       summary: Delete Sprint.
       description: Delete a sprint by providing the username, password, sprint name, projectID in the request body..
       requestBody:
