@@ -33,6 +33,10 @@ apiEndpoints:
   getuserstoriesdetails:
     host: localhost 
     paths: "/getAllUserStoryDetails"
+  epicservice:
+    host: localhost
+    paths: "/createEpic"
+
   memberservice:
     host: localhost
     paths: "/createMember"
@@ -77,6 +81,8 @@ serviceEndpoints:
     url: "http://projectservice:3002"
   userstoryservice:
     url: "http://userstoryservice:3003"
+  epicservice:
+    url: "http://epicservice:3006"
   taskservice:
     url: "http://taskservice:3005"
   memberservice:
@@ -139,6 +145,17 @@ pipelines:
           - action:
               serviceEndpoint: userstoryservice
               changeOrigin: true
+  epicPipeline:
+    apiEndpoints:
+      - epicSerice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: epicservice
+              changeOrigin: true
+                            
   taskPipeline:
     apiEndpoints:
       - taskservice
@@ -149,6 +166,7 @@ pipelines:
           - action:
               serviceEndpoint: taskservice
               changeOrigin: true
+
   memberPipeline:
     apiEndpoints:
       - memberservice
