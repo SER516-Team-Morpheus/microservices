@@ -40,9 +40,9 @@ describe('Member Microservice', () => {
       const response = await request(app)
         .get('/getMembers')
         .set('Accept', 'application/json')
-        .send({
-          username: 'sambhavv14asu',
-          password: 'Wisdommarrt_01',
+        .query({
+          username: 'SERtestuser',
+          password: 'testuser',
           projectId: 720797
         })
       expect(response.status).toBe(201)
@@ -52,7 +52,7 @@ describe('Member Microservice', () => {
       const response = await request(app)
         .get('/getMembers')
         .set('Accept', 'application/json')
-        .send({
+        .query({
           username: 'sambhavv14asu',
           password: 'Wisdommarrt_01',
           projectId: 720

@@ -33,7 +33,7 @@ app.post('/createMember', async (req, res) => {
 
 // Endpoint for getting  all members details
 app.get('/getMembers', async (req, res) => {
-  const { username, password, projectId } = req.body
+  const { username, password, projectId } = req.query
   const memberData = await getMembers(username, password, projectId)
   if (memberData.success) {
     const result = memberData.data.map(member => ({
