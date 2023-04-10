@@ -118,7 +118,7 @@ describe('Delete Sprints', () => {
   describe('DELETE /deleteSprintByName', () => {
     it('should return 201 and acknowledgement if sprint is successfully deleted', async () => {
       const response = await request(app)
-        .delete('/deleteSprintByName')
+        .post('/deleteSprintByName')
         .send({ username, password, sprintName: patch.name, projectID })
 
       expect(response.status).toBe(201)
@@ -129,7 +129,7 @@ describe('Delete Sprints', () => {
 
     it('should return 500 if there is an error deleting the sprint', async () => {
       const response = await request(app)
-        .delete('/deleteSprintByName')
+        .post('/deleteSprintByName')
         .send({ username, password, sprintname, projectID })
 
       expect(response.status).toBe(500)

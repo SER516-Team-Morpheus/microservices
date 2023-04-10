@@ -115,7 +115,7 @@ app.patch('/editSprintByName', async (req, res) => {
   }
 })
 
-app.delete('/deleteSprintByName', async (req, res) => {
+app.post('/deleteSprintByName', async (req, res) => {
   let token = req.body.token
   if (!token) {
     const { username, password } = req.body

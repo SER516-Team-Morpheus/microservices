@@ -17,27 +17,23 @@ paths:
       description: List the sprints objects under a specific project.
       parameters:
         - name: username
-          in: body
+          in: query
           required: true
           description: Username of the Taiga account
           schema:
             type: string
         - name: password
-          in: body
+          in: query
           required: true
           description: Password of the Taiga account
           schema:
             type: string
         - name: projectID
-          in: body
+          in: query
           required: true
           description: ProjectID of the project
           schema:
             type: integer
-      required:
-        - username
-        - password
-        - projectID
       responses:
         "200":
           description: OK
@@ -127,34 +123,29 @@ paths:
       description: Get one sprint by name under a specific project.
       parameters:
         - name: username
-          in: body
+          in: query
           required: true
           description: Username of the Taiga account
           schema:
             type: string
         - name: password
-          in: body
+          in: query
           required: true
           description: Password of the Taiga account
           schema:
             type: string
         - name: sprintName
-          in: body
+          in: query
           required: true
           description: sprint name 
           schema:
             type: string
         - name: projectID
-          in: body
+          in: query
           required: true
           description: ProjectID of the project
           schema:
             type: integer
-      required:
-        - username
-        - password
-        - sprintName
-        - projectID
       responses:
         "200":
           description: OK
@@ -245,19 +236,19 @@ paths:
       description: Create Sprint data by providing the username, password, and projectID in the request body. 
       parameters:
         - name: username
-          in: body
+          in: query
           required: true
           description: Taiga username
           schema:
             type: string
         - name: password
-          in: body
+          in: query
           required: true
           description: Taiga password
           schema:
             type: string
         - name: sprint
-          in: body
+          in: query
           required: true
           description: sprint object
           schema:
@@ -277,10 +268,6 @@ paths:
               project:
                 type: integer
                 example: 5465849
-      required:
-        - username
-        - password
-        - sprint
       responses:
         "201":
           description: Created
@@ -290,58 +277,58 @@ paths:
                 type: object
                 properties:
                   project:
-            type: integer
-            example: 722202
-          project_extra_info:
-            type: object
-            example: { "key": "value" }
-          id:
-            type: integer
-            example: 345482
-          name:
-            type: string
-            example: testsprint_2867362
-          slug:
-            type: string
-            example: testsprint_2867362
-          owner:
-            type: integer
-            example: 560843
-          estimated_start:
-            type: string
-            format: date
-            example: '2023-05-25'
-          estimated_finish:
-            type: string
-            format: date
-            example: '2023-05-29'
-          created_date:
-            type: string
-            format: date-time
-            example: '2023-04-10T20:32:26.637Z'
-          modified_date:
-            type: string
-            format: date-time
-            example: '2023-04-10T20:32:26.645Z'
-          closed:
-            type: boolean
-            example: false
-          disponibility:
-            type: integer
-            example: 0
-          order:
-            type: integer
-            example: 1
-          user_stories:
-            type: array
-            items: {}
-            example: []
-          total_points:
-            type: integer
-            example: null
-          closed_points:
-            type: integer
-            example: null
+                    type: integer
+                    example: 722202
+                  project_extra_info:
+                    type: object
+                    example: { "key": "value" }
+                  id:
+                    type: integer
+                    example: 345482
+                  name:
+                    type: string
+                    example: testsprint_2867362
+                  slug:
+                    type: string
+                    example: testsprint_2867362
+                  owner:
+                    type: integer
+                    example: 560843
+                  estimated_start:
+                    type: string
+                    format: date
+                    example: '2023-05-25'
+                  estimated_finish:
+                    type: string
+                    format: date
+                    example: '2023-05-29'
+                  created_date:
+                    type: string
+                    format: date-time
+                    example: '2023-04-10T20:32:26.637Z'
+                  modified_date:
+                    type: string
+                    format: date-time
+                    example: '2023-04-10T20:32:26.645Z'
+                  closed:
+                    type: boolean
+                    example: false
+                  disponibility:
+                    type: integer
+                    example: 0
+                  order:
+                    type: integer
+                    example: 1
+                  user_stories:
+                    type: array
+                    items: {}
+                    example: []
+                  total_points:
+                    type: integer
+                    example: null
+                  closed_points:
+                    type: integer
+                    example: null
 
         "500":
           description: Error
@@ -406,58 +393,58 @@ paths:
                 type: object
                 properties:
                   project:
-            type: integer
-            example: 722202
-          project_extra_info:
-            type: object
-            example: { "key": "value" }
-          id:
-            type: integer
-            example: 345482
-          name:
-            type: string
-            example: new edited sprint name
-          slug:
-            type: string
-            example: testsprint_2867362
-          owner:
-            type: integer
-            example: 560843
-          estimated_start:
-            type: string
-            format: date
-            example: '2023-05-25'
-          estimated_finish:
-            type: string
-            format: date
-            example: '2023-05-29'
-          created_date:
-            type: string
-            format: date-time
-            example: '2023-04-10T20:32:26.637Z'
-          modified_date:
-            type: string
-            format: date-time
-            example: '2023-04-10T20:32:26.645Z'
-          closed:
-            type: boolean
-            example: false
-          disponibility:
-            type: integer
-            example: 0
-          order:
-            type: integer
-            example: 1
-          user_stories:
-            type: array
-            items: {}
-            example: []
-          total_points:
-            type: integer
-            example: null
-          closed_points:
-            type: integer
-            example: null
+                    type: integer
+                    example: 722202
+                  project_extra_info:
+                    type: object
+                    example: { "key": "value" }
+                  id:
+                    type: integer
+                    example: 345482
+                  name:
+                    type: string
+                    example: new edited sprint name
+                  slug:
+                    type: string
+                    example: testsprint_2867362
+                  owner:
+                    type: integer
+                    example: 560843
+                  estimated_start:
+                    type: string
+                    format: date
+                    example: '2023-05-25'
+                  estimated_finish:
+                    type: string
+                    format: date
+                    example: '2023-05-29'
+                  created_date:
+                    type: string
+                    format: date-time
+                    example: '2023-04-10T20:32:26.637Z'
+                  modified_date:
+                    type: string
+                    format: date-time
+                    example: '2023-04-10T20:32:26.645Z'
+                  closed:
+                    type: boolean
+                    example: false
+                  disponibility:
+                    type: integer
+                    example: 0
+                  order:
+                    type: integer
+                    example: 1
+                  user_stories:
+                    type: array
+                    items: {}
+                    example: []
+                  total_points:
+                    type: integer
+                    example: null
+                  closed_points:
+                    type: integer
+                    example: null
 
         "500":
           description: Error
@@ -473,7 +460,7 @@ paths:
         - sprint microservice
 
   /deleteSprint:
-    delete:
+    post:
       summary: Delete Sprint.
       description: Delete a sprint by providing the username, password, sprint name, projectID in the request body..
       requestBody:
@@ -508,15 +495,15 @@ paths:
                 
       responses:
         "201":
-          description: 
+          description: Created
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   sprintID:
-                  type: integer
-                  example: 345491
+                    type: integer
+                    example: 345491
                   status:
                     type: string
                     example: Deleted Successfully
@@ -525,15 +512,15 @@ paths:
                     example: 204
                 
 
-              "500":
-                description: Error
-                content:
-                  application/json:
-                    schema:
-                      type: object
-                      properties:
-                        error:
-                          type: string
-                          example: No Sprint By This Name - Non Existin Sprint
-            tags:
-              - sprint microservice
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No Sprint By This Name - Non Existin Sprint
+      tags:
+        - sprint microservice
