@@ -140,10 +140,34 @@ async function updateTaskDetails (token, taskId, parameters) {
   }
 }
 
+async function deleteTask (token, taskId) {
+  try {
+    const TASK_DELETE_API_URL = `${TASK_API_URL}/${taskId}`
+    const response = await axios.delete(TASK_DELETE_API_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    // eslint-disable-next-line eqeqeq
+    if (response.status == 204) {
+      return {
+        success: true,
+        message: `Task with id ${taskId} successfully deleted`,
+        taskId
+      }
+    }
+    return {
+      success: false,
+      message: 'Something went wrong while deleting task'
+    }
+  } catch (error) {
+    return { success: false, message: 'Error deleting the task' }
+  }
+}
+
 module.exports = {
   createTask,
   getToken,
   getUserStoryDetails,
   getTaskDetails,
-  updateTaskDetails
+  updateTaskDetails,
+  deleteTask
 }

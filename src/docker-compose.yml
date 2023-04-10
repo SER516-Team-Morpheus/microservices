@@ -34,6 +34,14 @@ services:
       - .env
     networks:
       - my-network
+  epicservice:
+    build: ./epicservice
+    ports:
+      - "3006:3006"
+    env_file:
+      - .env
+    networks:
+      - my-network
   memberservice:
     build: ./memberservice
     ports:

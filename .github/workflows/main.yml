@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/addroleservice'] 
+        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/epicservice', 'src/memberservice', 'src/addroleservice'] 
 
     steps:
       - uses: actions/checkout@v3
