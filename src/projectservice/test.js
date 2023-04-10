@@ -31,7 +31,7 @@ describe('Project Microservice', () => {
           username: 'SERtestuser',
           password: 'tetuser',
           name: 'testProject',
-          description: 'testProject',
+          description: 'testProject'
         })
       expect(response.status).toBe(500)
       expect(response.body.success).toBe(false)
@@ -48,7 +48,7 @@ describe('Project Microservice', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          name: 'testProject',
+          name: 'testProject'
         })
       expect(response.status).toBe(200)
       expect(response.body.success).toBe(true)
@@ -64,7 +64,7 @@ describe('Project Microservice', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          name: 'gibberish',
+          name: 'gibberish'
         })
       expect(response.status).toBe(404)
       expect(response.body.success).toBe(false)
@@ -80,7 +80,7 @@ describe('Project Microservice', () => {
         .set('Accept', 'application/json')
         .query({
           username: 'SERtestuser',
-          password: 'testuser',
+          password: 'testuser'
         })
       expect(response.status).toBe(200)
       expect(response.body.success).toBe(true)
@@ -92,7 +92,7 @@ describe('Project Microservice', () => {
         .set('Accept', 'application/json')
         .query({
           username: 'SERtestuser',
-          password: 'testuse',
+          password: 'testuse'
         })
       expect(response.status).toBe(404)
       expect(response.body.success).toBe(false)

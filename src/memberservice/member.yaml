@@ -1,0 +1,268 @@
+openapi: 3.0.0
+info:
+  title: Member Microservice
+  version: 1.0.0
+  description: Documentation for Member Microservice.
+  contact:
+    name: Team Morpheus
+    email: skapoo26@asu.edu
+servers:
+  - url: http://localhost:3004
+  - url: http://localhost:8080
+
+paths:
+  /getMembers:
+    get:
+      summary: List all the members under a specific project.
+      description: List the member id, full name, email and role under a specific project.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+        - name: projectId
+          in: query
+          required: true
+          description: ProjectId of project in the Taiga account
+          schema:
+            type: number            
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          example: 1446686
+                        email:
+                          type: string
+                          example: skapoo26@asu.edu
+                        full_name:
+                          type: string
+                          example: Sambhav Kapoor
+                        role:
+                          type: string
+                          example: Front    
+        "500":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error getting roles
+
+      tags:
+        - member microservice
+
+  /createMember:
+    post:
+      summary: Create new member in a project.
+      description: Create a new member by providing the username, password, member name, and project id in the request body..
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                member:
+                  type: string
+                  description: Member username
+                  example: uniqueASU
+                projectId:
+                  type: number
+                  description: Project Id in the taiga account
+                  example: 720797
+              required:
+                - username
+                - password
+                - member
+                - projectId
+      responses:
+        "201":
+          description: Member successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  memberId:
+                    type: number
+                    example: 715454
+        "500":
+          description: Error creating project.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error creating member
+      tags:
+        - member microservice
+
+  /editMemberRole':
+    patch:
+      summary: Assign a new role to the member.
+      description: Assign role to a member by passing usrname, password, roleId and memberId.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                roleId:
+                  type: number
+                  description: Role ID
+                  example: 4371743
+                memberId:
+                  type: number
+                  description: Member Id
+                  example: 1446686
+                
+              required:
+                - username
+                - password
+                - roleId
+                - memberId
+      responses:
+        "201":
+          description: Member role successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      memberId:
+                        type: number
+                        example: 1446686
+                      roleId:
+                        type: number
+                        example: 4371743
+                      memberName:
+                        type: string
+                        example: Heet Punjawat
+                      roleName:
+                        type: string
+                        example: Front 
+        "500":
+          description: Error editing member role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error editing member role
+      tags:
+        - member microservice
+
+  /deleteMember/{id}:
+    delete:
+      summary: Delete a member
+      description: Deletes a member with the specified ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the member to delete
+          required: true
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+      responses:
+        "201":
+          description: "Member successfully deleted"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                default: true
+              message:
+                type: "string"
+                default: "Member successfully deleted"
+        "500":
+          description: "Error deleting member"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                default: false
+              message:
+                type: "string"
+                default: "Error deleting member"        
+      tags:
+        - member microservice     
