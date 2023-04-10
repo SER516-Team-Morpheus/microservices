@@ -234,40 +234,28 @@ paths:
     post:
       summary: create sprint 
       description: Create Sprint data by providing the username, password, and projectID in the request body. 
-      parameters:
-        - name: username
-          in: query
-          required: true
-          description: Taiga username
-          schema:
-            type: string
-        - name: password
-          in: query
-          required: true
-          description: Taiga password
-          schema:
-            type: string
-        - name: sprint
-          in: query
-          required: true
-          description: sprint object
-          schema:
-            type: object
-            example: 
-              estimated_start:
-                type: string
-                format: date
-                example: '2023-05-25'
-              estimated_finish:
-                type: string
-                format: date
-                example: '2023-05-29'
-              name:
-                type: string
-                example: 'test'
-              project:
-                type: integer
-                example: 5465849
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                sprint :
+                  type: object
+                  example:
+                    estimated_start: '2023-05-25'
+                    estimated_finish: '2023-05-29'
+                    name: 'test'
+                    project: 5465849
       responses:
         "201":
           description: Created
@@ -374,10 +362,9 @@ paths:
                   type: object
                   description: Key Value pair of sprint values to be changed
                   example:
-                    properties:
-                      name:
-                        type: string
-                        example: new sprint
+                  
+                      name: New Sprint Name
+                     
               required:
                 - username
                 - password
