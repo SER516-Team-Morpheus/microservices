@@ -96,7 +96,7 @@ describe('User story Microservices', () => {
           userstoryname: 'test US3',
           tags: ['feature'],
           points: {
-            UX: '1',
+            UX: '2',
             Back: '8',
             Front: '5',
           },
