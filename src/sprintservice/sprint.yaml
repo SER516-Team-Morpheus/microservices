@@ -1,0 +1,539 @@
+openapi: 3.0.0
+info:
+  title: Sprint Microservice
+  version: 1.0.3
+  description: Documentation for Sprint Microservice.
+  contact:
+    name: Team Morpheus
+    email: rdhandhu@asu.edu
+servers:
+  - url: http://localhost:3010
+  - url: http://localhost:8080
+
+paths:
+  /sprints:
+    get:
+      summary: List all the sprints unde a specific project.
+      description: List the sprints objects under a specific project.
+      parameters:
+        - name: username
+          in: body
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: body
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+        - name: projectID
+          in: body
+          required: true
+          description: ProjectID of the project
+          schema:
+            type: integer
+      required:
+        - username
+        - password
+        - projectID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sprints:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        project:
+                          type: integer
+                          example: 722202
+                        project_extra_info:
+                          type: object
+                          example: { "key": "value" }
+                        id:
+                          type: integer
+                          example: 345482
+                        name:
+                          type: string
+                          example: testsprint_2867362
+                        slug:
+                          type: string
+                          example: testsprint_2867362
+                        owner:
+                          type: integer
+                          example: 560843
+                        estimated_start:
+                          type: string
+                          format: date
+                          example: '2023-05-25'
+                        estimated_finish:
+                          type: string
+                          format: date
+                          example: '2023-05-29'
+                        created_date:
+                          type: string
+                          format: date-time
+                          example: '2023-04-10T20:32:26.637Z'
+                        modified_date:
+                          type: string
+                          format: date-time
+                          example: '2023-04-10T20:32:26.645Z'
+                        closed:
+                          type: boolean
+                          example: false
+                        disponibility:
+                          type: integer
+                          example: 0
+                        order:
+                          type: integer
+                          example: 1
+                        user_stories:
+                          type: array
+                          items: {}
+                          example: []
+                        total_points:
+                          type: integer
+                          example: null
+                        closed_points:
+                          type: integer
+                          example: null
+        "500":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: error retriving sprints
+                        
+      tags:
+        - sprint microservice
+    
+  /sprintByName:
+    get:
+      summary: Get one sprint by name.
+      description: Get one sprint by name under a specific project.
+      parameters:
+        - name: username
+          in: body
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: body
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+        - name: sprintName
+          in: body
+          required: true
+          description: sprint name 
+          schema:
+            type: string
+        - name: projectID
+          in: body
+          required: true
+          description: ProjectID of the project
+          schema:
+            type: integer
+      required:
+        - username
+        - password
+        - sprintName
+        - projectID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sprints:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        project:
+                          type: integer
+                          example: 722202
+                        project_extra_info:
+                          type: object
+                          example: { "key": "value" }
+                        id:
+                          type: integer
+                          example: 345482
+                        name:
+                          type: string
+                          example: testsprint_2867362
+                        slug:
+                          type: string
+                          example: testsprint_2867362
+                        owner:
+                          type: integer
+                          example: 560843
+                        estimated_start:
+                          type: string
+                          format: date
+                          example: '2023-05-25'
+                        estimated_finish:
+                          type: string
+                          format: date
+                          example: '2023-05-29'
+                        created_date:
+                          type: string
+                          format: date-time
+                          example: '2023-04-10T20:32:26.637Z'
+                        modified_date:
+                          type: string
+                          format: date-time
+                          example: '2023-04-10T20:32:26.645Z'
+                        closed:
+                          type: boolean
+                          example: false
+                        disponibility:
+                          type: integer
+                          example: 0
+                        order:
+                          type: integer
+                          example: 1
+                        user_stories:
+                          type: array
+                          items: {}
+                          example: []
+                        total_points:
+                          type: integer
+                          example: null
+                        closed_points:
+                          type: integer
+                          example: null
+
+        "500":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: No Sprint By This Name - random_name
+                        
+      tags:
+        - sprint microservice
+
+  /createSprint:
+    post:
+      summary: create sprint 
+      description: Create Sprint data by providing the username, password, and projectID in the request body. 
+      parameters:
+        - name: username
+          in: body
+          required: true
+          description: Taiga username
+          schema:
+            type: string
+        - name: password
+          in: body
+          required: true
+          description: Taiga password
+          schema:
+            type: string
+        - name: sprint
+          in: body
+          required: true
+          description: sprint object
+          schema:
+            type: object
+            example: 
+              estimated_start:
+                type: string
+                format: date
+                example: '2023-05-25'
+              estimated_finish:
+                type: string
+                format: date
+                example: '2023-05-29'
+              name:
+                type: string
+                example: 'test'
+              project:
+                type: integer
+                example: 5465849
+      required:
+        - username
+        - password
+        - sprint
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project:
+            type: integer
+            example: 722202
+          project_extra_info:
+            type: object
+            example: { "key": "value" }
+          id:
+            type: integer
+            example: 345482
+          name:
+            type: string
+            example: testsprint_2867362
+          slug:
+            type: string
+            example: testsprint_2867362
+          owner:
+            type: integer
+            example: 560843
+          estimated_start:
+            type: string
+            format: date
+            example: '2023-05-25'
+          estimated_finish:
+            type: string
+            format: date
+            example: '2023-05-29'
+          created_date:
+            type: string
+            format: date-time
+            example: '2023-04-10T20:32:26.637Z'
+          modified_date:
+            type: string
+            format: date-time
+            example: '2023-04-10T20:32:26.645Z'
+          closed:
+            type: boolean
+            example: false
+          disponibility:
+            type: integer
+            example: 0
+          order:
+            type: integer
+            example: 1
+          user_stories:
+            type: array
+            items: {}
+            example: []
+          total_points:
+            type: integer
+            example: null
+          closed_points:
+            type: integer
+            example: null
+
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error Creating Sprint
+      tags:
+        - sprint microservice
+
+  /editSprint:
+    post:
+      summary: Edit Sprint.
+      description: Edit a sprint by providing the username, password, sprint name, projectID, and patch object in the request body..
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                sprintName:
+                  type: string
+                  description: Project name
+                  example: testProject
+                projectID:
+                  type: integer
+                  description: project ID of project
+                  example: 5656564
+                patch:
+                  type: object
+                  description: Key Value pair of sprint values to be changed
+                  example:
+                    properties:
+                      name:
+                        type: string
+                        example: new sprint
+              required:
+                - username
+                - password
+                - sprintName
+                - projectID
+                - patch
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project:
+            type: integer
+            example: 722202
+          project_extra_info:
+            type: object
+            example: { "key": "value" }
+          id:
+            type: integer
+            example: 345482
+          name:
+            type: string
+            example: new edited sprint name
+          slug:
+            type: string
+            example: testsprint_2867362
+          owner:
+            type: integer
+            example: 560843
+          estimated_start:
+            type: string
+            format: date
+            example: '2023-05-25'
+          estimated_finish:
+            type: string
+            format: date
+            example: '2023-05-29'
+          created_date:
+            type: string
+            format: date-time
+            example: '2023-04-10T20:32:26.637Z'
+          modified_date:
+            type: string
+            format: date-time
+            example: '2023-04-10T20:32:26.645Z'
+          closed:
+            type: boolean
+            example: false
+          disponibility:
+            type: integer
+            example: 0
+          order:
+            type: integer
+            example: 1
+          user_stories:
+            type: array
+            items: {}
+            example: []
+          total_points:
+            type: integer
+            example: null
+          closed_points:
+            type: integer
+            example: null
+
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error editing Sprint
+      tags:
+        - sprint microservice
+
+  /deleteSprint:
+    post:
+      summary: Delete Sprint.
+      description: Delete a sprint by providing the username, password, sprint name, projectID in the request body..
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                sprintName:
+                  type: string
+                  description: Project name
+                  example: testProject
+                projectID:
+                  type: integer
+                  description: project ID of project
+                  example: 5656564
+                
+              required:
+                - username
+                - password
+                - sprintName
+                - projectID
+                
+      responses:
+        "201":
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sprintID:
+                  type: integer
+                  example: 345491
+                  status:
+                    type: string
+                    example: Deleted Successfully
+                  TaigaAPIResponseStatus:
+                    type: integer
+                    example: 204
+                
+
+              "500":
+                description: Error
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        error:
+                          type: string
+                          example: No Sprint By This Name - Non Existin Sprint
+            tags:
+              - sprint microservice
