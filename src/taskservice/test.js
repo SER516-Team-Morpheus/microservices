@@ -24,7 +24,7 @@ describe('Task Microservices', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectname: 'testProject',
+          projectname: 'testProjec',
           userstoryname: 'test US',
           taskname: 'TASK1-TESTCASE'
         })

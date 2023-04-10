@@ -140,7 +140,7 @@ paths:
                     type: string
                     example: Something went wrong while updating userstory or UserStory not found 
       tags:
-        - user story update
+        - user story
   
   /getUserStoryBySlug:
     get:
@@ -200,4 +200,58 @@ paths:
                     type: string
                     example: User Story not found
       tags:
-        - get user story details
+        - user story
+
+  /getUserStory:
+    get:
+      summary: Get UserStory for a project
+      description: Get userstory by providing the username, password, project name in the request query param.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Taiga username
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Taiga password
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          required: true
+          description: Project name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  parameters:
+                    type: object
+                    example: { "id": 4505087,"subject": "test US"}
+
+        "404":
+          description: UserStory not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: User Story not found
+      tags:
+        - user story
