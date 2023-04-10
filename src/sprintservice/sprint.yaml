@@ -116,7 +116,7 @@ paths:
                     example: false
                   error:
                     type: string
-                    example: error retriving sprints
+                    example: Error retriving sprints
                         
       tags:
         - sprint microservice
