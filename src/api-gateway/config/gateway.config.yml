@@ -42,6 +42,9 @@ apiEndpoints:
   deleteMembers:
     host: localhost
     paths: "/deleteMember/:id"
+  editMemberRole:
+    host: localhost
+    paths: "/editMemberRole"  
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -124,6 +127,9 @@ pipelines:
   memberPipeline:
     apiEndpoints:
       - memberservice
+      - getMembers
+      - deleteMembers
+      - editMemberRole
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
