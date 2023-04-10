@@ -4,6 +4,7 @@ require('dotenv').config({ path: '../.env' })
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`
 const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
+const GET_USER_URL = `${process.env.TAIGA_API_BASE_URL}/users`
 
 // Function to get auth token from authenticate api
 async function getToken (username, password) {
@@ -103,7 +104,20 @@ async function updateUserstory (userstoryId, parameters, token) {
   }
 }
 
-// Function to get the projects by slug name
+// Function to get the user name from user id
+async function getUserName (token, assignedTo) {
+  const GET_USER_NAME_URL = GET_USER_URL + '/' + assignedTo
+  try {
+    const response = await axios.get(GET_USER_NAME_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return response.data.full_name
+  } catch (error) {
+    return error
+  }
+}
+
+// Function to get the user story detail
 async function getUserStory (token, projectId) {
   const GET_USER_STORY_URL = USERSTORY_API_URL + '?project=' + projectId
   try {
@@ -113,7 +127,15 @@ async function getUserStory (token, projectId) {
     const newResponse = []
     for (let i = 0; i < response.data.length; i++) {
       const { id, subject } = response.data[i]
-      newResponse.push({ id, subject })
+      const status = response.data[i].status_extra_info.name
+      let assignee = 'none'
+      const assignedTo = response.data[i].assigned_to
+
+      if (assignedTo) {
+        assignee = await getUserName(token, assignedTo)
+      }
+
+      newResponse.push({ id, subject, status, assignee })
     }
     if (newResponse.length) {
       return {
