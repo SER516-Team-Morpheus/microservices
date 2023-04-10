@@ -28,7 +28,7 @@ app.post('/createroles', async (req, res, next) => {
 
   try {
     const role = await logic.createRoles(name, project, order, computable, permissions)
-    res.status(200).json(role)
+    res.status(201).json(role)
   } catch (error) {
     next(error)
   }
@@ -43,7 +43,7 @@ app.patch('/updateroles/:roleId', async (req, res, next) => {
 
   try {
     const role = await logic.updateRole(roleId, name, order, computable, permissions)
-    res.status(200).json(role)
+    res.status(201).json(role)
   } catch (error) {
     next(error)
   }
@@ -55,7 +55,7 @@ app.get('/getroles/:roleId', async (req, res, next) => {
 
   try {
     const role = await logic.getRoleDetails(roleId)
-    res.status(200).json(role)
+    res.status(201).json(role)
   } catch (error) {
     next(error)
   }

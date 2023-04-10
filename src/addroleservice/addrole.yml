@@ -39,7 +39,7 @@ paths:
                 - permissions
                 
       responses:
-        "200":
+        "201":
           description: role created successfully
           content:
             application/json:
@@ -84,7 +84,7 @@ paths:
                 - permissions
                 
       responses:
-        "200":
+        "201":
           description: role update successfully
           content:
             application/json:
