@@ -27,6 +27,9 @@ apiEndpoints:
   taskservice:
     host: localhost
     paths: "/createTask"
+  deleteTask:
+    host: localhost
+    paths: "/deleteTask"
   updateuserstory:
     host: localhost
     paths: "/updateUserstory"
@@ -159,6 +162,7 @@ pipelines:
   taskPipeline:
     apiEndpoints:
       - taskservice
+      - deleteTask
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
