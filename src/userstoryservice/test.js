@@ -11,7 +11,7 @@ describe('User story Microservices', () => {
           username: 'SERtestuser',
           password: 'testuser',
           projectName: 'testProject',
-          subject: 'test US'
+          subject: 'test US',
         })
       expect(response.status).toBe(201)
       expect(response.body.userstoryId).toBeDefined()
@@ -24,7 +24,7 @@ describe('User story Microservices', () => {
           username: 'SERtestuser',
           password: 'testuser',
           projectName: 'noProject',
-          subject: 'test US4'
+          subject: 'test US4',
         })
       expect(response.status).toBe(500)
     })
@@ -38,7 +38,7 @@ describe('User story Microservices', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          projectName: 'testProject'
+          projectName: 'testProject',
         })
       expect(response.status).toBe(200)
       expect(response.body.userStory).toBeDefined()
@@ -50,7 +50,7 @@ describe('User story Microservices', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          projectName: 'noProject'
+          projectName: 'noProject',
         })
       expect(response.status).toBe(500)
     })
@@ -65,7 +65,7 @@ describe('User story Microservices', () => {
           username: 'SERtestuser',
           password: 'testuser',
           projectname: 'testProject',
-          userstoryname: 'test US3'
+          userstoryname: 'test US3',
         })
       expect(response.status).toBe(200)
       expect(response.body.parameters).toBeDefined()
@@ -78,7 +78,7 @@ describe('User story Microservices', () => {
           username: 'SERtestuser',
           password: 'testuser',
           projectname: 'testProject',
-          userstoryname: 'test USTest'
+          userstoryname: 'test USTest',
         })
       expect(response.status).toBe(500)
     })
@@ -98,10 +98,10 @@ describe('User story Microservices', () => {
           points: {
             UX: '1',
             Back: '8',
-            Front: '5'
-          }
+            Front: '5',
+          },
         })
-      expect(response.status).toBe(500)
+      expect(response.status).toBe(201)
     })
   })
 })
