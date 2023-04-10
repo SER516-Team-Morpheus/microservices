@@ -49,6 +49,9 @@ apiEndpoints:
   deleteMembers:
     host: localhost
     paths: "/deleteMember/:id"
+  editMemberRole:
+    host: localhost
+    paths: "/editMemberRole"  
 
   sprintservice:
     host: localhost
@@ -174,6 +177,9 @@ pipelines:
   memberPipeline:
     apiEndpoints:
       - memberservice
+      - getMembers
+      - deleteMembers
+      - editMemberRole
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
