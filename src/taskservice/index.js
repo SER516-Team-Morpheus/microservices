@@ -59,17 +59,19 @@ app.post('/updateTask', async (req, res) => {
       taskDetails
     })
   }
+  const statusId = taskDetails.parameters.status_id
 
   const taskId = taskDetails.parameters.id
   const parameters = {}
   if (req.body.status !== undefined) {
     const status = {
-      new: 3664464,
-      'in progress': 3664465,
-      'ready for test': 3664466,
-      closed: 3664467,
-      done: 3664734,
-      'needs info': 3664468
+      new: statusId,
+      'in progress': statusId + 1,
+      'ready for test': statusId + 2,
+      closed: statusId + 3,
+      done: statusId + 4,
+      'needs info': statusId + 5
+
     }
     parameters.status = status[req.body.status.toLowerCase()]
   }
