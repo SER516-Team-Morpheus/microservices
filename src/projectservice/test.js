@@ -12,13 +12,16 @@ const patch = { 'name': 'RenamebyAPI' }
 describe('Project Microservice', () => {
   describe('POST /createProject', () => {
     it('should return a 201 response', async () => {
+      const baseName = 'testProject' // base project name
+      const randomSuffix = Math.floor(Math.random() * 10000) // generate a random number
+      const projectName = `${baseName}_${randomSuffix}`
       const response = await request(app)
         .post('/createProject')
         .set('Accept', 'application/json')
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          name: 'newtestProject',
+          name: projectName,
           description: 'testProject'
         })
       expect(response.status).toBe(201)

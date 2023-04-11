@@ -131,3 +131,92 @@ paths:
                     type: string
       tags:
         - task service
+    
+  /getTaskDetails:
+    post:
+      summary: Get task details 
+      description: Get task details based on userstory name and task name 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                projectname:
+                  type: string
+                userstoryname:
+                  type: string
+                taskname:
+                  type: string
+              required:
+                - username
+                - password
+                - projectname
+                - userstoryname
+                - taskname
+                
+      responses:
+        "200":
+          description: Task details successfully fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  parameters:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      taskname:
+                        type: string
+                      user_story:
+                        type: number
+                      version:
+                        type: number
+                      user_story_extra_info:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          ref:
+                            type: number
+                          subject:
+                            type: string
+                          epics:
+                            type: string
+                      status_extra_info:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          color:
+                            type: string
+                          is_closed:
+                            type: boolean
+                      assigned_to:
+                        type: string
+                      status_id: 
+                        type: number
+        "500":
+          description: Issue in getting task details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      tags:
+        - task service

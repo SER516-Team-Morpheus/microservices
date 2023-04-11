@@ -5,7 +5,8 @@ const {
   createUserstory,
   updateUserstory,
   getUserStoryDetails,
-  getUserStory
+  getUserStory,
+  getPointValues
 } = require('./logic')
 
 const app = express()
@@ -95,6 +96,8 @@ app.patch('/updateUserstory', async (req, res) => {
   } else {
     const userstoryId = userstoryDetails.parameters.id
     const version = userstoryDetails.parameters.version
+    const projectId = userstoryDetails.parameters.projectId
+    // const point = userstoryDetails.parameters.point
     const parameters = {}
     if (req.body.description !== undefined) {
       parameters.description = req.body.description
@@ -111,10 +114,10 @@ app.patch('/updateUserstory', async (req, res) => {
     const points = {}
     if (req.body.points !== undefined) {
       const roles = {
-        UX: 4339586,
-        Design: 4339587,
-        Front: 4339588,
-        Back: 4339589
+        UX: userstoryDetails.parameters.point,
+        Design: userstoryDetails.parameters.point + 1,
+        Front: userstoryDetails.parameters.point + 2,
+        Back: userstoryDetails.parameters.point + 3
       }
       const userpoint = {
         '?': 0,
@@ -131,11 +134,13 @@ app.patch('/updateUserstory', async (req, res) => {
         40: 11
       }
 
+      const pointDetails = await getPointValues(token, projectId)
+      const point = pointDetails.point_value
       for (const key in req.body.points) {
         const value = req.body.points[key]
         const newKey = roles[key]
         const newValue = userpoint[value]
-        points[newKey] = 8615602 + newValue
+        points[newKey] = point + newValue
       }
 
       parameters.points = points

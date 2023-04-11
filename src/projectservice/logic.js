@@ -55,8 +55,8 @@ async function getProjectList (token, memberId) {
 
     const newResponse = []
     for (let i = 0; i < response.data.length; i++) {
-      const { name, description } = response.data[i]
-      newResponse.push({ name, description })
+      const { name, description, id } = response.data[i]
+      newResponse.push({ name, description, id })
     }
 
     if (newResponse.length) {

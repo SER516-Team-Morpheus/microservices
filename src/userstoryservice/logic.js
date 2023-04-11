@@ -4,6 +4,8 @@ require('dotenv').config({ path: '../.env' })
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`
 const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
+const POINTS_API_URL = `${process.env.TAIGA_API_BASE_URL}/points`
+const GET_USER_URL = `${process.env.TAIGA_API_BASE_URL}/users`
 
 // Function to get auth token from authenticate api
 async function getToken (username, password) {
@@ -103,7 +105,20 @@ async function updateUserstory (userstoryId, parameters, token) {
   }
 }
 
-// Function to get the projects by slug name
+// Function to get the user name from user id
+async function getUserName (token, assignedTo) {
+  const GET_USER_NAME_URL = GET_USER_URL + '/' + assignedTo
+  try {
+    const response = await axios.get(GET_USER_NAME_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return response.data.full_name
+  } catch (error) {
+    return error
+  }
+}
+
+// Function to get the user story detail
 async function getUserStory (token, projectId) {
   const GET_USER_STORY_URL = USERSTORY_API_URL + '?project=' + projectId
   try {
@@ -113,7 +128,15 @@ async function getUserStory (token, projectId) {
     const newResponse = []
     for (let i = 0; i < response.data.length; i++) {
       const { id, subject } = response.data[i]
-      newResponse.push({ id, subject })
+      const status = response.data[i].status_extra_info.name
+      let assignee = 'none'
+      const assignedTo = response.data[i].assigned_to
+
+      if (assignedTo) {
+        assignee = await getUserName(token, assignedTo)
+      }
+
+      newResponse.push({ id, subject, status, assignee })
     }
     if (newResponse.length) {
       return {
@@ -145,6 +168,9 @@ async function getUserStoryDetails (token, slugName, userstoryName) {
         parameters.id = response.data[i].id
         parameters.version = response.data[i].version
         parameters.ref = response.data[i].ref
+        parameters.projectId = response.data[i].project
+        const points = response.data[i].points
+        parameters.point = Math.min(...Object.keys(points).map(Number))
       }
     }
     if (parameters.id) {
@@ -164,11 +190,35 @@ async function getUserStoryDetails (token, slugName, userstoryName) {
   }
 }
 
+async function getPointValues (token, projectId) {
+  try {
+    const PROJECT_POINTS_DETAILS_URL = POINTS_API_URL + '?project=' + projectId
+    const response = await axios.get(PROJECT_POINTS_DETAILS_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (response.data.length > 0) {
+      let pointValue = 0
+      for (let i = 0; i < response.data.length; i += 1) {
+        if (response.data[i].order === 1) {
+          pointValue = response.data[i].id
+          break
+        }
+      }
+      return { success: true, message: 'found all the details', point_value: pointValue }
+    } else {
+      return { success: false, message: 'Not project found with given details' }
+    }
+  } catch (error) {
+    return { success: false, message: 'Not able to fetch points' }
+  }
+}
+
 module.exports = {
   createUserstory,
   updateUserstory,
   getToken,
   getUserStoryDetails,
   getProjectBySlug,
-  getUserStory
+  getUserStory,
+  getPointValues
 }

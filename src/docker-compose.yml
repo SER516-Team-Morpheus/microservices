@@ -16,6 +16,10 @@ services:
       - .env
     networks:
       - my-network
+  roleservice:
+    build: ./roleservice
+    ports:
+      - "3008:3008"
   userstoryservice:
     build: ./userstoryservice
     ports:
@@ -30,6 +34,14 @@ services:
       - .env
     networks:
       - my-network
+  epicservice:
+    build: ./epicservice
+    ports:
+      - "3006:3006"
+    env_file:
+      - .env
+    networks:
+      - my-network
   memberservice:
     build: ./memberservice
     ports:
@@ -37,7 +49,15 @@ services:
     env_file:
       - .env    
     networks:
-      - my-network    
+      - my-network   
+  sprintservice:
+    build: ./sprintservice
+    ports:
+      - "3010:3010"
+    env_file:
+      - .env    
+    networks:
+      - my-network   
   api-gateway:
     build: ./api-gateway
     ports:
@@ -52,6 +72,7 @@ services:
       - userstoryservice
       - memberservice
       - taskservice
+      - roleservice
 networks:
   my-network:
 

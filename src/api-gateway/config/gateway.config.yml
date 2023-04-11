@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  roleservice:
+    host: localhost
+    paths: "/roleservice"
   getProjectByslug:
     host: localhost
     paths: "/getProjectByslug"
@@ -27,12 +30,19 @@ apiEndpoints:
   taskservice:
     host: localhost
     paths: "/createTask"
+  deleteTask:
+    host: localhost
+    paths: "/deleteTask"
   updateuserstory:
     host: localhost
     paths: "/updateUserstory"
   getuserstoriesdetails:
     host: localhost 
     paths: "/getAllUserStoryDetails"
+  epicservice:
+    host: localhost
+    paths: "/createEpic"
+
   memberservice:
     host: localhost
     paths: "/createMember"
@@ -42,6 +52,34 @@ apiEndpoints:
   deleteMembers:
     host: localhost
     paths: "/deleteMember/:id"
+  editMemberRole:
+    host: localhost
+    paths: "/editMemberRole"  
+
+  sprintservice:
+    host: localhost
+    paths: "/sprints" 
+  sprintByID:
+    host: localhost  
+    paths: "/sprintByID/:sprintId"
+  createSprint:
+    host: localhost
+    paths: "/createSprint"
+  editSprint:
+    host: localhost  
+    paths: "/editSprint/:sprintId"
+  deleteSprint:
+    host: localhost
+    paths: "/deleteSprint/:sprintId"
+  sprintByName:
+    host: localhost
+    paths: "/sprintByName"
+  editSprintByName:
+    host: localhost
+    paths: "/editSprintByName"
+  deleteSprintByName:
+    host: localhost
+    paths: "/deleteSprintByName"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -49,12 +87,18 @@ serviceEndpoints:
     url: "http://authservice:3001"
   projectservice:
     url: "http://projectservice:3002"
+  roleservice:
+    url: "http://roleservice:3008"
   userstoryservice:
     url: "http://userstoryservice:3003"
+  epicservice:
+    url: "http://epicservice:3006"
   taskservice:
     url: "http://taskservice:3005"
   memberservice:
     url: "http://memberservice:3004"
+  sprintservice:
+    url: "http://sprintservice:3010"
 policies:
   - basic-auth
   - cors
@@ -99,6 +143,9 @@ pipelines:
               serviceEndpoint: projectservice
               changeOrigin: true
 
+  projectPipeline:
+    apiEndpoints:
+      - roleservice
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
@@ -111,9 +158,23 @@ pipelines:
           - action:
               serviceEndpoint: userstoryservice
               changeOrigin: true
+  epicPipeline:
+    apiEndpoints:
+      - epicSerice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: epicservice
+              changeOrigin: true
+              serviceEndpoint: roleservice
+              changeOrigin: true
+                        
   taskPipeline:
     apiEndpoints:
       - taskservice
+      - deleteTask
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -121,14 +182,36 @@ pipelines:
           - action:
               serviceEndpoint: taskservice
               changeOrigin: true
+
   memberPipeline:
     apiEndpoints:
       - memberservice
+      - getMembers
+      - deleteMembers
+      - editMemberRole
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
       - proxy:
           - action:
               serviceEndpoint: memberservice
-              changeOrigin: true
+              changeOrigin: true      
+
+  sprintPipeline:
+    apiEndpoints:
+      - sprintservice
+      - sprintByID
+      - createSprint
+      - editSprint
+      - deleteSprint
+      - sprintByName
+      - editSprintByName
+      - deleteSprintByName
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: sprintservice
+              changeOrigin: true              
 

@@ -2,11 +2,10 @@ const express = require('express')
 // const { createTask } = require("./logic");
 // const { getUserStoryDetails } = require("./logic");
 const {
-  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails
+  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask
 } = require('./logic')
 
 const app = express()
-const port = 3005
 
 app.use(express.json())
 
@@ -50,27 +49,29 @@ app.post('/createTask', async (req, res) => {
 
 app.post('/updateTask', async (req, res) => {
   const {
-    username, password, projectname, taskname
+    username, password, projectname, userstoryname, taskname
   } = req.body
   const token = await getToken(username, password)
   const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
-  const taskDetails = await getTaskDetails(token, slugName, taskname)
+  const taskDetails = await getTaskDetails(token, slugName, userstoryname, taskname)
   if (!taskDetails.success) {
     return res.status(500).send({
       taskDetails
     })
   }
+  const statusId = taskDetails.parameters.status_id
 
   const taskId = taskDetails.parameters.id
   const parameters = {}
   if (req.body.status !== undefined) {
     const status = {
-      new: 3572652,
-      'in progress': 3572653,
-      'ready for test': 3572654,
-      closed: 3572655,
-      done: 3572655,
-      'needs info': 3572656
+      new: statusId,
+      'in progress': statusId + 1,
+      'ready for test': statusId + 2,
+      closed: statusId + 3,
+      done: statusId + 4,
+      'needs info': statusId + 5
+
     }
     parameters.status = status[req.body.status.toLowerCase()]
   }
@@ -90,6 +91,45 @@ app.post('/updateTask', async (req, res) => {
   return res.status(201).send(taskUpdateData)
 })
 
+app.delete('/deleteTask', async (req, res) => {
+  const {
+    username, password, projectname, userstoryname, taskname
+  } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+  const taskDetails = await getTaskDetails(token, slugName, userstoryname, taskname)
+  if (!taskDetails.success) {
+    return res.status(500).send({
+      taskDetails
+    })
+  }
+  const taskId = taskDetails.parameters.id
+
+  const taskDeleteData = await deleteTask(token, taskId)
+  if (!taskDeleteData.success) {
+    return res.status(500).send({
+      taskDeleteData
+    })
+  }
+  return res.status(201).send(taskDeleteData)
+})
+
+app.post('/getTaskDetails', async (req, res) => {
+  const {
+    username, password, projectname, userstoryname, taskname
+  } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+  const taskDetails = await getTaskDetails(token, slugName, userstoryname, taskname)
+  if (!taskDetails.success) {
+    return res.status(500).send({
+      taskDetails
+    })
+  }
+  return res.status(201).send(taskDetails)
+})
+
+const port = 3005
 // Start the server
 app.listen(port, () => {
   console.log(`Task microservice running at http://localhost:${port}`)
