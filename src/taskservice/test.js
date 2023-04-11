@@ -24,7 +24,7 @@ describe('Task Microservices', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectname: 'testProjec',
+          projectname: 'testProjectFail',
           userstoryname: 'test US',
           taskname: 'TASK1-TESTCASE'
         })
@@ -43,7 +43,7 @@ describe('Task Microservices', () => {
           userstoryname: 'test US3',
           taskname: 'TASK1-TESTCASE',
           description: 'Testing personal data',
-          status: 'In Progress'
+          status: 'Ready for Test'
         })
       expect(response.status).toBe(201)
       expect(response.body.taskId).toBeDefined()
@@ -61,6 +61,35 @@ describe('Task Microservices', () => {
           description: 'Testing personal data',
           status: 'In Progress'
         })
+      expect(response.status).toBe(500)
+    })
+  })
+  describe('DELETE /deleteTask', () => {
+    it('should return a 201 response with the taskid and deletion message', async () => {
+      const response = await request(app)
+        .post('/updateTask')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testProject',
+          taskname: 'TASK1-TESTCASE'
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.taskId).toBeDefined()
+    })
+    it('should return a 500 response with an error message if task is not deleted', async () => {
+      const response = await request(app)
+        .post('/updateTask')
+        .set('Accept', 'application/json')
+        .send(
+          {
+            username: 'SERtestuser',
+            password: 'testuser',
+            projectname: 'testProject',
+            taskname: 'TASK1-FAIL'
+          }
+        )
       expect(response.status).toBe(500)
     })
   })
