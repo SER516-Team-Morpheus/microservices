@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  roleservice:
+    host: localhost
+    paths: "/roleservice"
   getProjectByslug:
     host: localhost
     paths: "/getProjectByslug"
@@ -77,7 +80,6 @@ apiEndpoints:
   deleteSprintByName:
     host: localhost
     paths: "/deleteSprintByName"
-
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -85,6 +87,8 @@ serviceEndpoints:
     url: "http://authservice:3001"
   projectservice:
     url: "http://projectservice:3002"
+  roleservice:
+    url: "http://roleservice:3008"
   userstoryservice:
     url: "http://userstoryservice:3003"
   epicservice:
@@ -139,6 +143,9 @@ pipelines:
               serviceEndpoint: projectservice
               changeOrigin: true
 
+  projectPipeline:
+    apiEndpoints:
+      - roleservice
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
@@ -161,7 +168,9 @@ pipelines:
           - action:
               serviceEndpoint: epicservice
               changeOrigin: true
-                            
+              serviceEndpoint: roleservice
+              changeOrigin: true
+                        
   taskPipeline:
     apiEndpoints:
       - taskservice
@@ -205,5 +214,4 @@ pipelines:
           - action:
               serviceEndpoint: sprintservice
               changeOrigin: true              
-
 

@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: addrole Microservice
+  version: 1.0.0
+  description: Documentation for addrole Microservice
+  contact:
+    name: Team Morpheus
+    email: chenxix2@asu.edu nnolas33@asu.edu
+servers:
+  - url: http://localhost:3008
+  - url: http://localhost:8080
+paths:
+  /createroles:
+    post:
+      summary: Create new roles 
+      description: Creating new task based on name, project, order, computable, permissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                project:
+                  type: string
+                order:
+                  type: int
+                computable:
+                  type: bool
+                permissions:
+                  type: string
+              required:
+                - name
+                - project
+                - order
+                - computable
+                - permissions
+                
+      responses:
+        "201":
+          description: role created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  taskId:
+                    type: string
+      tags:
+        - addrole service
+
+  /updateroles/:roleId:
+    post:
+      summary: Update existing role details 
+      description: Update existing role based on name, project, order, computable, permissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                project:
+                  type: string
+                order:
+                  type: int
+                computable:
+                  type: bool
+                permissions:
+                  type: string
+              required:
+                - name
+                - project
+                - order
+                - computable
+                - permissions
+                
+      responses:
+        "201":
+          description: role update successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  taskId:
+                    type: string
+      tags:
+        - addrole service
