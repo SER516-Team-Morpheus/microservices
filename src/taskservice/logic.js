@@ -85,7 +85,7 @@ async function createTask (project, user_story, subject, token) {
   }
 }
 
-async function getTaskDetails (token, slugName, taskname) {
+async function getTaskDetails (token, slugName, userstoryName, taskname) {
   try {
     const TASK_DETAILS_API_URL = `${TASK_API_URL}?project__slug=${slugName}`
     const response = await axios.get(
@@ -94,22 +94,28 @@ async function getTaskDetails (token, slugName, taskname) {
     )
     const parameters = {}
     for (let i = 0; i < response.data.length; i += 1) {
-      if (response.data[i].subject === taskname) {
-        parameters.id = response.data[i].id
-        parameters.user_story = response.data[i].user_story
-        parameters.version = response.data[i].version
-        if (response.data[i].status_extra_info.name.toLowerCase() === 'new') {
-          parameters.status_id = response.data[i].status
-        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'in progress') {
-          parameters.status_id = response.data[i].status - 1
-        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'ready for test') {
-          parameters.status_id = response.data[i].status - 2
-        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'closed') {
-          parameters.status_id = response.data[i].status - 3
-        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'needs info') {
-          parameters.status_id = response.data[i].status - 4
-        } else if (response.data[i].status_extra_info.name.toLowerCase() === 'done') {
-          parameters.status_id = response.data[i].status - 5
+      if (response.data[i].user_story_extra_info.subject === userstoryName) {
+        if (response.data[i].subject === taskname) {
+          parameters.id = response.data[i].id
+          parameters.taskName = response.data[i].subject
+          parameters.user_story = response.data[i].user_story
+          parameters.version = response.data[i].version
+          parameters.user_story_extra_info = response.data[i].user_story_extra_info
+          parameters.status_extra_info = response.data[i].status_extra_info
+          parameters.assigned_to = response.data[i].assigned_to
+          if (response.data[i].status_extra_info.name.toLowerCase() === 'new') {
+            parameters.status_id = response.data[i].status
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'in progress') {
+            parameters.status_id = response.data[i].status - 1
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'ready for test') {
+            parameters.status_id = response.data[i].status - 2
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'closed') {
+            parameters.status_id = response.data[i].status - 3
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'needs info') {
+            parameters.status_id = response.data[i].status - 4
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'done') {
+            parameters.status_id = response.data[i].status - 5
+          }
         }
       }
     }

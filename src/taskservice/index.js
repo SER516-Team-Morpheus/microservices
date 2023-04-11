@@ -49,17 +49,18 @@ app.post('/createTask', async (req, res) => {
 
 app.post('/updateTask', async (req, res) => {
   const {
-    username, password, projectname, taskname
+    username, password, projectname, userstoryname, taskname
   } = req.body
   const token = await getToken(username, password)
   const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
-  const taskDetails = await getTaskDetails(token, slugName, taskname)
+  const taskDetails = await getTaskDetails(token, slugName, userstoryname, taskname)
   if (!taskDetails.success) {
     return res.status(500).send({
       taskDetails
     })
   }
   const statusId = taskDetails.parameters.status_id
+
   const taskId = taskDetails.parameters.id
   const parameters = {}
   if (req.body.status !== undefined) {
@@ -92,11 +93,11 @@ app.post('/updateTask', async (req, res) => {
 
 app.delete('/deleteTask', async (req, res) => {
   const {
-    username, password, projectname, taskname
+    username, password, projectname, userstoryname, taskname
   } = req.body
   const token = await getToken(username, password)
   const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
-  const taskDetails = await getTaskDetails(token, slugName, taskname)
+  const taskDetails = await getTaskDetails(token, slugName, userstoryname, taskname)
   if (!taskDetails.success) {
     return res.status(500).send({
       taskDetails
@@ -111,6 +112,21 @@ app.delete('/deleteTask', async (req, res) => {
     })
   }
   return res.status(201).send(taskDeleteData)
+})
+
+app.post('/getTaskDetails', async (req, res) => {
+  const {
+    username, password, projectname, userstoryname, taskname
+  } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+  const taskDetails = await getTaskDetails(token, slugName, userstoryname, taskname)
+  if (!taskDetails.success) {
+    return res.status(500).send({
+      taskDetails
+    })
+  }
+  return res.status(201).send(taskDetails)
 })
 
 const port = 3005
