@@ -72,8 +72,6 @@ app.get('/getroles', async (req, res, next) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(
-    `Create Member addroleservice running at http://localhost:${port}`
-  )
+  console.log(`Role microservice running at http://localhost:${port}`)
 })
 module.exports = app

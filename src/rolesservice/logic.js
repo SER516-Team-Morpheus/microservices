@@ -41,7 +41,7 @@ async function getAllRoles(token, slugName) {
     if (newResponse.length) {
       return {
         success: true,
-        userStory: newResponse,
+        roles: newResponse,
       }
     } else {
       return {
