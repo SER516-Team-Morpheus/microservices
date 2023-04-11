@@ -8,6 +8,7 @@ const projectIDForDelete = '722202'
 const projectIDForUpdate = '733407'
 // eslint-disable-next-line quote-props
 const patch = { 'name': 'RenamebyAPI' }
+
 describe('Project Microservice', () => {
   describe('POST /createProject', () => {
     it('should return a 201 response', async () => {
@@ -34,7 +35,7 @@ describe('Project Microservice', () => {
         .send({
           username: 'SERtestuser',
           password: 'tetuser',
-          name: 'Project',
+          name: 'testProject',
           description: 'testProject'
         })
       expect(response.status).toBe(500)
@@ -49,7 +50,7 @@ describe('Project Microservice', () => {
       const response = await request(app)
         .get('/getProjectBySlug')
         .set('Accept', 'application/json')
-        .send({
+        .query({
           username: 'SERtestuser',
           password: 'testuser',
           name: 'testProject'
@@ -65,7 +66,7 @@ describe('Project Microservice', () => {
       const response = await request(app)
         .get('/getProjectBySlug')
         .set('Accept', 'application/json')
-        .send({
+        .query({
           username: 'SERtestuser',
           password: 'testuser',
           name: 'gibberish'

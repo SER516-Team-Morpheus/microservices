@@ -11,6 +11,69 @@ servers:
   - url: http://localhost:8080
 
 paths:
+  /getProject:
+    get:
+      summary: List all the projects unde a specific user.
+      description: List the project name and description under a specific user.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  projects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: My Project
+                        description:
+                          type: string
+                          example: description of the project
+        "404":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Authorization header must contain two space-delimited values.
+                        code:
+                          type: string
+                          example: bad_authorization_header
+      tags:
+        - project microservice
+
   /getProjectBySlug:
     get:
       summary: Get project by slug name
@@ -70,6 +133,8 @@ paths:
                   message:
                     type: string
                     example: Error getting project by name
+      tags:
+        - project microservice
 
   /createProject:
     post:
@@ -140,7 +205,7 @@ paths:
                     type: string
                     example: Error creating userstory
       tags:
-        - project
+        - project microservice
 
   \deleteProject
     post:
@@ -188,6 +253,8 @@ paths:
                     message:
                       type: string
                       example: Error deleting project
+          tags:
+            - project microservice
 
   \editProject
     post:
@@ -239,4 +306,6 @@ paths:
                       example: false
                     message:
                       type: string
-                      example: Error editing project                      
+                      example: Error editing project
+          tags:
+            - project microservice 

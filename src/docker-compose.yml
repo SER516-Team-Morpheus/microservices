@@ -25,11 +25,19 @@ services:
   taskservice:
     build: ./taskservice 
     ports:
-      - "3004:3004"
+      - "3005:3005"
     env_file:
       - .env
     networks:
       - my-network
+  memberservice:
+    build: ./memberservice
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env    
+    networks:
+      - my-network    
   api-gateway:
     build: ./api-gateway
     ports:
@@ -42,5 +50,8 @@ services:
       - authservice
       - projectservice
       - userstoryservice
+      - memberservice
+      - taskservice
 networks:
   my-network:
+

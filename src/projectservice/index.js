@@ -1,5 +1,13 @@
 const express = require('express')
-const { getToken, getProjectBySlug, createProject, editProject, deleteProject } = require('./logic')
+const {
+  getToken,
+  getProjectBySlug,
+  getMember,
+  getProjectList,
+  editProject,
+  deleteProject,
+  createProject
+} = require('./logic')
 
 const app = express()
 const port = 3002
@@ -12,8 +20,24 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'
   )
-  res.header('Access-Control-Allow-Methods", "GET, POST, PUT, DELETE')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
   next()
+})
+
+// Endpoint for getting project under a member account
+app.get('/getProject', async (req, res) => {
+  const { username, password } = req.query
+  const token = await getToken(username, password)
+  const memberData = await getMember(token)
+  if (!memberData.success) {
+    return res.status(404).send(memberData)
+  }
+  const memberId = memberData.memberId
+  const getProjectData = await getProjectList(token, memberId)
+  if (!getProjectData.success) {
+    return res.status(404).send(getProjectData)
+  }
+  return res.send(getProjectData)
 })
 
 // Endpoint for getting project by slug name
