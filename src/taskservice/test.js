@@ -43,7 +43,7 @@ describe('Task Microservices', () => {
           userstoryname: 'test US3',
           taskname: 'TASK1-TESTCASE',
           description: 'Testing personal data',
-          status: 'Ready for Test'
+          status: 'In Progress'
         })
       expect(response.status).toBe(201)
       expect(response.body.taskId).toBeDefined()
@@ -73,6 +73,7 @@ describe('Task Microservices', () => {
           username: 'SERtestuser',
           password: 'testuser',
           projectname: 'testProject',
+          userstoryname: 'test US3',
           taskname: 'TASK1-TESTCASE'
         })
       expect(response.status).toBe(201)
@@ -90,6 +91,35 @@ describe('Task Microservices', () => {
             taskname: 'TASK1-FAIL'
           }
         )
+      expect(response.status).toBe(500)
+    })
+  })
+  describe('POST /getTaskDetails', () => {
+    it('should return a 201 response with the all the details', async () => {
+      const response = await request(app)
+        .post('/getTaskDetails')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testProject',
+          userstoryname: 'test US3',
+          taskname: 'Customer test'
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.parameters.id).toBeDefined()
+    })
+    it('should return a 500 response with the failure message', async () => {
+      const response = await request(app)
+        .post('/getTaskDetails')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testProject',
+          userstoryname: 'test US3',
+          taskname: 'Customer test11111'
+        })
       expect(response.status).toBe(500)
     })
   })
