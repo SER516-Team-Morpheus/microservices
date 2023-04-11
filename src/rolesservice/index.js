@@ -2,7 +2,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const logic = require('./logic')
-const { getToken, getAllRoles } = require('./logic')
+const { getToken, getAllRoles, createRoles } = require('./logic')
 
 const app = express()
 app.use(bodyParser.json())
@@ -22,21 +22,20 @@ app.use((req, res, next) => {
 })
 
 // Endpoint for creating a role
-app.post('/createroles', async (req, res, next) => {
-  const { name, project, order, computable, permissions } = req.body
-
-  try {
-    const role = await logic.createRoles(
-      name,
-      project,
-      order,
-      computable,
-      permissions
-    )
-    res.status(201).json(role)
-  } catch (error) {
-    next(error)
+app.post('/createroles', async (req, res) => {
+  const { username, password, roleName, projectName } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getAllRoles(token, slugName)
+  const projectId = projectData.projectId
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
   }
+  const roleData = await createRoles(token, roleName, projectId)
+  if (!roleData.success) {
+    return res.status(500).send(roleData)
+  }
+  return res.status(201).send(roleData)
 })
 
 // Endpoint for updating a role
@@ -59,15 +58,15 @@ app.patch('/updateroles/:roleId', async (req, res, next) => {
 })
 
 // Endpoint for geting a role
-app.get('/getroles', async (req, res, next) => {
+app.get('/getroles', async (req, res) => {
   const { username, password, projectName } = req.query
   const token = await getToken(username, password)
   const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
-  const projectData = await getAllRoles(token, slugName)
-  if (!projectData.success) {
+  const projectDataRoles = await getAllRoles(token, slugName)
+  if (!projectDataRoles.success) {
     return res.status(404).send(projectData)
   }
-  return res.send(projectData)
+  return res.send(projectDataRoles)
 })
 
 // Start the server

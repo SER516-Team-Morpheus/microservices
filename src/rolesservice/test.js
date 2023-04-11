@@ -11,7 +11,7 @@ describe('Role Microservice', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          projectName: 'testProject',
+          projectName: 'testProject'
         })
       expect(response.status).toBe(200)
       expect(response.body.success).toBe(true)
@@ -53,8 +53,8 @@ describe('createRoles', () => {
             project,
             order,
             computable,
-            permissions,
-          }),
+            permissions
+          })
       })
     )
 
@@ -71,9 +71,9 @@ describe('createRoles', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ name, project, order, computable, permissions }),
+      body: JSON.stringify({ name, project, order, computable, permissions })
     })
 
     expect(role).toEqual({
@@ -82,7 +82,7 @@ describe('createRoles', () => {
       project,
       order,
       computable,
-      permissions,
+      permissions
     })
   })
 
@@ -98,7 +98,7 @@ describe('createRoles', () => {
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: false,
-        statusText: 'Internal Server Error',
+        statusText: 'Internal Server Error'
       })
     )
 

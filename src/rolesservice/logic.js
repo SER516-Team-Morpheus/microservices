@@ -41,6 +41,7 @@ async function getAllRoles(token, slugName) {
     if (newResponse.length) {
       return {
         success: true,
+        projectId: response.data.id,
         roles: newResponse,
       }
     } else {
@@ -54,80 +55,35 @@ async function getAllRoles(token, slugName) {
   }
 }
 
-// create new roles
-async function createRoles(
-  name,
-  project,
-  order,
-  computable,
-  permissions,
-  token
-) {
-  const data = {
-    name,
-    project,
-    order,
-    computable,
-    permissions,
+// Function to create new roles in a project
+async function createRoles(token, name, project) {
+  try {
+    const response = await axios.post(
+      ROLE_API_URL,
+      {
+        name,
+        project,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+    if (response.data.id) {
+      return {
+        success: true,
+        roleId: response.data.id,
+        roleName: response.data.name,
+        message: `Role ${response.data.name} successfully created.`,
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while creating role',
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error creating roles' }
   }
-
-  const response = await fetch(ROLE_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    const errorMessage = `Failed to create role: ${response.statusText}`
-    throw new Error(errorMessage)
-  }
-
-  const role = await response.json()
-
-  return role
-}
-
-// update roles
-async function updateRole(roleId, name, order, computable, permissions, token) {
-  const ROLE_UPDATE_API_URL = ROLE_API_URL + '/' + roleId
-  const data = {}
-
-  if (name) {
-    data.name = name
-  }
-
-  if (order !== undefined) {
-    data.order = order
-  }
-
-  if (computable !== undefined) {
-    data.computable = computable
-  }
-
-  if (permissions) {
-    data.permissions = permissions
-  }
-
-  const response = await fetch(ROLE_UPDATE_API_URL, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    const errorMessage = `Failed to update role: ${response.statusText}`
-    throw new Error(errorMessage)
-  }
-
-  const role = await response.json()
-
-  return role
 }
 
 // get roles details
@@ -153,7 +109,6 @@ async function getRoleDetails(roleId, token) {
 module.exports = {
   getToken,
   createRoles,
-  updateRole,
   getRoleDetails,
   getAllRoles,
 }
