@@ -58,7 +58,344 @@ async function createEpic (
   }
 }
 
+// Function to list epics
+// await listEpics(authToken, projectId, projectSlug, assignedTo, isClosed)
+async function listEpics (
+  token,
+  projectId,
+  projectSlug,
+  assignedTo,
+  isClosed
+) {
+  try {
+    const response = await axios.get(EPIC_API_URL, {
+      params: {
+        project: projectId,
+        project__slug: projectSlug,
+        assigned_to: assignedTo,
+        is_closed: isClosed
+      }
+    })
+    if (response.data) {
+      return {
+        success: true,
+        epics: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while listing epics'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error listing epics' }
+  }
+}
+
+// Function to get epic details
+async function getEpic (token, epicId) {
+  try {
+    const response = await axios.get(`${EPIC_API_URL}/${epicId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (response.data) {
+      return {
+        success: true,
+        epic: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while getting epic details'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error getting epic details' }
+  }
+}
+
+// Function to Edit epic details
+async function editEpic (epicId, name, version, token) {
+  try {
+    const response = await axios.patch(
+      `${EPIC_API_URL}/${epicId}`,
+      {
+        subject: name,
+        version
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        epic: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while editing epic details'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error editing epic details' }
+  }
+}
+
+// Function to delete epic
+async function deleteEpic (epicId, token) {
+  try {
+    const response = await axios.delete(`${EPIC_API_URL}/${epicId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (response.data) {
+      return {
+        success: true,
+        epic: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while deleting epic'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error deleting epic' }
+  }
+}
+
+// Function to create bulk epics
+async function createBulkEpics (epics, token) {
+  try {
+    const response = await axios.post(
+      EPIC_API_URL,
+      epics,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        epics: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while creating bulk epics'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error creating bulk epics' }
+  }
+}
+
+// Function to get filters data
+async function getFiltersData (token, projectId) {
+  try {
+    const response = await axios.get(`${EPIC_API_URL}/filters_data`, {
+      params: {
+        project: projectId
+      },
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (response.data) {
+      return {
+        success: true,
+        filtersData: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while getting filters data'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error getting filters data' }
+  }
+}
+
+// Function for listing related user stories
+async function listRelatedUserStories (token, epicId) {
+  try {
+    const response = await axios.get(
+      `${EPIC_API_URL}/${epicId}/related_userstories`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        userStories: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while listing related user stories'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error listing related user stories' }
+  }
+}
+
+// Function for adding related user story
+async function addRelatedUserStory (token, epicId, userStoryId) {
+  try {
+    const response = await axios.post(
+      `${EPIC_API_URL}/${epicId}/related_userstories`,
+      {
+        user_story: userStoryId
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        userStory: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while adding related user story'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error adding related user story' }
+  }
+}
+
+// Function for getting related user story
+async function getRelatedUserStory (token, epicId, userStoryId) {
+  try {
+    const response = await axios.get(
+      `${EPIC_API_URL}/${epicId}/related_userstories/${userStoryId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        userStory: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while getting related user story'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error getting related user story' }
+  }
+}
+
+// Function for editing related user story
+async function editRelatedUserStory (token, epicId, userStoryId, version) {
+  try {
+    const response = await axios.patch(
+      `${EPIC_API_URL}/${epicId}/related_userstories/${userStoryId}`,
+      {
+        version
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        userStory: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while editing related user story'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error editing related user story' }
+  }
+}
+
+// Function for deleting related user story
+async function deleteRelatedUserStory (token, epicId, userStoryId) {
+  try {
+    const response = await axios.delete(
+      `${EPIC_API_URL}/${epicId}/related_userstories/${userStoryId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        userStory: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while deleting related user story'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error deleting related user story' }
+  }
+}
+
+// Function for bulk creating related user stories
+async function bulkCreateRelatedUserStories (token, epicId, userStories) {
+  try {
+    const response = await axios.post(
+      `${EPIC_API_URL}/${epicId}/bulk_create_related_userstories`,
+      {
+        user_stories: userStories
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    if (response.data) {
+      return {
+        success: true,
+        userStories: response.data
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while bulk creating related user stories'
+      }
+    }
+  } catch (error) {
+    console.error(error.response.data)
+    return { success: false, message: 'Error bulk creating related user stories' }
+  }
+}
+
 module.exports = {
   createEpic,
-  getToken
+  getToken,
+  listEpics,
+  getEpic,
+  editEpic,
+  deleteEpic,
+  createBulkEpics,
+  getFiltersData,
+  listRelatedUserStories,
+  addRelatedUserStory,
+  getRelatedUserStory,
+  editRelatedUserStory,
+  deleteRelatedUserStory,
+  bulkCreateRelatedUserStories
 }
