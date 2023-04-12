@@ -22,7 +22,7 @@ describe('Role Microservice', () => {
         .query({
           username: 'SERtestuser',
           password: 'tetuser',
-          projectName: 'noProject',
+          projectName: 'noProject'
         })
       expect(response.status).toBe(404)
       expect(response.body.success).toBe(false)
