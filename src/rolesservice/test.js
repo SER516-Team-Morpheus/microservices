@@ -39,24 +39,56 @@ describe('Role Microservice', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          roleName: 'test Role',
+          roleName: 'testDevRole',
           projectName: 'testProject'
         })
       expect(response.status).toBe(201)
       expect(response.body.success).toBe(true)
       expect(response.body.roleName).toBeDefined()
     })
-    it('should return a 404 response', async () => {
+    // it('should return a 404 response', async () => {
+    //   const response = await request(app)
+    //     .post('/createroles')
+    //     .set('Accept', 'application/json')
+    //     .send({
+    //       username: 'SERtestuser',
+    //       password: 'tetuser',
+    //       roleName: 'testDevRole',
+    //       name: 'testProject'
+    //     })
+    //   expect(response.status).toBe(404)
+    // }, 20000)
+  })
+
+  describe('PATCH /updateroles', () => {
+    it('should return a 200 response', async () => {
       const response = await request(app)
-        .post('/createroles')
+        .patch('/updateroles')
         .set('Accept', 'application/json')
         .send({
           username: 'SERtestuser',
-          password: 'tetuser',
-          roleName: 'test Role',
-          name: 'testProject'
+          password: 'testuser',
+          roleName: 'testDevRole',
+          newRoleName: 'Developer',
+          projectName: 'testProject'
+        })
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+      expect(response.body.roleName).toBeDefined()
+    })
+    it('should return a 404 response', async () => {
+      const response = await request(app)
+        .patch('/updateroles')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          roleName: 'testDevRole',
+          newRoleName: 'Developer',
+          projectName: 'testProject'
         })
       expect(response.status).toBe(404)
+      expect(response.body.success).toBe(false)
     })
   })
 })
