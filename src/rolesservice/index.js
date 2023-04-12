@@ -1,8 +1,7 @@
 // This will have your endpoints of your microservices.
 const express = require('express')
 const bodyParser = require('body-parser')
-const logic = require('./logic')
-const { getToken, getAllRoles, createRoles } = require('./logic')
+const { getToken, getAllRoles, createRoles, updateRole } = require('./logic')
 
 const app = express()
 app.use(bodyParser.json())
@@ -38,25 +37,6 @@ app.post('/createroles', async (req, res) => {
   return res.status(201).send(roleData)
 })
 
-// Endpoint for updating a role
-app.patch('/updateroles/:roleId', async (req, res, next) => {
-  const { roleId } = req.params
-  const { name, order, computable, permissions } = req.body
-
-  try {
-    const role = await logic.updateRole(
-      roleId,
-      name,
-      order,
-      computable,
-      permissions
-    )
-    res.status(201).json(role)
-  } catch (error) {
-    next(error)
-  }
-})
-
 // Endpoint for geting a role
 app.get('/getroles', async (req, res) => {
   const { username, password, projectName } = req.query
@@ -67,6 +47,27 @@ app.get('/getroles', async (req, res) => {
     return res.status(404).send(projectDataRoles)
   }
   return res.send(projectDataRoles)
+})
+
+// Endpoint for updating the role
+app.patch('/updateroles', async (req, res) => {
+  const { username, password, roleName, newRoleName, projectName } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getAllRoles(token, slugName)
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
+  }
+  const roleId = projectData.roles.find(role => role.roleName === roleName)?.roleId
+  console.log(roleId)
+  if (!roleId) {
+    return res.status(404).send({ success: false, message: 'Role not found' })
+  }
+  const roleData = await updateRole(token, roleId, newRoleName)
+  if (!roleData.success) {
+    return res.status(500).send(roleData)
+  }
+  return res.status(200).send(roleData)
 })
 
 // Start the server

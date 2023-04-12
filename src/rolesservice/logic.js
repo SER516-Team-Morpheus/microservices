@@ -86,6 +86,38 @@ async function createRoles (token, name, project) {
   }
 }
 
+// Function to update role name
+async function updateRole (token, roleId, newRoleName) {
+  const UPDATE_ROLE_API_URL = ROLE_API_URL + '/' + roleId
+  try {
+    const response = await axios.patch(
+      UPDATE_ROLE_API_URL,
+      {
+        name: newRoleName
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    console.log(response.data)
+    if (response.data.id) {
+      return {
+        success: true,
+        roleId: response.data.id,
+        roleName: response.data.name,
+        message: `Role ${response.data.name} successfully updated.`
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while updating role'
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error updating role' }
+  }
+}
+
 // get roles details
 async function getRoleDetails (roleId, token) {
   const ROLE_DETAILS_API_URL = ROLE_API_URL + '/' + roleId
@@ -110,5 +142,6 @@ module.exports = {
   getToken,
   createRoles,
   getRoleDetails,
-  getAllRoles
+  getAllRoles,
+  updateRole
 }

@@ -1,4 +1,4 @@
-const { createRoles } = require('./logic')
+
 const request = require('supertest')
 const app = require('./index')
 
@@ -48,7 +48,7 @@ describe('Role Microservice', () => {
     })
     it('should return a 404 response', async () => {
       const response = await request(app)
-        .post('/getroles')
+        .post('/createroles')
         .set('Accept', 'application/json')
         .send({
           username: 'SERtestuser',
