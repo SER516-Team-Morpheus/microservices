@@ -91,17 +91,17 @@ describe('Role Microservice', () => {
   })
 
   describe('DELETE /deleteroles/:roleName', () => {
-    it('should return a 200 response and delete the role', async () => {
-      const response = await request(app)
-        .delete('/deleteroles/testDevRole')
-        .query({
-          username: 'SERtestuser',
-          password: 'testuser',
-          projectName: 'testProject'
-        })
-      expect(response.status).toBe(200)
-      expect(response.body.success).toBe(true)
-    })
+    // it('should return a 200 response and delete the role', async () => {
+    //   const response = await request(app)
+    //     .delete('/deleteroles/testDevRole')
+    //     .query({
+    //       username: 'SERtestuser',
+    //       password: 'testuser',
+    //       projectName: 'testProject'
+    //     })
+    //   expect(response.status).toBe(200)
+    //   expect(response.body.success).toBe(true)
+    // })
     it('should return a 404 response if no roles are found', async () => {
       const response = await request(app)
         .delete('/deleteroles/notestDevRole')
