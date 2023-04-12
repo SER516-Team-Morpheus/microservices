@@ -1,7 +1,7 @@
 // This will have your endpoints of your microservices.
 const express = require('express')
 const bodyParser = require('body-parser')
-const { getToken, getAllRoles, createRoles, updateRole } = require('./logic')
+const { getToken, getAllRoles, createRoles, updateRole, deleteRole } = require('./logic')
 
 const app = express()
 app.use(bodyParser.json())
@@ -70,6 +70,25 @@ app.patch('/updateroles', async (req, res) => {
   return res.status(200).send(roleData)
 })
 
+// endpoint to delete a role
+app.delete('/deleteroles/:roleName', async (req, res) => {
+  const { username, password, projectName } = req.query
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getAllRoles(token, slugName)
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
+  }
+  const roleId = projectData.roles.find(role => role.roleName === req.params.roleName)?.roleId
+  if (!roleId) {
+    return res.status(404).send({ success: false, message: 'Role not found' })
+  }
+  const roleData = await deleteRole(token, roleId)
+  if (!roleData.success) {
+    return res.status(500).send(roleData)
+  }
+  return res.status(200).send(roleData)
+})
 // Start the server
 app.listen(port, () => {
   console.log(`Role microservice running at http://localhost:${port}`)

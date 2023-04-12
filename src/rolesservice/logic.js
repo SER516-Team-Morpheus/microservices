@@ -138,10 +138,37 @@ async function getRoleDetails (roleId, token) {
   return role
 }
 
+// get roles details
+async function deleteRole (token, roleId) {
+  const DELETE_ROLE_API_URL = ROLE_API_URL + '/' + roleId
+  try {
+    const response = await axios.delete(DELETE_ROLE_API_URL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
+    if (response.status === 204) {
+      return {
+        success: true,
+        message: 'Role successfully deleted.'
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while deleting role'
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error deleting  role' }
+  }
+}
+
 module.exports = {
   getToken,
   createRoles,
   getRoleDetails,
   getAllRoles,
-  updateRole
+  updateRole,
+  deleteRole
 }
