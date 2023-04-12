@@ -1,7 +1,7 @@
 // This will have your endpoints of your microservices.
 const express = require('express')
 const bodyParser = require('body-parser')
-const logic = require('./logic')
+const { getToken, getAllRoles, createRoles, updateRole, deleteRole } = require('./logic')
 
 const app = express()
 app.use(bodyParser.json())
@@ -21,48 +21,76 @@ app.use((req, res, next) => {
 })
 
 // Endpoint for creating a role
-app.post('/createroles', async (req, res, next) => {
-  const {
-    name, project, order, computable, permissions
-  } = req.body
-
-  try {
-    const role = await logic.createRoles(name, project, order, computable, permissions)
-    res.status(201).json(role)
-  } catch (error) {
-    next(error)
+app.post('/createroles', async (req, res) => {
+  const { username, password, roleName, projectName } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getAllRoles(token, slugName)
+  const projectId = projectData.projectId
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
   }
-})
-
-// Endpoint for updating a role
-app.patch('/updateroles/:roleId', async (req, res, next) => {
-  const { roleId } = req.params
-  const {
-    name, order, computable, permissions
-  } = req.body
-
-  try {
-    const role = await logic.updateRole(roleId, name, order, computable, permissions)
-    res.status(201).json(role)
-  } catch (error) {
-    next(error)
+  const roleData = await createRoles(token, roleName, projectId)
+  if (!roleData.success) {
+    return res.status(500).send(roleData)
   }
+  return res.status(201).send(roleData)
 })
 
 // Endpoint for geting a role
-app.get('/getroles/:roleId', async (req, res, next) => {
-  const { roleId } = req.params
-
-  try {
-    const role = await logic.getRoleDetails(roleId)
-    res.status(201).json(role)
-  } catch (error) {
-    next(error)
+app.get('/getroles', async (req, res) => {
+  const { username, password, projectName } = req.query
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectDataRoles = await getAllRoles(token, slugName)
+  if (!projectDataRoles.success) {
+    return res.status(404).send(projectDataRoles)
   }
+  return res.send(projectDataRoles)
 })
 
+// Endpoint for updating the role
+app.patch('/updateroles', async (req, res) => {
+  const { username, password, roleName, newRoleName, projectName } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getAllRoles(token, slugName)
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
+  }
+  const roleId = projectData.roles.find(role => role.roleName === roleName)?.roleId
+  console.log(roleId)
+  if (!roleId) {
+    return res.status(404).send({ success: false, message: 'Role not found' })
+  }
+  const roleData = await updateRole(token, roleId, newRoleName)
+  if (!roleData.success) {
+    return res.status(500).send(roleData)
+  }
+  return res.status(200).send(roleData)
+})
+
+// endpoint to delete a role
+app.delete('/deleteroles/:roleName', async (req, res) => {
+  const { username, password, projectName } = req.query
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getAllRoles(token, slugName)
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
+  }
+  const roleId = projectData.roles.find(role => role.roleName === req.params.roleName)?.roleId
+  if (!roleId) {
+    return res.status(404).send({ success: false, message: 'Role not found' })
+  }
+  const roleData = await deleteRole(token, roleId)
+  if (!roleData.success) {
+    return res.status(500).send(roleData)
+  }
+  return res.status(200).send(roleData)
+})
 // Start the server
 app.listen(port, () => {
-  console.log(`Create Member addroleservice running at http://localhost:${port}`)
+  console.log(`Role microservice running at http://localhost:${port}`)
 })
 module.exports = app
