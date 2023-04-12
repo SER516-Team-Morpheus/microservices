@@ -31,79 +31,32 @@ describe('Role Microservice', () => {
     //   expect(response.body.message).toBeDefined()
     // }, 30000)
   })
-})
-
-describe('createRoles', () => {
-  test('should create a new role', async () => {
-    const token = 'mock_token'
-    const name = 'test_role'
-    const project = 1
-    const order = 2
-    const computable = true
-    const permissions = [1, 2]
-
-    // Mock the fetch API call
-    global.fetch = jest.fn().mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            id: 1,
-            name,
-            project,
-            order,
-            computable,
-            permissions
-          })
-      })
-    )
-
-    const role = await createRoles(
-      name,
-      project,
-      order,
-      computable,
-      permissions,
-      token
-    )
-
-    expect(fetch).toHaveBeenCalledWith('https://api.taiga.io/api/v1/roles', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ name, project, order, computable, permissions })
+  describe('POST /createroles', () => {
+    it('should return a 201 response', async () => {
+      const response = await request(app)
+        .post('/createroles')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          roleName: 'test Role',
+          projectName: 'testProject'
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.success).toBe(true)
+      expect(response.body.roleName).toBeDefined()
     })
-
-    expect(role).toEqual({
-      id: 1,
-      name,
-      project,
-      order,
-      computable,
-      permissions
+    it('should return a 404 response', async () => {
+      const response = await request(app)
+        .post('/getroles')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'tetuser',
+          roleName: 'test Role',
+          name: 'testProject'
+        })
+      expect(response.status).toBe(404)
     })
-  })
-
-  test('should throw an error if the API call fails', async () => {
-    const token = 'mock_token'
-    const name = 'test_role'
-    const project = 1
-    const order = 2
-    const computable = true
-    const permissions = [1, 2]
-
-    // Mock the fetch API call to return an error
-    global.fetch = jest.fn().mockImplementation(() =>
-      Promise.resolve({
-        ok: false,
-        statusText: 'Internal Server Error'
-      })
-    )
-
-    await expect(
-      createRoles(name, project, order, computable, permissions, token)
-    ).rejects.toThrow('Failed to create role: Internal Server Error')
   })
 })

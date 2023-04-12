@@ -8,12 +8,12 @@ const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
 const PROJECT_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
 
 // Function to get auth token from authenticate api
-async function getToken(username, password) {
+async function getToken (username, password) {
   try {
     const response = await axios.post(AUTH_URL, {
       type: 'normal',
       username,
-      password,
+      password
     })
     if (response.data.auth_token) {
       return response.data.auth_token
@@ -25,11 +25,11 @@ async function getToken(username, password) {
 }
 
 // Function to get the roles by slug name
-async function getAllRoles(token, slugName) {
+async function getAllRoles (token, slugName) {
   const ROLE_SLUG_URL = PROJECT_URL + '/by_slug?slug=' + slugName
   try {
     const response = await axios.get(ROLE_SLUG_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
     const rolesArray = response.data.roles
     const newResponse = []
@@ -42,12 +42,12 @@ async function getAllRoles(token, slugName) {
       return {
         success: true,
         projectId: response.data.id,
-        roles: newResponse,
+        roles: newResponse
       }
     } else {
       return {
         success: false,
-        message: 'No roles found.',
+        message: 'No roles found.'
       }
     }
   } catch (error) {
@@ -56,16 +56,16 @@ async function getAllRoles(token, slugName) {
 }
 
 // Function to create new roles in a project
-async function createRoles(token, name, project) {
+async function createRoles (token, name, project) {
   try {
     const response = await axios.post(
       ROLE_API_URL,
       {
         name,
-        project,
+        project
       },
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       }
     )
     if (response.data.id) {
@@ -73,12 +73,12 @@ async function createRoles(token, name, project) {
         success: true,
         roleId: response.data.id,
         roleName: response.data.name,
-        message: `Role ${response.data.name} successfully created.`,
+        message: `Role ${response.data.name} successfully created.`
       }
     } else {
       return {
         success: false,
-        message: 'Something went wrong while creating role',
+        message: 'Something went wrong while creating role'
       }
     }
   } catch (error) {
@@ -87,13 +87,13 @@ async function createRoles(token, name, project) {
 }
 
 // get roles details
-async function getRoleDetails(roleId, token) {
+async function getRoleDetails (roleId, token) {
   const ROLE_DETAILS_API_URL = ROLE_API_URL + '/' + roleId
   const response = await fetch(ROLE_DETAILS_API_URL, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   })
 
   if (!response.ok) {
@@ -110,5 +110,5 @@ module.exports = {
   getToken,
   createRoles,
   getRoleDetails,
-  getAllRoles,
+  getAllRoles
 }

@@ -64,7 +64,7 @@ app.get('/getroles', async (req, res) => {
   const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
   const projectDataRoles = await getAllRoles(token, slugName)
   if (!projectDataRoles.success) {
-    return res.status(404).send(projectData)
+    return res.status(404).send(projectDataRoles)
   }
   return res.send(projectDataRoles)
 })
