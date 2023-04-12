@@ -102,9 +102,9 @@ app.patch('/updateUserstory', async (req, res) => {
     if (req.body.description !== undefined) {
       parameters.description = req.body.description
     }
-    /* if(req.body.assigned_to !== undefined) {
-    parameters.assigned_to = req.body.assigned_to;
-  } */
+    if (req.body.assigned_to !== undefined) {
+      parameters.assigned_to = req.body.assigned_to
+    }
     if (req.body.is_closed !== undefined) {
       parameters.is_closed = req.body.is_closed
     }

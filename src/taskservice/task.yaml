@@ -39,7 +39,7 @@ paths:
                 - taskname
                 
       responses:
-        "200":
+        "500":
           description: Task created successfully
           content:
             application/json:
@@ -52,7 +52,7 @@ paths:
                     type: string
                   taskId:
                     type: string
-        "401":
+        "201":
           description: Task Creation Failed
           content:
             application/json:
@@ -103,7 +103,7 @@ paths:
                 - status
                 
       responses:
-        "200":
+        "500":
           description: Task updated successfully
           content:
             application/json:
@@ -116,8 +116,8 @@ paths:
                     type: string
                   taskId:
                     type: string
-        "401":
-          description: Task Creation Failed
+        "201":
+          description: Task Updation Failed
           content:
             application/json:
               schema:
@@ -161,7 +161,7 @@ paths:
                 - taskname
                 
       responses:
-        "200":
+        "500":
           description: Task details successfully fetched
           content:
             application/json:
@@ -207,7 +207,98 @@ paths:
                         type: string
                       status_id: 
                         type: number
+        "201":
+          description: Issue in getting task details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      tags:
+        - task service
+  /getUserStoryTaskDetails:
+    post:
+      summary: Get task details 
+      description: Get task details based on userstory name and task name 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                projectname:
+                  type: string
+                userstoryname:
+                  type: string
+              required:
+                - username
+                - password
+                - projectname
+                - userstoryname
+                
+      responses:
         "500":
+          description: Task details successfully fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        taskId:
+                          type: number
+                        taskName:
+                          type: string
+                        version:
+                          type: number
+                        user_story_extra_info:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            ref:
+                              type: number
+                            subject:
+                              type: string
+                            epics:
+                              type: string
+                        status_extra_info:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            color:
+                              type: string
+                            is_closed:
+                              type: boolean
+                        assigned_to_extra_info:
+                          type: object
+                          properties:
+                            username:
+                              type: string
+                            full_name_display:
+                              type: string
+                            id:
+                              type: number
+                    
+        "201":
           description: Issue in getting task details
           content:
             application/json:

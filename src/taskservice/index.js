@@ -2,7 +2,7 @@ const express = require('express')
 // const { createTask } = require("./logic");
 // const { getUserStoryDetails } = require("./logic");
 const {
-  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask
+  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask, getUserStoryTasksDetails
 } = require('./logic')
 
 const app = express()
@@ -127,6 +127,21 @@ app.post('/getTaskDetails', async (req, res) => {
     })
   }
   return res.status(201).send(taskDetails)
+})
+
+app.post('/getUserStoryTaskDetails', async (req, res) => {
+  const {
+    username, password, projectname, userstoryname
+  } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+  const userStoryTasksDetails = await getUserStoryTasksDetails(token, slugName, userstoryname)
+  if (!userStoryTasksDetails.success) {
+    return res.status(500).send({
+      userStoryTasksDetails
+    })
+  }
+  return res.status(201).send(userStoryTasksDetails)
 })
 
 const port = 3005
