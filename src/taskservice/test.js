@@ -94,10 +94,10 @@ describe('Task Microservices', () => {
       expect(response.status).toBe(500)
     })
   })
-  describe('POST /getTaskDetails', () => {
+  describe('GET /getTaskDetails', () => {
     it('should return a 201 response with the all the details', async () => {
       const response = await request(app)
-        .post('/getTaskDetails')
+        .get('/getTaskDetails')
         .set('Accept', 'application/json')
         .send({
           username: 'SERtestuser',
@@ -111,7 +111,7 @@ describe('Task Microservices', () => {
     })
     it('should return a 500 response with the failure message', async () => {
       const response = await request(app)
-        .post('/getTaskDetails')
+        .get('/getTaskDetails')
         .set('Accept', 'application/json')
         .send({
           username: 'SERtestuser',
@@ -123,10 +123,10 @@ describe('Task Microservices', () => {
       expect(response.status).toBe(500)
     })
   })
-  describe('POST /getUserStoryTaskDetails', () => {
+  describe('GET /getUserStoryTaskDetails', () => {
     it('should return a 201 response with the all the task details in given user story', async () => {
       const response = await request(app)
-        .post('/getUserStoryTaskDetails')
+        .get('/getUserStoryTaskDetails')
         .set('Accept', 'application/json')
         .send({
           username: 'SERtestuser',
