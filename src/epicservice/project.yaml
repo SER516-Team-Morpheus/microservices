@@ -30,6 +30,9 @@ paths:
                   type: string
                   description: Taiga password
                   example: testuser
+                token:
+                  type: string
+                  description: Taiga token
                 projectId:
                   type: number
                   description: Project id in which epic is to be created

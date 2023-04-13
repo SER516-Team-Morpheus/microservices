@@ -111,7 +111,10 @@ app.post('/listEpics', async (req, res) => {
 // The HTTP response is a 200 OK and the response body is a JSON epic detail (GET) object
 app.get('/getEpic/:epicId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId } = req.params
   const epicData = await getEpic(token, epicId)
   if (!epicData.success) {
@@ -134,7 +137,10 @@ app.get('/getEpic/:epicId', async (req, res) => {
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON epic detail object
 app.put('/editEpic/:epicId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId } = req.params
   const { name, version } = req.body
   const epicData = await editEpic(epicId, name, version, token)
@@ -154,7 +160,10 @@ app.put('/editEpic/:epicId', async (req, res) => {
 // When delete succeeded, the HTTP response is a 204 NO CONTENT with an empty body response
 app.delete('/deleteEpic/:epicId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId } = req.params
   const epicData = await deleteEpic(epicId, token)
   if (!epicData.success) {
@@ -180,7 +189,10 @@ app.delete('/deleteEpic/:epicId', async (req, res) => {
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON list of epic detail object
 app.post('/createBulkEpics', async (req, res) => {
   const { username, password, epics } = req.body
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const epicData = await createBulkEpics(epics, token)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -198,7 +210,10 @@ app.post('/createBulkEpics', async (req, res) => {
 // The HTTP response is a 200 OK and the response body is a JSON epic filters data object
 app.get('/filtersData', async (req, res) => {
   const { username, password, projectId } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const epicData = await getFiltersData(token, projectId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -216,7 +231,10 @@ app.get('/filtersData', async (req, res) => {
 // The HTTP response is a 200 OK and the response body is a JSON list of epic related user story detail objects
 app.get('/listRelatedUserStories/:epicId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId } = req.params
   const epicData = await listRelatedUserStories(token, epicId)
   if (!epicData.success) {
@@ -241,7 +259,10 @@ app.get('/listRelatedUserStories/:epicId', async (req, res) => {
 // When the creation is successful, the HTTP response is a 201 Created and the response body is a JSON epic related user story detail object
 app.post('/addRelatedUserStory/:epicId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId } = req.params
   const { userStoryId } = req.body
   const epicData = await addRelatedUserStory(token, epicId, userStoryId)
@@ -260,7 +281,10 @@ app.post('/addRelatedUserStory/:epicId', async (req, res) => {
 // The HTTP response is a 200 OK and the response body is a JSON epic related user story detail object
 app.get('/getRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId, userStoryId } = req.params
   const epicData = await getRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
@@ -282,7 +306,10 @@ app.get('/getRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON epic related user story detail object
 app.put('/editRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId, userStoryId } = req.params
   const epicData = await editRelatedUserStory(token, epicId, userStoryId, req.body)
   if (!epicData.success) {
@@ -301,7 +328,10 @@ app.put('/editRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
 // When delete succeeded, the HTTP response is a 204 NO CONTENT with an empty body response
 app.delete('/deleteRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId, userStoryId } = req.params
   const epicData = await deleteRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
@@ -326,7 +356,10 @@ app.delete('/deleteRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
 // When the creation is successful, the HTTP response is a 201 OK and the response body is a JSON list of epic related user story detail object
 app.post('/bulkCreateRelatedUserStories/:epicId', async (req, res) => {
   const { username, password } = req.query
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const { epicId } = req.params
   const epicData = await bulkCreateRelatedUserStories(token, epicId, req.body)
   if (!epicData.success) {
