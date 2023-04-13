@@ -69,7 +69,10 @@ app.use((req, res, next) => {
 // When the creation is successful, the HTTP response is a 201 Created and the response body is a JSON epic detail object
 app.post('/createEpic', async (req, res) => {
   const { username, password, projectId, name, description } = req.body
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const epicData = await createEpic(name, projectId, description, token)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -87,7 +90,10 @@ app.post('/createEpic', async (req, res) => {
 // The HTTP response is a 200 OK and the response body is a JSON epic detail (GET) object
 app.post('/listEpics', async (req, res) => {
   const { username, password, projectId, projectSlug, assignedTo, isClosed } = req.body
-  const token = await getToken(username, password)
+  let { token } = req.body
+  if (!token) {
+    token = await getToken(username, password)
+  }
   const epicList = await listEpics(token, projectId, projectSlug, assignedTo, isClosed)
   if (!epicList.success) {
     return res.status(500).send(epicList)
