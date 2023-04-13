@@ -80,14 +80,13 @@ app.post('/createEpic', async (req, res) => {
 // Endpoint for listing epics
 // 14.3. Get
 // To get an epic send a GET request specifying the epic id in the url
-
 // curl -X GET \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
 // -s http://localhost:8000/api/v1/epics/1
 // The HTTP response is a 200 OK and the response body is a JSON epic detail (GET) object
-app.get('/listEpics', async (req, res) => {
-  const { username, password, projectId, projectSlug, assignedTo, isClosed } = req.query
+app.post('/listEpics', async (req, res) => {
+  const { username, password, projectId, projectSlug, assignedTo, isClosed } = req.body
   const token = await getToken(username, password)
   const epicList = await listEpics(token, projectId, projectSlug, assignedTo, isClosed)
   if (!epicList.success) {
@@ -99,7 +98,6 @@ app.get('/listEpics', async (req, res) => {
 // Endpoint for getting epic details
 // 14.3. Get
 // To get an epic send a GET request specifying the epic id in the url
-
 // curl -X GET \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
@@ -119,7 +117,6 @@ app.get('/getEpic/:epicId', async (req, res) => {
 // Endpoint for editing an epic
 // 14.5. Edit
 // To edit epics send a PUT or a PATCH specifying the epic id in the url. In a PATCH request you just need to send the modified data, in a PUT one the whole object must be sent.
-
 // curl -X PATCH \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
@@ -144,7 +141,6 @@ app.put('/editEpic/:epicId', async (req, res) => {
 // Endpoint for deleting an epic
 // 14.6. Delete
 // To delete epics send a DELETE specifying the epic id in the url
-
 // curl -X DELETE \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
@@ -164,13 +160,9 @@ app.delete('/deleteEpic/:epicId', async (req, res) => {
 // Endpoint for bulk creation of epics
 // 14.7. Bulk creation
 // To create multiple epics at the same time send a POST request with the following data:
-
 // project_id (required)
-
 // status_id (optional)
-
 // bulk_epics: epic subjects, one per line
-
 // curl -X POST \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
@@ -252,11 +244,9 @@ app.post('/addRelatedUserStory/:epicId', async (req, res) => {
   }
   return res.status(201).send(epicData)
 })
-
 // Endpoint for getting related user stories
 // 14.11. Get related userstory
 // To get a related user story from an epic send a GET request specifying the epic and user story ids in the url
-
 // curl -X GET \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
@@ -298,7 +288,6 @@ app.put('/editRelatedUserStory/:epicId/:userStoryId', async (req, res) => {
 // Endpoint for deleting related user stories
 // 14.13. Delete related userstory
 // To delete epic related user stories send a DELETE specifying the epic and the userstory ids in the url
-
 // curl -X DELETE \
 // -H "Content-Type: application/json" \
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \

@@ -69,12 +69,13 @@ async function listEpics (
 ) {
   try {
     const response = await axios.get(EPIC_API_URL, {
-      params: {
-        project: projectId,
-        project__slug: projectSlug,
-        assigned_to: assignedTo,
-        is_closed: isClosed
-      }
+      params: Object.assign({},
+        projectId && { project: projectId },
+        projectSlug && { project__slug: projectSlug },
+        assignedTo && { assigned_to: assignedTo },
+        isClosed && { is_closed: isClosed }
+      ),
+      headers: { Authorization: `Bearer ${token}` }
     })
     if (response.data) {
       return {
