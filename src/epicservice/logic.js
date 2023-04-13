@@ -360,7 +360,7 @@ async function deleteRelatedUserStory (token, epicId, userStoryId) {
 }
 
 // Function for bulk creating related user stories
-async function bulkCreateRelatedUserStories (token, projectId, userStories) {
+async function bulkCreateRelatedUserStories (token, projectId, epicId, userStories) {
   try {
     const response = await axios.post(
       `${EPIC_API_URL}/${epicId}/bulk_create_related_userstories`,

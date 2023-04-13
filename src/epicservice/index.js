@@ -193,6 +193,7 @@ app.post('/deleteEpic/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/bulk_create
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON list of epic detail object
 app.post('/createBulkEpics', async (req, res) => {
+  // eslint-disable-next-line no-unused-vars
   const { username, password, epics, projectId, statusId } = req.body
   let { token } = req.body
   if (!token) {
@@ -355,12 +356,12 @@ app.delete('/deleteRelatedUserStory/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories/bulk_create
 // When the creation is successful, the HTTP response is a 201 OK and the response body is a JSON list of epic related user story detail object
 app.post('/bulkCreateRelatedUserStories/', async (req, res) => {
-  const { username, password, projectId, userStories } = req.body
+  const { username, password, projectId, epicId, userStories } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const epicData = await bulkCreateRelatedUserStories(token, projectId, userStories)
+  const epicData = await bulkCreateRelatedUserStories(token, projectId, epicId, userStories)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
