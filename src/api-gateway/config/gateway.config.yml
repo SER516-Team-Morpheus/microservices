@@ -154,6 +154,19 @@ pipelines:
   epicPipeline:
     apiEndpoints:
       - epicSerice
+      - createEpic
+      - listEpics
+      - getEpic
+      - editEpic
+      - deleteEpic
+      - createBulkEpics
+      - getFiltersData
+      - listRelatedUserStories
+      - addRelatedUserStory
+      - getRelatedUserStory
+      - editRelatedUserStory
+      - deleteRelatedUserStory
+      - bulkCreateRelatedUserStories
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
