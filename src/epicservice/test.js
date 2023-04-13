@@ -117,7 +117,7 @@ describe('Epic Microservice', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          epiId: 187877,
+          epicId: 187877,
           name: 'Updated Epic 1',
           version: '1'
         })
