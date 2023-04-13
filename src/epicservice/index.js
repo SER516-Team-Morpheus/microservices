@@ -88,6 +88,15 @@ app.post('/createEpic', async (req, res) => {
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
 // -s http://localhost:8000/api/v1/epics/1
 // The HTTP response is a 200 OK and the response body is a JSON epic detail (GET) object
+// The results can be filtered using the following parameters:
+// project: project id
+// project__slug: project slug
+// assigned_to: assigned to user id
+// status__is_closed: boolean indicating if the epic status is closed
+// curl -X GET \
+// -H "Content-Type: application/json" \
+// -H "Authorization: Bearer ${AUTH_TOKEN}" \
+// -s http://localhost:8000/api/v1/epics?project=1
 app.post('/listEpics', async (req, res) => {
   const { username, password, projectId, projectSlug, assignedTo, isClosed } = req.body
   let { token } = req.body
@@ -110,12 +119,11 @@ app.post('/listEpics', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/1
 // The HTTP response is a 200 OK and the response body is a JSON epic detail (GET) object
 app.post('/getEpic/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, epicId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId } = req.body
   const epicData = await getEpic(token, epicId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -135,14 +143,12 @@ app.post('/getEpic/', async (req, res) => {
 //     }' \
 // -s http://localhost:8000/api/v1/epics/15
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON epic detail object
-app.put('/editEpic/', async (req, res) => {
-  const { username, password } = req.body
+app.post('/editEpic/', async (req, res) => {
+  const { username, password, epicId, name, version } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId } = req.body
-  const { name, version } = req.body
   const epicData = await editEpic(epicId, name, version, token)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -158,13 +164,12 @@ app.put('/editEpic/', async (req, res) => {
 // -H "Authorization: Bearer ${AUTH_TOKEN}" \
 // -s http://localhost:8000/api/v1/epics/15
 // When delete succeeded, the HTTP response is a 204 NO CONTENT with an empty body response
-app.delete('/deleteEpic/', async (req, res) => {
-  const { username, password } = req.body
+app.post('/deleteEpic/', async (req, res) => {
+  const { username, password, epicId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId } = req.body
   const epicData = await deleteEpic(epicId, token)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -188,12 +193,12 @@ app.delete('/deleteEpic/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/bulk_create
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON list of epic detail object
 app.post('/createBulkEpics', async (req, res) => {
-  const { username, password, epics } = req.body
+  const { username, password, epics, projectId, statusId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const epicData = await createBulkEpics(epics, token)
+  const epicData = await createBulkEpics(projectId, epics, token)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
@@ -230,12 +235,11 @@ app.post('/filtersData', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories
 // The HTTP response is a 200 OK and the response body is a JSON list of epic related user story detail objects
 app.post('/listRelatedUserStories/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, epicId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId } = req.body
   const epicData = await listRelatedUserStories(token, epicId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -258,19 +262,18 @@ app.post('/listRelatedUserStories/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories
 // When the creation is successful, the HTTP response is a 201 Created and the response body is a JSON epic related user story detail object
 app.post('/addRelatedUserStory/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, epicId, userStoryId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId } = req.body
-  const { userStoryId } = req.body
   const epicData = await addRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
   return res.status(201).send(epicData)
 })
+
 // Endpoint for getting related user stories
 // 14.11. Get related userstory
 // To get a related user story from an epic send a GET request specifying the epic and user story ids in the url
@@ -280,12 +283,11 @@ app.post('/addRelatedUserStory/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories/2
 // The HTTP response is a 200 OK and the response body is a JSON epic related user story detail object
 app.post('/getRelatedUserStory/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, epicId, userStoryId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId, userStoryId } = req.body
   const epicData = await getRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -305,13 +307,12 @@ app.post('/getRelatedUserStory/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories/2
 // When the creation is successful, the HTTP response is a 200 OK and the response body is a JSON epic related user story detail object
 app.put('/editRelatedUserStory/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, epicId, userStoryId, order } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId, userStoryId } = req.body
-  const epicData = await editRelatedUserStory(token, epicId, userStoryId, req.body)
+  const epicData = await editRelatedUserStory(token, epicId, userStoryId, order)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
@@ -327,12 +328,11 @@ app.put('/editRelatedUserStory/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories/2
 // When delete succeeded, the HTTP response is a 204 NO CONTENT with an empty body response
 app.delete('/deleteRelatedUserStory/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, epicId, userStoryId } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId, userStoryId } = req.body
   const epicData = await deleteRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
@@ -355,13 +355,12 @@ app.delete('/deleteRelatedUserStory/', async (req, res) => {
 // -s http://localhost:8000/api/v1/epics/15/related_userstories/bulk_create
 // When the creation is successful, the HTTP response is a 201 OK and the response body is a JSON list of epic related user story detail object
 app.post('/bulkCreateRelatedUserStories/', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, projectId, userStories } = req.body
   let { token } = req.body
   if (!token) {
     token = await getToken(username, password)
   }
-  const { epicId } = req.body
-  const epicData = await bulkCreateRelatedUserStories(token, epicId, req.body)
+  const epicData = await bulkCreateRelatedUserStories(token, projectId, userStories)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }

@@ -118,7 +118,7 @@ async function getEpic (token, epicId) {
 }
 
 // Function to Edit epic details
-async function editEpic (epicId, name, version, token) {
+async function editEpic (epicId, name, version = 1, token) {
   try {
     const response = await axios.patch(
       `${EPIC_API_URL}/${epicId}`,
@@ -169,11 +169,14 @@ async function deleteEpic (epicId, token) {
 }
 
 // Function to create bulk epics
-async function createBulkEpics (epics, token) {
+async function createBulkEpics (projectId, epics, token) {
   try {
     const response = await axios.post(
       EPIC_API_URL,
-      epics,
+      {
+        project_id: projectId,
+        bulk_epics: epics
+      },
       { headers: { Authorization: `Bearer ${token}` } }
     )
     if (response.data) {
@@ -251,6 +254,7 @@ async function addRelatedUserStory (token, epicId, userStoryId) {
     const response = await axios.post(
       `${EPIC_API_URL}/${epicId}/related_userstories`,
       {
+        epic: epicId,
         user_story: userStoryId
       },
       {
@@ -301,12 +305,12 @@ async function getRelatedUserStory (token, epicId, userStoryId) {
 }
 
 // Function for editing related user story
-async function editRelatedUserStory (token, epicId, userStoryId, version) {
+async function editRelatedUserStory (token, epicId, userStoryId, order) {
   try {
     const response = await axios.patch(
       `${EPIC_API_URL}/${epicId}/related_userstories/${userStoryId}`,
       {
-        version
+        order
       },
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -356,12 +360,13 @@ async function deleteRelatedUserStory (token, epicId, userStoryId) {
 }
 
 // Function for bulk creating related user stories
-async function bulkCreateRelatedUserStories (token, epicId, userStories) {
+async function bulkCreateRelatedUserStories (token, projectId, userStories) {
   try {
     const response = await axios.post(
       `${EPIC_API_URL}/${epicId}/bulk_create_related_userstories`,
       {
-        user_stories: userStories
+        project_id: projectId,
+        bulk_userstories: userStories
       },
       {
         headers: { Authorization: `Bearer ${token}` }

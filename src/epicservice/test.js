@@ -110,45 +110,35 @@ describe('Epic Microservice', () => {
     })
   })
 
-  // describe('PUT /editEpic/:epicId', () => {
-  //   it('should edit the epic and return 200 status code', async () => {
-  //     const response = await request(app)
-  //       .put('/editEpic/1')
-  //       .query({ username: 'SERtestuser', password: 'testuser' })
-  //       .send({ name: 'Updated Epic 1', version: '2' })
-  //     expect(response.status).toEqual(200)
-  //     expect(response.body.success).toBe(true)
-  //     expect(response.body.epic).toBeDefined()
-  //   })
+  describe('POST /editEpic/', () => {
+    it('should edit the epic and return 200 status code', async () => {
+      const response = await request(app)
+        .post('/editEpic')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          epiId: 187877,
+          name: 'Updated Epic 1',
+          version: '1'
+        })
+      expect(response.status).toEqual(200)
+      expect(response.body.success).toBe(true)
+      expect(response.body.epic).toBeDefined()
+    })
 
-  //   it('should return 500 status code if any error occurred', async () => {
-  //     const response = await request(app)
-  //       .put('/editEpic/1')
-  //       .query({ username: 'invaliduser', password: 'invalidpassword' })
-  //       .send({ name: 'Updated Epic 1', version: '2' })
-  //     expect(response.status).toEqual(500)
-  //     expect(response.body.success).toBe(false)
-  //     expect(response.body.message).toBeDefined()
-  //   })
-  // })
-
-  // describe('DELETE /deleteEpic/:epicId', () => {
-  //   it('should delete the epic and return 200 status code', async () => {
-  //     const response = await request(app)
-  //       .delete('/deleteEpic/1')
-  //       .query({ username: 'SERtestuser', password: 'testuser' })
-  //     expect(response.status).toEqual(200)
-  //     expect(response.body.success).toBe(true)
-  //     expect(response.body.message).toBeDefined()
-  //   })
-
-  //   it('should return 500 status code if any error occurred', async () => {
-  //     const response = await request(app)
-  //       .delete('/deleteEpic/1')
-  //       .query({ username: 'invaliduser', password: 'invalidpassword' })
-  //     expect(response.status).toEqual(500)
-  //     expect(response.body.success).toBe(false)
-  //     expect(response.body.message).toBeDefined()
-  //   })
-  // })
+    it('should return 500 status code if any error occurred', async () => {
+      const response = await request(app)
+        .post('/editEpic')
+        .send({
+          username: 'invaliduser',
+          password: 'invalidpassword',
+          epiId: 187877,
+          name: 'Updated Epic 1',
+          version: '1'
+        })
+      expect(response.status).toEqual(500)
+      expect(response.body.success).toBe(false)
+      expect(response.body.message).toBeDefined()
+    })
+  })
 })
