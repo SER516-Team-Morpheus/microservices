@@ -114,7 +114,7 @@ app.delete('/deleteTask', async (req, res) => {
   return res.status(201).send(taskDeleteData)
 })
 
-app.post('/getTaskDetails', async (req, res) => {
+app.get('/getTaskDetails', async (req, res) => {
   const {
     username, password, projectname, userstoryname, taskname
   } = req.body
@@ -129,7 +129,7 @@ app.post('/getTaskDetails', async (req, res) => {
   return res.status(201).send(taskDetails)
 })
 
-app.post('/getUserStoryTaskDetails', async (req, res) => {
+app.get('/getUserStoryTaskDetails', async (req, res) => {
   const {
     username, password, projectname, userstoryname
   } = req.body
