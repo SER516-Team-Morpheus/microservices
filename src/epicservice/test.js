@@ -80,25 +80,35 @@ describe('Epic Microservice', () => {
     })
   })
 
-  // describe('GET /getEpic/:epicId', () => {
-  //   it('should return epic details and return 200 status code', async () => {
-  //     const response = await request(app)
-  //       .get('/getEpic/1')
-  //       .query({ username: 'SERtestuser', password: 'testuser' })
-  //     expect(response.status).toEqual(200)
-  //     expect(response.body.success).toBe(true)
-  //     expect(response.body.epic).toBeDefined()
-  //   })
+  describe('POST /getEpic', () => {
+    it('should return epic details and return 200 status code', async () => {
+      const response = await request(app)
+        .post('/getEpic/')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          epicId: 187877
+        })
+      expect(response.status).toEqual(200)
+      expect(response.body.success).toBe(true)
+      expect(response.body.epic).toBeDefined()
+    })
 
-  //   it('should return 500 status code if any error occurred', async () => {
-  //     const response = await request(app)
-  //       .get('/getEpic/invalidepicid')
-  //       .query({ username: 'invaliduser', password: 'invalidpassword' })
-  //     expect(response.status).toEqual(500)
-  //     expect(response.body.success).toBe(false)
-  //     expect(response.body.message).toBeDefined()
-  //   })
-  // })
+    it('should return 500 status code if any error occurred', async () => {
+      const response = await request(app)
+        .post('/getEpic/')
+        .set('Accept', 'application/json')
+        .query({
+          username: 'invaliduser',
+          password: 'invalidpassword',
+          epicId: 187877
+        })
+      expect(response.status).toEqual(500)
+      expect(response.body.success).toBe(false)
+      expect(response.body.message).toBeDefined()
+    })
+  })
 
   // describe('PUT /editEpic/:epicId', () => {
   //   it('should edit the epic and return 200 status code', async () => {
