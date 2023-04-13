@@ -13,9 +13,6 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
-  rolesservice:
-    host: localhost
-    paths: "/rolesservice"
   getProjectByslug:
     host: localhost
     paths: "/getProjectByslug"
@@ -87,8 +84,6 @@ serviceEndpoints:
     url: "http://authservice:3001"
   projectservice:
     url: "http://projectservice:3002"
-  rolesservice:
-    url: "http://rolesservice:3008"
   userstoryservice:
     url: "http://userstoryservice:3003"
   epicservice:
@@ -142,10 +137,6 @@ pipelines:
           - action:
               serviceEndpoint: projectservice
               changeOrigin: true
-
-  projectPipeline:
-    apiEndpoints:
-      - rolesservice
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
@@ -180,8 +171,6 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: epicservice
-              changeOrigin: true
-              serviceEndpoint: rolesservice
               changeOrigin: true
                         
   taskPipeline:
