@@ -77,7 +77,6 @@ apiEndpoints:
   deleteSprintByName:
     host: localhost
     paths: "/deleteSprintByName"
-
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -138,7 +137,6 @@ pipelines:
           - action:
               serviceEndpoint: projectservice
               changeOrigin: true
-
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
@@ -154,6 +152,19 @@ pipelines:
   epicPipeline:
     apiEndpoints:
       - epicSerice
+      - createEpic
+      - listEpics
+      - getEpic
+      - editEpic
+      - deleteEpic
+      - createBulkEpics
+      - getFiltersData
+      - listRelatedUserStories
+      - addRelatedUserStory
+      - getRelatedUserStory
+      - editRelatedUserStory
+      - deleteRelatedUserStory
+      - bulkCreateRelatedUserStories
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -161,7 +172,7 @@ pipelines:
           - action:
               serviceEndpoint: epicservice
               changeOrigin: true
-                            
+                        
   taskPipeline:
     apiEndpoints:
       - taskservice
@@ -205,5 +216,4 @@ pipelines:
           - action:
               serviceEndpoint: sprintservice
               changeOrigin: true              
-
 
