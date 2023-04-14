@@ -159,10 +159,18 @@ async function getUserStoryTasksDetails (token, slugName, userstoryName) {
         parameters.push(taskDetails)
       }
     }
-    return {
-      success: true,
-      message: 'No Task Found for given user story',
-      details: parameters
+    if (parameters.length !== 0) {
+      return {
+        success: true,
+        message: 'Task details fetched successfully',
+        details: parameters
+      }
+    } else {
+      return {
+        success: true,
+        message: 'No Task Found for given user story',
+        details: parameters
+      }
     }
   } catch (error) {
     return { success: false, message: 'Error fetching tasks for given user story' }
