@@ -1,5 +1,5 @@
 const express = require('express')
-const { createIssue, getIssues } = require('./logic')
+const { createIssue, getIssues, getIssue } = require('./logic')
 
 const app = express()
 const port = 3009
@@ -43,15 +43,36 @@ app.get('/getIssues', async (req, res) => {
         subject:issue.subject,
         project: issue.project,
         assigned_to: issue.assigned_to,
-        created_date: issue.created_date,
         is_blocked: issue.is_blocked,
         is_closed: issue.is_closed,
         status_id: issue.status,
-        status: issue.status_extra_info.name,
-        priority: issue.priority,
-        severity: issue.severity
+        status: issue.status_extra_info.name
       }))
       return res.status(201).send({ success: true, data: result })
+    }
+    return res.status(500).send(issuerData)
+  })
+
+  // Endpoint for getting  all issues details
+app.get('/getIssueById', async (req, res) => {
+    const { username, password, issueId } = req.query
+    const issueData = await getIssue(username, password, issueId)
+    const result = {
+        id: issueData.data.id,
+        project: issueData.data.project,
+        status_id: issueData.data.status,
+        status: issueData.data.status_extra_info.name,
+        assigned_to: issueData.data.assigned_to == null ? null : issueData.data.assigned_to_extra_info.full_name_display,
+        subject: issueData.data.subject,
+        description: issueData.data.description,
+        is_blocked: issueData.data.is_blocked,
+        is_closed: issueData.data.is_closed,
+        severity: issueData.data.severity,
+        priority: issueData.data.priority,
+        type: issueData.data.type
+    }
+    if (issueData.success) {
+      return res.status(201).send({ success: true, data: result  })
     }
     return res.status(500).send(issuerData)
   })
