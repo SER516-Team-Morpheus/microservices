@@ -4,6 +4,7 @@ require('dotenv').config({ path: '../.env' })
 const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`
 const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
+const POINTS_API_URL = `${process.env.TAIGA_API_BASE_URL}/points`
 const GET_USER_URL = `${process.env.TAIGA_API_BASE_URL}/users`
 const POINTS_URL = `${process.env.TAIGA_API_BASE_URL}/points`
 
@@ -185,6 +186,9 @@ async function getUserStoryDetails(token, slugName, userstoryName) {
         parameters.id = response.data[i].id
         parameters.version = response.data[i].version
         parameters.ref = response.data[i].ref
+        parameters.projectId = response.data[i].project
+        const points = response.data[i].points
+        parameters.point = Math.min(...Object.keys(points).map(Number))
       }
     }
     if (parameters.id) {
@@ -204,6 +208,29 @@ async function getUserStoryDetails(token, slugName, userstoryName) {
   }
 }
 
+async function getPointValues (token, projectId) {
+  try {
+    const PROJECT_POINTS_DETAILS_URL = POINTS_API_URL + '?project=' + projectId
+    const response = await axios.get(PROJECT_POINTS_DETAILS_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (response.data.length > 0) {
+      let pointValue = 0
+      for (let i = 0; i < response.data.length; i += 1) {
+        if (response.data[i].order === 1) {
+          pointValue = response.data[i].id
+          break
+        }
+      }
+      return { success: true, message: 'found all the details', point_value: pointValue }
+    } else {
+      return { success: false, message: 'Not project found with given details' }
+    }
+  } catch (error) {
+    return { success: false, message: 'Not able to fetch points' }
+  }
+}
+
 module.exports = {
   createUserstory,
   updateUserstory,
@@ -211,4 +238,5 @@ module.exports = {
   getUserStoryDetails,
   getProjectBySlug,
   getUserStory,
+  getPointValues
 }

@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const { getAllSprints, getSprintById, createSprint, deleteSprint, editSprint, getToken } = require('./logic')
+const { getAllSprints, createSprint, deleteSprint, editSprint, getToken } = require('./logic')
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -37,20 +37,20 @@ app.get('/sprints', async (req, res) => {
   }
 })
 
-app.get('/sprintByID/:sprintId', async (req, res) => {
-  let token = req.body.token
-  if (!token) {
-    const { username, password } = req.body
-    token = await getToken(username, password)
-  }
-  const { sprintId } = req.params
-  try {
-    const sprints = await getSprintById(token, sprintId)
-    res.status(200).send({ sprints, success: true })
-  } catch (error) {
-    res.status(500).json({ error: 'Error retrieving sprint', success: false })
-  }
-})
+// app.get('/sprintByID/:sprintId', async (req, res) => {
+//   let token = req.body.token
+//   if (!token) {
+//     const { username, password } = req.body
+//     token = await getToken(username, password)
+//   }
+//   const { sprintId } = req.params
+//   try {
+//     const sprints = await getSprintById(token, sprintId)
+//     res.status(200).send({ sprints, success: true })
+//   } catch (error) {
+//     res.status(500).json({ error: 'Error retrieving sprint', success: false })
+//   }
+// })
 
 async function getSprintByName (sprintName, token, projectID) {
   try {
@@ -115,7 +115,7 @@ app.patch('/editSprintByName', async (req, res) => {
   }
 })
 
-app.delete('/deleteSprintByName', async (req, res) => {
+app.post('/deleteSprintByName', async (req, res) => {
   let token = req.body.token
   if (!token) {
     const { username, password } = req.body
@@ -157,41 +157,41 @@ app.post('/createSprint', async (req, res) => {
   }
 })
 
-app.patch('/editSprint/:sprintId', async (req, res) => {
-  let token = req.body.token
-  if (!token) {
-    const { username, password } = req.body
-    token = await getToken(username, password)
-  }
-  const sprintId = req.params.sprintId
-  const patch = req.body.patch
-  try {
-    const editedSprint = await editSprint(token, sprintId, patch)
-    res.status(201).json(editedSprint)
-  } catch (error) {
-    res.status(500).json({ error: 'Error editing sprint' })
-  }
-})
+// app.patch('/editSprint/:sprintId', async (req, res) => {
+//   let token = req.body.token
+//   if (!token) {
+//     const { username, password } = req.body
+//     token = await getToken(username, password)
+//   }
+//   const sprintId = req.params.sprintId
+//   const patch = req.body.patch
+//   try {
+//     const editedSprint = await editSprint(token, sprintId, patch)
+//     res.status(201).json(editedSprint)
+//   } catch (error) {
+//     res.status(500).json({ error: 'Error editing sprint' })
+//   }
+// })
 
-app.delete('/deleteSprint/:sprintId', async (req, res) => {
-  let token = req.body.token
-  if (!token) {
-    const { username, password } = req.body
-    token = await getToken(username, password)
-  }
-  const sprintId = req.params.sprintId
-  try {
-    const status = await deleteSprint(token, sprintId)
-    const ack = {
-      sprintID: sprintId,
-      status: 'Deleted Successfully',
-      TaigaAPIResponseStatus: status
-    }
-    res.status(201).send(ack)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
+// app.delete('/deleteSprint/:sprintId', async (req, res) => {
+//   let token = req.body.token
+//   if (!token) {
+//     const { username, password } = req.body
+//     token = await getToken(username, password)
+//   }
+//   const sprintId = req.params.sprintId
+//   try {
+//     const status = await deleteSprint(token, sprintId)
+//     const ack = {
+//       sprintID: sprintId,
+//       status: 'Deleted Successfully',
+//       TaigaAPIResponseStatus: status
+//     }
+//     res.status(201).send(ack)
+//   } catch (error) {
+//     res.status(500).json({ error: error.message })
+//   }
+// })
 
 const port = 3010
 // Start the server
