@@ -5,6 +5,7 @@ const USERSTORY_API_URL = `${process.env.TAIGA_API_BASE_URL}/userstories`
 const AUTH_URL = `${process.env.TAIGA_API_BASE_URL}/auth`
 const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
 const GET_USER_URL = `${process.env.TAIGA_API_BASE_URL}/users`
+const POINTS_URL = `${process.env.TAIGA_API_BASE_URL}/points`
 
 // Function to get auth token from authenticate api
 async function getToken(username, password) {
@@ -124,8 +125,24 @@ async function getUserStory(token, projectId) {
     const response = await axios.get(GET_USER_STORY_URL, {
       headers: { Authorization: `Bearer ${token}` },
     })
+    const GET_POINTS_URL = POINTS_URL + '?project=' + projectId
+    const pointsResponse = await axios.get(GET_POINTS_URL, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    const points = pointsResponse.data
+
     const newResponse = []
     for (let i = 0; i < response.data.length; i++) {
+      const pointsMapping = response.data[i].points
+      let totalPoints = 0
+      for (const pointId in pointsMapping) {
+        const pointsId = pointsMapping[pointId]
+        const point = points.find((p) => p.id === pointsId)
+        if (point) {
+          totalPoints += point.value
+        }
+      }
       const { id, subject } = response.data[i]
       const status = response.data[i].status_extra_info.name
       let assignee = 'none'
@@ -135,7 +152,7 @@ async function getUserStory(token, projectId) {
         assignee = await getUserName(token, assignedTo)
       }
 
-      newResponse.push({ id, subject, status, assignee })
+      newResponse.push({ id, subject, status, assignee, totalPoints })
     }
     if (newResponse.length) {
       return {
