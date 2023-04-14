@@ -8,12 +8,12 @@ const GET_USER_URL = `${process.env.TAIGA_API_BASE_URL}/users`
 const POINTS_URL = `${process.env.TAIGA_API_BASE_URL}/points`
 
 // Function to get auth token from authenticate api
-async function getToken(username, password) {
+async function getToken (username, password) {
   try {
     const response = await axios.post(AUTH_URL, {
       type: 'normal',
       username,
-      password,
+      password
     })
     if (response.data.auth_token) {
       return response.data.auth_token
@@ -26,11 +26,11 @@ async function getToken(username, password) {
 }
 
 // Function to get the projects by slug name
-async function getProjectBySlug(token, slugName) {
+async function getProjectBySlug (token, slugName) {
   const PROJECT_SLUG_URL = PROJECT_API_URL + '/by_slug?slug=' + slugName
   try {
     const response = await axios.get(PROJECT_SLUG_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
     if (response.data.id) {
       return {
@@ -38,12 +38,12 @@ async function getProjectBySlug(token, slugName) {
         projectId: response.data.id,
         projectName: response.data.name,
         slugName: response.data.slug,
-        description: response.data.description,
+        description: response.data.description
       }
     } else {
       return {
         success: false,
-        message: 'No project found',
+        message: 'No project found'
       }
     }
   } catch (error) {
@@ -51,13 +51,13 @@ async function getProjectBySlug(token, slugName) {
   }
 }
 // Function to create new user story
-async function createUserstory(project, subject, token) {
+async function createUserstory (project, subject, token) {
   try {
     const response = await axios.post(
       USERSTORY_API_URL,
       {
         project,
-        subject,
+        subject
       },
       { headers: { Authorization: `Bearer ${token}` } }
     )
@@ -65,12 +65,12 @@ async function createUserstory(project, subject, token) {
       return {
         success: true,
         userstoryId: response.data.id,
-        message: `${subject} successfully created.`,
+        message: `${subject} successfully created.`
       }
     } else {
       return {
         success: false,
-        message: 'Something went wrong while creating userstory',
+        message: 'Something went wrong while creating userstory'
       }
     }
   } catch (error) {
@@ -80,23 +80,23 @@ async function createUserstory(project, subject, token) {
 }
 
 // Function to update user story
-async function updateUserstory(userstoryId, parameters, token) {
+async function updateUserstory (userstoryId, parameters, token) {
   try {
     const USERSTORY_UPDATE_API_URL = USERSTORY_API_URL + '/' + userstoryId
     const response = await axios.patch(USERSTORY_UPDATE_API_URL, parameters, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
     // console.log(response);
     if (response.data.id) {
       return {
         success: true,
         message: `User Story with id ${userstoryId} successfully updated`,
-        userstoryId: response.data.id,
+        userstoryId: response.data.id
       }
     } else {
       return {
         success: false,
-        message: 'Something went wrong while updating userstory',
+        message: 'Something went wrong while updating userstory'
       }
     }
   } catch (error) {
@@ -106,11 +106,11 @@ async function updateUserstory(userstoryId, parameters, token) {
 }
 
 // Function to get the user name from user id
-async function getUserName(token, assignedTo) {
+async function getUserName (token, assignedTo) {
   const GET_USER_NAME_URL = GET_USER_URL + '/' + assignedTo
   try {
     const response = await axios.get(GET_USER_NAME_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
     return response.data.full_name
   } catch (error) {
@@ -119,15 +119,15 @@ async function getUserName(token, assignedTo) {
 }
 
 // Function to get the user story detail
-async function getUserStory(token, projectId) {
+async function getUserStory (token, projectId) {
   const GET_USER_STORY_URL = USERSTORY_API_URL + '?project=' + projectId
   try {
     const response = await axios.get(GET_USER_STORY_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
     const GET_POINTS_URL = POINTS_URL + '?project=' + projectId
     const pointsResponse = await axios.get(GET_POINTS_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
 
     const points = pointsResponse.data
@@ -157,13 +157,13 @@ async function getUserStory(token, projectId) {
     if (newResponse.length) {
       return {
         success: true,
-        userStory: newResponse,
+        userStory: newResponse
       }
     } else {
       return {
         success: true,
         message: 'No User story found for this project.',
-        userStory: newResponse,
+        userStory: newResponse
       }
     }
   } catch (error) {
@@ -171,12 +171,12 @@ async function getUserStory(token, projectId) {
   }
 }
 
-async function getUserStoryDetails(token, slugName, userstoryName) {
+async function getUserStoryDetails (token, slugName, userstoryName) {
   try {
     const USERSTORY_DETAILS_API_URL =
       USERSTORY_API_URL + '?project__slug=' + slugName
     const response = await axios.get(USERSTORY_DETAILS_API_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
 
     const parameters = {}
@@ -191,12 +191,12 @@ async function getUserStoryDetails(token, slugName, userstoryName) {
       return {
         success: true,
         message: 'successfully fetched details',
-        parameters,
+        parameters
       }
     } else {
       return {
         success: false,
-        message: 'User Story not found',
+        message: 'User Story not found'
       }
     }
   } catch (error) {
@@ -210,5 +210,5 @@ module.exports = {
   getToken,
   getUserStoryDetails,
   getProjectBySlug,
-  getUserStory,
+  getUserStory
 }
