@@ -141,11 +141,98 @@ async function deleteIssue (username, password, issueId) {
       return { success: false, message: error.message }
     }
   }
+
+  async function getToken (username, password) {
+  try {
+    const response = await axios.post(AUTH_API_URL, {
+      type: 'normal',
+      username,
+      password
+    })
+    if (response.data.auth_token) {
+      return response.data.auth_token
+    }
+    return { auth_token: 'NULL' }
+  } catch (error) {
+    return { auth_token: 'NULL' }
+  }
+} 
+
+async function getIssueDetails(authToken, slugName, issueName)
+{
+  try {
+      const ISSUEDETAILS_URL = `${ISSUE_API_URL}?project__slug=${slugName}`
+      const response  = await axios.get(
+        ISSUEDETAILS_URL,
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      )
+      const parameters = {}
+      for (let i = 0; i < response.data.length; i += 1) {
+        if (response.data[i].subject === issueName)
+        {
+          parameters.subject = response.data[i].subject
+          parameters.issueId = response.data[i].id
+          parameters.version = response.data[i].version
+          if (response.data[i].status_extra_info.name.toLowerCase() === 'new') {
+            parameters.status_id = response.data[i].status
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'in progress') {
+            parameters.status_id = response.data[i].status - 1
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'ready for test') {
+            parameters.status_id = response.data[i].status - 2
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'closed') {
+            parameters.status_id = response.data[i].status - 3
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'needs info') {
+            parameters.status_id = response.data[i].status - 4
+          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'rejected') {
+            parameters.status_id = response.data[i].status - 5
+          } else if(response.data[i].status_extra_info.name.toLowerCase() === 'postponed') {
+            parameters.status_id = response.data[i].status - 6
+          }
+        } 
+        
+      }
+      if (parameters.issueId) {
+        return {
+          success: true,
+          message: 'successfully fetched details',
+          parameters
+        }
+      }
+  
+      return {
+        success: false,
+        message: 'Issue not found'
+      }
+      
+  } catch (error) {
+
+    return { success: false, message : "Error fetching issue details"}
+    
+  }
+}
+async function updateIssue(authToken, issueId,parameters){
+  try {
+    
+    const issue_API_URL = `${ISSUE_API_URL}/${issueId}`
+    const response = await axios.patch(
+      issue_API_URL,
+      parameters,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    )
+    return { success: true, message : "Issue Updated successfully"}
+  } catch (error) {
+    console.log(error)
+    return { success: false, message : "Error updating issues"}
+  }
+}
   
 
 module.exports = {
     createIssue,
     getIssues,
     getIssue,
-    deleteIssue
+    deleteIssue,
+    updateIssue,
+    getToken,
+    getIssueDetails
   }
