@@ -16,12 +16,22 @@ services:
       - .env
     networks:
       - my-network
+  rolesservice:
+    build: ./rolesservice
+    ports:
+      - "3008:3008"
+    env_file:
+      - .env
+    networks:
+      - my-network
   userstoryservice:
     build: ./userstoryservice
     ports:
       - "3003:3003"
     env_file:
       - .env
+    networks:
+      - my-network
   taskservice:
     build: ./taskservice 
     ports:
@@ -68,6 +78,7 @@ services:
       - userstoryservice
       - memberservice
       - taskservice
+      - rolesservice
 networks:
   my-network:
 
