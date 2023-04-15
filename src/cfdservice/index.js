@@ -74,7 +74,6 @@ app.get('/cfd', async (req, res) => {
                 ':key': key
             }
         }
-        console.log(key)
         return queryDynamoDB(params)
             .then(data => {
                 cfdDataList[key] = data;
@@ -111,10 +110,10 @@ app.get('/cfd', async (req, res) => {
 })
 // Start the server
 app.listen(port, () => {
-    console.log(`User story microservice running at http://localhost:${port}`)
+    console.log(`CFD Microservice running at http://localhost:${port}`)
 })
 
-module.exports = app
+module.exports = { app, getEmptyStatusMatrix }
 
 
 
