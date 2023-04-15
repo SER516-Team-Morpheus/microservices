@@ -77,6 +77,9 @@ apiEndpoints:
   deleteSprintByName:
     host: localhost
     paths: "/deleteSprintByName"
+  cfdservice:
+    host: localhost
+    paths: "/cfd" 
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -94,6 +97,8 @@ serviceEndpoints:
     url: "http://memberservice:3004"
   sprintservice:
     url: "http://sprintservice:3010"
+  cfdservice:
+    url: "http://cfdservice:3012"
 policies:
   - basic-auth
   - cors
@@ -215,5 +220,16 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: sprintservice
+              changeOrigin: true              
+  
+  cfdPipeline:
+    apiEndpoints:
+      - cfd
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: cfdservice
               changeOrigin: true              
 
