@@ -84,7 +84,7 @@ describe('Project Microservice', () => {
   describe('Update Project Name', () => {
     describe('PATCH /updateProject/:projectID', () => {
       it('should return 201 if patch is successful', async () => {
-        console.log(projID)
+        const response = await request(app)
           .patch(`/updateProject/${projID}`)
           .send({ username, password, patch })
           .expect(201)
