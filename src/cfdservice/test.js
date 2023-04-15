@@ -6,7 +6,7 @@ describe('GET /cfd', () => {
     const projectName = 'TestProject'
     const response = await request(app)
       .get('/cfd')
-      .send({ projectName })
+      .query({ projectName })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -17,7 +17,7 @@ describe('GET /cfd', () => {
     const projectName = 'NonexistentProject'
     const response = await request(app)
       .get('/cfd')
-      .send({ projectName })
+      .query({ projectName })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(500)

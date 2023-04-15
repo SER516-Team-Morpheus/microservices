@@ -51,7 +51,12 @@ app.get('/cfd', async (req, res) => {
   const endDate = new Date(today.getTime())
   const sevenDays = 6 * oneDay
   const startDate = new Date(today.getTime() - sevenDays)
-  const { projectName } = req.body
+  const { projectName } = req.query
+  if (!projectName) {
+    return res.status(500).send({
+      error: 'Project name not sent in query.'
+    })
+  }
   const slug = `${userName.toLowerCase()}-${projectName.toLowerCase()}`
   const dateList = []
   const cfdDataList = {}

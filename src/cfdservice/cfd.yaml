@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  title: CFD Microservice
+  version: 1.0.0
+  description: Documentation for CFD (Cumulative Flow Diagram) Microservice
+  contact:
+    name: Raumil Dhandhukia
+    email: rdhandhu@asu.edu
+servers:
+  - url: http://localhost:3012
+  - url: http://localhost:8080
+paths:
+  /cfd:
+    get:
+      summary: Get tasks status matrix for to create CFD.
+      description: Based upon Project Name, status matrix for past seven days will be returned to the called to create CFD.
+      parameters:
+        - name: projectName
+          in: query
+          required: true
+          description: Project Name of the Taiga
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              example:
+                project: testproject
+                "2023-04-09":
+                  Ready for test: 1
+                  Closed: 0
+                  Done: 0
+                  In progress: 5
+                  New: 9
+                  Needs Info: 2
+                "2023-04-10":
+                  Ready for test: 1
+                  Closed: 0
+                  Done: 0
+                  In progress: 11
+                  New: 4
+                  Needs Info: 1
+                "2023-04-11":
+                  Ready for test: 1
+                  Closed: 0
+                  Done: 0
+                  In progress: 11
+                  New: 6
+                  Needs Info: 1
+                "2023-04-12":
+                  Ready for test: 1
+                  Closed: 0
+                  Done: 0
+                  In progress: 17
+                  New: 1
+                  Needs Info: 2
+                "2023-04-13":
+                  Ready for test: 1
+                  Closed: 0
+                  Done: 0
+                  In progress: 20
+                  New: 0
+                  Needs Info: 0
+                "2023-04-14":
+                  Ready for test: 2
+                  Closed: 0
+                  Done: 2
+                  In progress: 22
+                  New: 0
+                  Needs Info: 1
+                "2023-04-15":
+                  Ready for test: 2
+                  Closed: 0
+                  Done: 0
+                  In progress: 26
+                  New: 2
+                  Needs Info: 0
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Project not found
+      tags:
+        - CFD Microservice
