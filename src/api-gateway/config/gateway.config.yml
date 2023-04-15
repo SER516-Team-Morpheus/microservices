@@ -13,9 +13,6 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
-  roleservice:
-    host: localhost
-    paths: "/roleservice"
   getProjectByslug:
     host: localhost
     paths: "/getProjectByslug"
@@ -87,8 +84,6 @@ serviceEndpoints:
     url: "http://authservice:3001"
   projectservice:
     url: "http://projectservice:3002"
-  roleservice:
-    url: "http://roleservice:3008"
   userstoryservice:
     url: "http://userstoryservice:3003"
   epicservice:
@@ -142,10 +137,6 @@ pipelines:
           - action:
               serviceEndpoint: projectservice
               changeOrigin: true
-
-  projectPipeline:
-    apiEndpoints:
-      - roleservice
   userstoryPipeline:
     apiEndpoints:
       - userstoryservice
@@ -161,14 +152,25 @@ pipelines:
   epicPipeline:
     apiEndpoints:
       - epicSerice
+      - createEpic
+      - listEpics
+      - getEpic
+      - editEpic
+      - deleteEpic
+      - createBulkEpics
+      - getFiltersData
+      - listRelatedUserStories
+      - addRelatedUserStory
+      - getRelatedUserStory
+      - editRelatedUserStory
+      - deleteRelatedUserStory
+      - bulkCreateRelatedUserStories
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
       - proxy:
           - action:
               serviceEndpoint: epicservice
-              changeOrigin: true
-              serviceEndpoint: roleservice
               changeOrigin: true
                         
   taskPipeline:

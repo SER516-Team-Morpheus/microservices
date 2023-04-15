@@ -136,6 +136,47 @@ async function getTaskDetails (token, slugName, userstoryName, taskname) {
   }
 }
 
+async function getUserStoryTasksDetails (token, slugName, userstoryName) {
+  try {
+    const TASK_DETAILS_API_URL = `${TASK_API_URL}?project__slug=${slugName}`
+    const response = await axios.get(
+      TASK_DETAILS_API_URL,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    const parameters = []
+    for (let i = 0; i < response.data.length; i += 1) {
+      const taskDetails = {}
+      if (response.data[i].user_story_extra_info.subject === userstoryName) {
+        taskDetails.taskId = response.data[i].id
+        taskDetails.taskName = response.data[i].subject
+        taskDetails.user_story = response.data[i].user_story
+        taskDetails.version = response.data[i].version
+        taskDetails.user_story_extra_info = response.data[i].user_story_extra_info
+        taskDetails.status_extra_info = response.data[i].status_extra_info
+        taskDetails.assigned_to_extra_info = response.data[i].assigned_to_extra_info
+      }
+      if (Object.keys(taskDetails).length !== 0) {
+        parameters.push(taskDetails)
+      }
+    }
+    if (parameters.length !== 0) {
+      return {
+        success: true,
+        message: 'Task details fetched successfully',
+        details: parameters
+      }
+    } else {
+      return {
+        success: true,
+        message: 'No Task Found for given user story',
+        details: parameters
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error fetching tasks for given user story' }
+  }
+}
+
 async function updateTaskDetails (token, taskId, parameters) {
   try {
     const TASK_UPDATE_API_URL = `${TASK_API_URL}/${taskId}`
@@ -187,5 +228,6 @@ module.exports = {
   getUserStoryDetails,
   getTaskDetails,
   updateTaskDetails,
-  deleteTask
+  deleteTask,
+  getUserStoryTasksDetails
 }
