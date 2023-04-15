@@ -112,7 +112,7 @@ app.patch('/updateProject/:projectID', async (req, res) => {
   try {
     const projectData = await editProject(token, projectID, patch)
     // eslint-disable-next-line eqeqeq
-    if (projectData.success == true) {
+    if (projectData.status == 'success') {
       res.status(201).json(projectData.data)
     } else {
       res.status(500).json({

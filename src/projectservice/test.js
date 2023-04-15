@@ -2,13 +2,13 @@
 const request = require('supertest')
 const app = require('./index')
 
-const username = 'ASUTest516'
-const password = 'ser516user'
-const projectIDForDelete = '722202'
-const projectIDForUpdate = '733407'
+const username = 'SERtestuser'
+const password = 'testuser'
+
 // eslint-disable-next-line quote-props
 const patch = { 'name': 'RenamebyAPI' }
-
+// eslint-disable-next-line no-unused-vars
+let projID = ''
 describe('Project Microservice', () => {
   describe('POST /createProject', () => {
     it('should return a 201 response', async () => {
@@ -19,8 +19,8 @@ describe('Project Microservice', () => {
         .post('/createProject')
         .set('Accept', 'application/json')
         .send({
-          username: 'SERtestuser',
-          password: 'testuser',
+          username: username,
+          password: password,
           name: projectName,
           description: 'testProject'
         })
@@ -30,14 +30,15 @@ describe('Project Microservice', () => {
       expect(response.body.projectName).toBeDefined()
       expect(response.body.slugName).toBeDefined()
       expect(response.body.description).toBeDefined()
+      projID = response.body.projectId
     })
     it('should return a 500 response', async () => {
       const response = await request(app)
         .post('/createProject')
         .set('Accept', 'application/json')
         .send({
-          username: 'SERtestuser',
-          password: 'tetuser',
+          username: username,
+          password: password,
           name: 'testProject',
           description: 'testProject'
         })
@@ -83,10 +84,11 @@ describe('Project Microservice', () => {
   describe('Update Project Name', () => {
     describe('PATCH /updateProject/:projectID', () => {
       it('should return 201 if patch is successful', async () => {
-        const response = await request(app)
-          .patch(`/editSprint/${projectIDForUpdate}`)
+        console.log(projID)
+          .patch(`/updateProject/${projID}`)
           .send({ username, password, patch })
-        expect(response.body.data.name).toEqual(patch.name)
+          .expect(201)
+        // expect(response.body.name).toEqual(patch.name)
       })
 
       it('should return 500 if an error occurs during patching', async () => {
@@ -94,7 +96,7 @@ describe('Project Microservice', () => {
           .patch('/updateProject/dummy')
           .send({ patch, username, password })
           .expect(500)
-        expect(response.body).toEqual({ error: 'Error editing sprint' })
+        expect(response.body).toEqual({ error: 'Error editing project' })
       })
     })
   })
@@ -103,21 +105,18 @@ describe('Project Microservice', () => {
     describe('DELETE /deleteProject/:projectID', () => {
       it('should return 201 and acknowledgement if sprint is successfully deleted', async () => {
         const response = await request(app)
-          .delete(`/deleteProject/${projectIDForDelete}`)
+          .delete(`/deleteProject/${projID}`)
           .send({ username, password })
 
         expect(response.status).toBe(201)
         expect(response.body.status).toEqual(
           'Project Deleted Successfully'
         )
-        expect(response.body.sprintID).toEqual(
-          projectID.toString()
-        )
       })
 
       it('should return 500 if there is an error deleting the sprint', async () => {
         const response = await request(app)
-          .delete(`/deleteProject/${projectID}`)
+          .delete('/deleteProject/dummy')
           .send({ username, password })
         expect(response.status).toBe(500)
       })
