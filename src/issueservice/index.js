@@ -22,7 +22,7 @@ app.post('/createIssue', async (req, res) => {
     const { username, password, assigned_to, blocked_note = null, description, project
     , severity, status, subject, is_blocked = false, priority, type, is_closed = false } = req.body
     const issueData = await createIssue(username, password, assigned_to, blocked_note, description, project
-        , severity, status, subject, is_blocked, priority, type)
+        , severity, status, subject, is_blocked, priority, type, is_closed)
     if (!issueData.success) {
       return res.status(500).send({
         success: false,
@@ -50,7 +50,7 @@ app.get('/getIssues', async (req, res) => {
       }))
       return res.status(201).send({ success: true, data: result })
     }
-    return res.status(500).send(issuerData)
+    return res.status(500).send(issueData)
   })
 
   // Endpoint for getting  all issues details
@@ -74,7 +74,7 @@ app.get('/getIssueById', async (req, res) => {
     if (issueData.success) {
       return res.status(201).send({ success: true, data: result  })
     }
-    return res.status(500).send(issuerData)
+    return res.status(500).send(issueData)
   })
 
 // Endpoint for deleting an issue
