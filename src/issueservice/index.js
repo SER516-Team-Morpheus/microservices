@@ -1,5 +1,5 @@
 const express = require('express')
-const { createIssue, getIssues, getIssue, deleteIssue } = require('./logic')
+const { createIssue, getIssues, getIssue, deleteIssue , getToken, getIssueDetails, updateIssue} = require('./logic')
 
 const app = express()
 const port = 3009
@@ -90,7 +90,47 @@ app.delete('/deleteIssue/:id', async (req, res) => {
     }
   
     return res.status(201).send({ success: true, message: 'Issue successfully deleted' })
-  })  
+  })
+  
+  app.patch('/updateIssue', async (req, res) => {
+    const { username, password,projectname,issuename } = req.body
+    const slugName = `${username.toLowerCase()}-${projectname.toLowerCase()}`
+    const authToken = await getToken(username, password)
+    const issueDetails = await getIssueDetails(authToken, slugName, issuename)
+    if (!issueDetails.success) {
+      return res.status(500).send({
+        issueDetails
+      })
+    } else {
+  
+      const version = issueDetails.parameters.version
+      const issueId = issueDetails.parameters.issueId
+      const statusId = issueDetails.parameters.status_id
+      var parameters = {}
+      if (req.body.status !== undefined) {
+        const status = {
+          new: statusId,
+          'in progress': statusId + 1,
+          'ready for test': statusId + 2,
+          closed: statusId + 3,
+          'needs info': statusId + 4,
+          'rejected': statusId + 5,
+          'postponed': statusId + 6
+        }
+        parameters.status = status[req.body.status.toLowerCase()]
+      }
+      parameters.version = version
+      const issueData = await updateIssue(authToken, issueId, parameters)
+      if (!issueData.success) {
+        return res.status(500).send({
+          success: false,
+          message: 'Error updating issue'
+      })
+    }
+    
+    return res.status(201).send(issueData)
+  }
+  })
 
 // Start the server
 app.listen(port, () => {
