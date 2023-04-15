@@ -16,6 +16,14 @@ services:
       - .env
     networks:
       - my-network
+  cfdservice:
+    build: ./cfdservice
+    ports:
+      - "3012:3012"
+    env_file:
+      - ./cfdservice/secret.env
+    networks:
+      - my-network
   rolesservice:
     build: ./rolesservice
     ports:
