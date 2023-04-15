@@ -117,9 +117,35 @@ async function getIssue (username, password, issueId) {
     }
 }
 
+// Function to delete an issue
+async function deleteIssue (username, password, issueId) {
+    const response1 = await axios.post(AUTH_API_URL, {
+      type: 'normal',
+      username,
+      password
+    })
+    const token = response1.data.auth_token
+    const ISSUES_API_URL = `${ISSUE_API_URL}/${issueId}`
+    try {
+      const response = await axios.delete(
+        ISSUES_API_URL,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+  
+      return { success: true, data: response.data }
+    } catch (error) {
+      return { success: false, message: error.message }
+    }
+  }
+  
 
 module.exports = {
     createIssue,
     getIssues,
-    getIssue
+    getIssue,
+    deleteIssue
   }

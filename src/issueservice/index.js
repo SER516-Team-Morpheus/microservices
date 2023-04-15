@@ -1,5 +1,5 @@
 const express = require('express')
-const { createIssue, getIssues, getIssue } = require('./logic')
+const { createIssue, getIssues, getIssue, deleteIssue } = require('./logic')
 
 const app = express()
 const port = 3009
@@ -76,6 +76,21 @@ app.get('/getIssueById', async (req, res) => {
     }
     return res.status(500).send(issuerData)
   })
+
+// Endpoint for deleting an issue
+app.delete('/deleteIssue/:id', async (req, res) => {
+    const { username, password } = req.body
+    const issueId = req.params.id
+    const issueData = await deleteIssue(username, password, issueId)
+    if (!issueData.success) {
+      return res.status(500).send({
+        success: false,
+        message: 'Error deleting issue'
+      })
+    }
+  
+    return res.status(201).send({ success: true, message: 'Issue successfully deleted' })
+  })  
 
 // Start the server
 app.listen(port, () => {
