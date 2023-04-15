@@ -12,7 +12,7 @@ describe('Issue Microservice', () => {
           username: 'SERtestuser',
           password: 'testuser',
           project: 746745,
-          subject: "testIssue99",
+          subject: "testIssueNew",
           assigned_to: null,
           description: "Implement API CALLs",
           is_closed: false,
