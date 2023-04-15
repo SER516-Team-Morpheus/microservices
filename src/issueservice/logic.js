@@ -26,6 +26,7 @@ async function getItemName(apiEndpoint, projectId, itemId, authToken) {
 
 async function createIssue(username, password, assigned_to, blocked_note, description, project
     , severity, status, subject, is_blocked, priority, type, is_closed){
+    try {
     const response1 = await axios.post(AUTH_API_URL, {
         type: 'normal',
         username,
@@ -40,7 +41,6 @@ async function createIssue(username, password, assigned_to, blocked_note, descri
     const priorityId = await getItemId(priorityApiEndpoint, project, priority, authToken);  
     const statusApiEndpoint = '/api/v1/issue-statuses';
     const statusId = await getItemId(statusApiEndpoint, project, status, authToken); 
-    try {
         const response = await axios.post(
           ISSUE_API_URL,
           {
@@ -91,6 +91,7 @@ async function getIssues (username, password, projectId) {
   }
 
 async function getIssue (username, password, issueId) {
+    try {
     const response1 = await axios.post(AUTH_API_URL, {
       type: 'normal',
       username,
@@ -98,7 +99,6 @@ async function getIssue (username, password, issueId) {
     })
     const token = response1.data.auth_token
     const ISSUES_API_URL = `${ISSUE_API_URL}/${issueId}`
-    try {
       const response = await axios.get(ISSUES_API_URL, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -119,6 +119,7 @@ async function getIssue (username, password, issueId) {
 
 // Function to delete an issue
 async function deleteIssue (username, password, issueId) {
+    try {
     const response1 = await axios.post(AUTH_API_URL, {
       type: 'normal',
       username,
@@ -126,7 +127,6 @@ async function deleteIssue (username, password, issueId) {
     })
     const token = response1.data.auth_token
     const ISSUES_API_URL = `${ISSUE_API_URL}/${issueId}`
-    try {
       const response = await axios.delete(
         ISSUES_API_URL,
         {
