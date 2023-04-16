@@ -88,7 +88,7 @@ describe('Project Microservice', () => {
           .patch(`/updateProject/${projID}`)
           .send({ username, password, patch })
           .expect(201)
-        // expect(response.body.name).toEqual(patch.name)
+        expect(response.body.name).toEqual(patch.name)
       })
 
       it('should return 500 if an error occurs during patching', async () => {
