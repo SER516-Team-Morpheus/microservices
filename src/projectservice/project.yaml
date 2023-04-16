@@ -279,7 +279,7 @@ paths:
                     description: Taiga project id
                     example: 12
                   patch:
-                    type: string
+                    type: object
                     description: project description which user want to change with
                     example: This Project Description
                 required:
