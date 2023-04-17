@@ -77,6 +77,10 @@ apiEndpoints:
   deleteSprintByName:
     host: localhost
     paths: "/deleteSprintByName"
+
+  issueservice:
+    host: localhost
+    paths: "/issueservice"    
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -94,6 +98,8 @@ serviceEndpoints:
     url: "http://memberservice:3004"
   sprintservice:
     url: "http://sprintservice:3010"
+  issueservice:
+    url: "http://issueservice:3009"  
 policies:
   - basic-auth
   - cors
@@ -215,5 +221,16 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: sprintservice
-              changeOrigin: true              
+              changeOrigin: true  
+
+  issuePipeline:
+    apiEndpoints:
+      - issueservice
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: issueservice
+              changeOrigin: true                          
 
