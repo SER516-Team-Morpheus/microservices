@@ -36,6 +36,16 @@ app.post('/createroles', async (req, res) => {
   if (!projectData.success) {
     return res.status(404).send(projectData)
   }
+  const rolesData = await getAllRoles(token, slugName)
+  const data = rolesData.roles
+  for (const role of data) {
+    if (role.roleName === roleName) {
+      return res.status(409).send({
+        success: false,
+        message: 'roleName already exists'
+      })
+    }
+  }
   const roleData = await createRoles(token, roleName, projectId)
   if (!roleData.success) {
     return res.status(500).send(roleData)
