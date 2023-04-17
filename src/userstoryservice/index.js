@@ -6,7 +6,8 @@ const {
   updateUserstory,
   getUserStoryDetails,
   getUserStory,
-  getPointValues
+  getPointValues,
+  getRoleId,
 } = require('./logic')
 
 const app = express()
@@ -113,12 +114,11 @@ app.patch('/updateUserstory', async (req, res) => {
     }
     const points = {}
     if (req.body.points !== undefined) {
-      const roles = {
-        UX: userstoryDetails.parameters.point,
-        Design: userstoryDetails.parameters.point + 1,
-        Front: userstoryDetails.parameters.point + 2,
-        Back: userstoryDetails.parameters.point + 3
+      const rolelist = await getRoleId(token, projectId)
+      if (!rolelist.success) {
+        console.log('Error getting roles')
       }
+      const roles = rolelist.roleIds
       const userpoint = {
         '?': 0,
         0: 1,
@@ -148,7 +148,6 @@ app.patch('/updateUserstory', async (req, res) => {
     parameters.version = version
 
     const userstoryData = await updateUserstory(userstoryId, parameters, token)
-    console.log(userstoryData)
     if (!userstoryData.success) {
       return res.status(500).send({
         userstoryData
