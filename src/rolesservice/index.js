@@ -1,7 +1,13 @@
 // This will have your endpoints of your microservices.
 const express = require('express')
 const bodyParser = require('body-parser')
-const { getToken, getAllRoles, createRoles, updateRole, deleteRole } = require('./logic')
+const {
+  getToken,
+  getAllRoles,
+  createRoles,
+  updateRole,
+  deleteRole,
+} = require('./logic')
 
 const app = express()
 app.use(bodyParser.json())
@@ -58,8 +64,9 @@ app.patch('/updateroles', async (req, res) => {
   if (!projectData.success) {
     return res.status(404).send(projectData)
   }
-  const roleId = projectData.roles.find(role => role.roleName === roleName)?.roleId
-  console.log(roleId)
+  const roleId = projectData.roles.find(
+    (role) => role.roleName === roleName
+  )?.roleId
   if (!roleId) {
     return res.status(404).send({ success: false, message: 'Role not found' })
   }
@@ -79,7 +86,9 @@ app.delete('/deleteroles/:roleName', async (req, res) => {
   if (!projectData.success) {
     return res.status(404).send(projectData)
   }
-  const roleId = projectData.roles.find(role => role.roleName === req.params.roleName)?.roleId
+  const roleId = projectData.roles.find(
+    (role) => role.roleName === req.params.roleName
+  )?.roleId
   if (!roleId) {
     return res.status(404).send({ success: false, message: 'Role not found' })
   }

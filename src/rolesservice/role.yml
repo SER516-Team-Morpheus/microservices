@@ -1,0 +1,266 @@
+openapi: 3.0.0
+info:
+  title: Role Microservice API
+  description: API endpoints for managing roles in a Taiga project
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3008
+  - url: http://localhost:8080
+
+paths:
+  /createroles:
+    post:
+      summary: Create a new role in a Taiga project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: 'SERtestuser'
+                password:
+                  type: string
+                  example: 'testuser'
+                roleName:
+                  type: string
+                  example: 'Developer'
+                projectName:
+                  type: string
+                  example: 'testProject'
+              required:
+                - username
+                - password
+                - roleName
+                - projectName
+      responses:
+        '201':
+          description: Role created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  roleId:
+                    type: integer
+                    example: 4588646
+                  roleName:
+                    type: string
+                    example: 'Developer'
+                  message:
+                    type: string
+                    example: 'Role Developer successfully created'
+
+        '404':
+          description: Invalid project or project not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Error getting roles'
+        '500':
+          description: Internal server error
+
+  /getroles:
+    get:
+      summary: Get all roles in a Taiga project
+      parameters:
+        - name: username
+          in: query
+          description: The username to authenticate with Taiga
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password to authenticate with Taiga
+          required: true
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          description: The name of the project to retrieve roles for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Roles retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  projectId:
+                    type: integer
+                    example: 733810
+                  roles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        roleId:
+                          type: integer
+                          example: 4588646
+                        roleName:
+                          type: string
+                          example: 'Developer'
+        '404':
+          description: Invalid project or project not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Error getting roles'
+        '500':
+          description: Internal server error
+
+  /updateroles:
+    patch:
+      summary: Update an existing role in a Taiga project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: 'SERtestuser'
+                password:
+                  type: string
+                  example: 'testuser'
+                roleName:
+                  type: string
+                  example: 'UX'
+                newRoleName:
+                  type: string
+                  example: 'Developer'
+                projectName:
+                  type: string
+                  example: testProject
+              required:
+                - username
+                - password
+                - roleName
+                - newRoleName
+                - projectName
+      responses:
+        '200':
+          description: Role updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  roleId:
+                    type: integer
+                    example: 4449977
+                  roleName:
+                    type: string
+                    example: 'Developer'
+                  message:
+                    type: string
+                    example: 'Role Developer successfully updated'
+        '404':
+          description: Invalid role or role not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Role not found'
+        '500':
+          description: Internal server error
+
+  /deleteroles/{roleName}:
+    delete:
+      summary: Delete an existing role in a Taiga project
+      parameters:
+        - name: roleName
+          in: path
+          description: The name of the role to delete
+          required: true
+          schema:
+            type: string
+            example: 'UX'
+        - name: username
+          in: query
+          description: The username to authenticate with Taiga
+          required: true
+          schema:
+            type: string
+            example: 'SERtestuser'
+        - name: password
+          in: query
+          description: The password to authenticate with Taiga
+          required: true
+          schema:
+            type: string
+            example: 'testuser'
+        - name: projectName
+          in: query
+          description: The name of the project to delete the role from
+          required: true
+          schema:
+            type: string
+            example: testProject
+      responses:
+        '200':
+          description: Role deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Role successfully deleted.'
+        '404':
+          description: Invalid role or role not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Role not found.'
+        '500':
+          description: Internal server error
