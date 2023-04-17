@@ -31,17 +31,6 @@ app.get('/getPoints', async (req, res) => {
     return res.status(404).send(pointsData)
   }
   return res.status(200).send(pointsData)
-
-  //   const memberData = await getMember(token)
-  //   if (!memberData.success) {
-  //     return res.status(404).send(memberData)
-  //   }
-  //   const memberId = memberData.memberId
-  //   const getProjectData = await getProjectList(token, memberId)
-  //   if (!getProjectData.success) {
-  //     return res.status(404).send(getProjectData)
-  //   }
-  //   return res.send(getProjectData)
 })
 
 // Start the server

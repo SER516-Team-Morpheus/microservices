@@ -7,7 +7,7 @@ describe('Points Microservice', () => {
       const response = await request(app).get('/getPoints').query({
         username: 'SERtestuser',
         password: 'testuser',
-        projectName: 'testProject',
+        projectName: 'testProject'
       })
       expect(response.status).toBe(200)
       expect(response.body.success).toBe(true)
@@ -20,7 +20,7 @@ describe('Points Microservice', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectName: 'testProjec',
+          projectName: 'testProjec'
         })
       expect(response.status).toBe(404)
     })
