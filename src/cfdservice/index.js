@@ -1,10 +1,9 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
 const express = require('express')
-const AWS = require('aws-sdk')
 const {
-  getHeaders, getToken, getTaskStatuses, getProjectID
+  getHeaders, getToken, getTaskStatuses, getProjectID, getTasks, getTasksHistory, getTaskStatus
 } = require('./logic')
-const dynamodb = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' })
 const app = express()
 const port = 3012
 
@@ -20,20 +19,8 @@ app.use((req, res, next) => {
   next()
 })
 
-function queryDynamoDB (params) {
-  return new Promise((resolve, reject) => {
-    dynamodb.query(params, function (err, data) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data.Items)
-      }
-    })
-  })
-}
-
-async function getEmptyStatusMatrix (slug) {
-  token = await getToken()
+async function getEmptyStatusMatrix (slug, userName, password) {
+  token = await getToken(userName, password)
   headers = getHeaders(token.token)
   res = await getProjectID(headers, slug)
   if (res.success) {
@@ -44,74 +31,64 @@ async function getEmptyStatusMatrix (slug) {
 }
 
 // Endpoint for getting user stories details
-app.get('/cfd', async (req, res) => {
-  const userName = 'sertestuser'
+app.post('/cfd', async (req, res) => {
+  const userName = req.body.username
+  const password = req.body.password
   const today = new Date()
   const oneDay = 24 * 60 * 60 * 1000
   const endDate = new Date(today.getTime())
   const sevenDays = 6 * oneDay
   const startDate = new Date(today.getTime() - sevenDays)
-  const { projectName } = req.query
+  let { projectName } = req.body
   if (!projectName) {
     return res.status(500).send({
-      error: 'Project name not sent in query.'
+      error: 'Project name not sent in body.'
     })
   }
+  projectName = projectName.replace(/\s+/g, '-')
   const slug = `${userName.toLowerCase()}-${projectName.toLowerCase()}`
-  const dateList = []
-  const cfdDataList = {}
-  const cfd = { project: projectName }
-  const statusData = await getEmptyStatusMatrix(slug)
+  const cfd = {}
+  const statusData = await getEmptyStatusMatrix(slug, userName, password)
   if (statusData.success) {
     emptyStatusMatrix = statusData.statuses
 
     // loop through each date between the start and end dates and add it to the list
     // eslint-disable-next-line no-unmodified-loop-condition
     for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
-      dateList.push(date.toISOString().slice(0, 10))
+      cfd[date] = { ...emptyStatusMatrix }
     }
 
-    // create an array of Promises for each date in the dateList
-    const promises = dateList.map(date => {
-      const key = date + ';' + slug
-      const params = {
-        TableName: 'ser516-cfd-data',
-        KeyConditionExpression: 'recordKey = :key',
-        ExpressionAttributeValues: {
-          ':key': key
+    const tasks = await getTasks(headers, slug)
+    try {
+      for (const task of tasks) {
+        let taskHistory = await getTasksHistory(headers, task.id)
+        taskHistory = taskHistory.filter(obj => obj.values_diff && obj.values_diff.status)
+        const createdDate = new Date(task.created_date)
+
+        let reducedObjects = taskHistory.reduce((acc, curr) => {
+          const currDate = new Date(curr.created_at).toLocaleDateString()
+          const accDate = acc[currDate] ? new Date(acc[currDate].created_at) : null
+          const currDateTime = new Date(curr.created_at)
+
+          // If there's no object for this date, or this object is newer than the existing one, replace it
+          if (!acc[currDate] || currDateTime > accDate) {
+            acc[currDate] = curr
+          }
+
+          return acc
+        }, {})
+        reducedObjects = Object.values(reducedObjects)
+        for (const [key, value] of Object.entries(cfd)) {
+          const status = getTaskStatus(reducedObjects, new Date(key), createdDate)
+          if (status) {
+            value[status] += 1
+          }
         }
       }
-      return queryDynamoDB(params)
-        .then(data => {
-          cfdDataList[key] = data
-          // code to execute after the data is fetched
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    })
-
-    // wait for all Promises to complete
-    Promise.all(promises)
-      .then(() => {
-        // execute this code after all Promises are resolved
-
-        Object.entries(cfdDataList).forEach(function ([key, value]) {
-          const stringArray = key.split(';')
-          const date = stringArray[0]
-          // eslint-disable-next-line eqeqeq
-          if (Object.keys(value).length != 0) {
-            delete value[0].recordKey
-            cfd[date] = value[0]
-          } else {
-            cfd[date] = emptyStatusMatrix
-          }
-        })
-        return res.status(200).send(cfd)
-      })
-      .catch(err => {
-        console.error(err)
-      })
+      return res.status(200).send(cfd)
+    } catch (err) {
+      return res.status(500).send({ error: 'Error occured while calculating CFD MATRIX' })
+    }
   } else {
     return res.status(500).send({ error: 'Project Not Found' })
   }

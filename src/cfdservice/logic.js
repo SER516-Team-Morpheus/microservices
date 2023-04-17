@@ -9,10 +9,31 @@ function getHeaders (token) {
   }
 }
 
-async function getToken () {
+function getTaskStatus (historyObject, date, createdDate) {
+  historyObject.sort((a, b) => {
+    return Date.parse(b.created_at) - Date.parse(a.created_at)
+  })
+  let status = ''
+  historyObject.forEach(obj => {
+    if (new Date(obj.created_at) <= date) {
+      status = obj.values_diff.status[obj.values_diff.status.length - 1]
+    }
+  })
+  if (status) {
+    return status
+  } else {
+    if (createdDate < date) {
+      return 'New'
+    } else {
+      return ''
+    }
+  }
+}
+
+async function getToken (username, password) {
   const body = {
-    username: 'sertestuser',
-    password: 'testuser',
+    username,
+    password,
     type: 'normal'
   }
 
@@ -48,6 +69,17 @@ async function getProjectID (headers, slug) {
   }
 }
 
+async function getTasks (headers, projectSlug) {
+  const url = `${TAIGA_BASE}/tasks?project__slug=${projectSlug}`
+  const res = await axios.get(url, { headers })
+  return res.data
+}
+async function getTasksHistory (headers, ID) {
+  const url = `${TAIGA_BASE}/history/task/${ID}`
+  const res = await axios.get(url, { headers })
+  return res.data
+}
+
 async function getTaskStatuses (headers, projectID) {
   try {
     const statusUrl = `${TAIGA_BASE}/task-statuses?project=${projectID}`
@@ -62,4 +94,4 @@ async function getTaskStatuses (headers, projectID) {
   }
 }
 
-module.exports = { getHeaders, getToken, getProjectID, getTaskStatuses }
+module.exports = { getHeaders, getToken, getProjectID, getTaskStatuses, getTasks, getTasksHistory, getTaskStatus }
