@@ -28,12 +28,12 @@ paths:
           description: Password of the Taiga account
           schema:
             type: string
-        - name: projectId
+        - name: projectName
           in: query
           required: true
-          description: ProjectId of project in the Taiga account
+          description: ProjectName of project in the Taiga account
           schema:
-            type: number            
+            type: string            
       responses:
         "201":
           description: OK
@@ -201,10 +201,10 @@ paths:
                   type: number
                   description: Member id
                   example: 123456
-                project:
-                  type: number
-                  description: Project Id in the taiga account
-                  example: 720797
+                projectName:
+                  type: string
+                  description: Project name in the taiga account
+                  example: testNew
                 blocked_note:
                   type: string
                   description: if the issue is blocked, the reason for it
