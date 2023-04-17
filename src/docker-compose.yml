@@ -63,7 +63,15 @@ services:
     env_file:
       - .env    
     networks:
-      - my-network   
+      - my-network
+  issueservice:
+    build: ./issueservice
+    ports:
+      - "3009:3009"
+    env_file:
+      - .env    
+    networks:
+      - my-network           
   api-gateway:
     build: ./api-gateway
     ports:
@@ -79,6 +87,7 @@ services:
       - memberservice
       - taskservice
       - rolesservice
+      - issueservice
 networks:
   my-network:
 
