@@ -1,5 +1,10 @@
 const express = require('express')
-const { getToken, getProjectData, getPointsData } = require('./logic')
+const {
+  getToken,
+  getProjectData,
+  getPointsData,
+  createPointsData,
+} = require('./logic')
 
 const app = express()
 const port = 3007
@@ -31,6 +36,33 @@ app.get('/getPoints', async (req, res) => {
     return res.status(404).send(pointsData)
   }
   return res.status(200).send(pointsData)
+})
+
+app.post('/createPoints', async (req, res) => {
+  const { username, password, projectName, value } = req.body
+  const token = await getToken(username, password)
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const projectData = await getProjectData(token, slugName)
+  if (!projectData.success) {
+    return res.status(404).send(projectData)
+  }
+  const projectId = projectData.projectId
+  const getPoints = await getPointsData(token, projectId)
+  console.log(getPoints.data)
+  const data = getPoints.data
+  for (const point of data) {
+    if (point.value === value) {
+      return res.status(409).send({
+        success: false,
+        message: 'Value already exists',
+      })
+    }
+  }
+  const pointsData = await createPointsData(token, projectId, value)
+  if (!pointsData.success) {
+    return res.status(404).send(pointsData)
+  }
+  return res.status(201).send(pointsData)
 })
 
 // Start the server
