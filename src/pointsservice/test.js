@@ -15,14 +15,43 @@ describe('Points Microservice', () => {
     })
     it('should return a 404 response', async () => {
       const response = await request(app)
-        .post('/getPoints')
+        .get('/getPoints')
         .set('Accept', 'application/json')
-        .send({
+        .query({
           username: 'SERtestuser',
           password: 'testuser',
           projectName: 'testProjec'
         })
       expect(response.status).toBe(404)
+    })
+  })
+
+  describe('POST /createPoints', () => {
+    it('should return a 201 response', async () => {
+      const response = await request(app)
+        .post('/createPoints')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectName: 'testProject',
+          value: Math.floor(Math.random() * 1000)
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.success).toBe(true)
+      expect(response.body.pointsId).toBeDefined()
+    })
+    it('should return a 409 response', async () => {
+      const response = await request(app)
+        .post('/createPoints')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectName: 'testProject',
+          value: 1
+        })
+      expect(response.status).toBe(409)
+      expect(response.body.success).toBe(false)
     })
   })
 })

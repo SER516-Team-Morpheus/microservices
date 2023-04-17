@@ -3,7 +3,7 @@ const {
   getToken,
   getProjectData,
   getPointsData,
-  createPointsData,
+  createPointsData
 } = require('./logic')
 
 const app = express()
@@ -48,13 +48,12 @@ app.post('/createPoints', async (req, res) => {
   }
   const projectId = projectData.projectId
   const getPoints = await getPointsData(token, projectId)
-  console.log(getPoints.data)
   const data = getPoints.data
   for (const point of data) {
     if (point.value === value) {
       return res.status(409).send({
         success: false,
-        message: 'Value already exists',
+        message: 'Value already exists'
       })
     }
   }
