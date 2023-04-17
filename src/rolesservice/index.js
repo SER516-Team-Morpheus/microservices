@@ -6,7 +6,7 @@ const {
   getAllRoles,
   createRoles,
   updateRole,
-  deleteRole,
+  deleteRole
 } = require('./logic')
 
 const app = express()
