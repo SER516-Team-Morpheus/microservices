@@ -11,7 +11,330 @@ servers:
   - url: http://localhost:8080
 
 paths:
-  /createTask:
+  /getIssues:
+    get:
+      summary: List all the issues under a specific project.
+      description: List the basic fields of each issue in a specific project.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+        - name: projectId
+          in: query
+          required: true
+          description: ProjectId of project in the Taiga account
+          schema:
+            type: number            
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          example: 1446686
+                        subject:
+                          type: string
+                          example: issueNew
+                        project:
+                          type: number
+                          example: 720797
+                        assigned_to:
+                          type: number
+                          example: 604287
+                        is_blocked:
+                          type: boolean
+                          example: true
+                        is_closed:
+                          type: boolean
+                          exampe: true    
+                        status_id:
+                          type: number
+                          example: 104278
+                        status:
+                          type: string
+                          example: New  
+        "500":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error getting issues
+
+      tags:
+        - issue microservice
+
+/getIssueById:
+    get:
+      summary: Get the issue based on id.
+      description: List the fields of the issue based on the id provided.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+        - name: issueId
+          in: query
+          required: true
+          description: issueId of issue in the Taiga account
+          schema:
+            type: number            
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                        example: 1446686
+                      subject:
+                        type: string
+                        example: issueNew
+                      project:
+                        type: number
+                        example: 720797
+                      assigned_to:
+                        type: string
+                        example: Sambhav Kapoor
+                      is_blocked:
+                        type: boolean
+                        example: true
+                      is_closed:
+                        type: boolean
+                        exampe: true    
+                      status_id:
+                        type: number
+                        example: 104278
+                      status:
+                        type: string
+                        example: New  
+                      severity:
+                        type: string
+                        example: Normal
+                      priority:
+                        type: string
+                        example: Normal
+                      type:
+                        type: string
+                        example: Bug                                                                              
+        "500":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error getting issue
+
+      tags:
+        - issue microservice        
+
+  /createIssue:
+    post:
+      summary: Create new issuer in a project.
+      description: Create a new issue by providing the details in the request body..
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                assigned_to:
+                  type: number
+                  description: Member id
+                  example: 123456
+                project:
+                  type: number
+                  description: Project Id in the taiga account
+                  example: 720797
+                blocked_note:
+                  type: string
+                  description: if the issue is blocked, the reason for it
+                  example: depends on other bug
+                description:
+                  type: string
+                  description: description of the issue
+                  example: wrong error returned
+                subject:
+                  type: string
+                  description: subject of the issue
+                  example: not able to add role        
+                severity:
+                  type: string
+                  description: severity of the issue 
+                  example: Wishlist, Minor, Normal, Important or Critical
+                status:
+                  type: string
+                  description: status of the issue
+                  example: New, In Progress, Ready For Test, Closed etc.
+                priority:
+                  type: string
+                  description: priority of the issue
+                  example: Low, Normal or High   
+                type:
+                  type: string
+                  description: type of the issue
+                  example: Bug, Question or Enhancement   
+                is_blocked:
+                  type: boolean
+                  description: if the issue is blocked
+                  example: true     
+                type:
+                  type: boolean
+                  description: if the issue is closed
+                  example: true                                                                                  
+              required:
+                - username
+                - password
+                - member
+                - assigned_to
+                - subject
+                - description
+                - project
+                - severity 
+                - status
+                - type 
+                - priority
+      responses:
+        "201":
+          description: Issue successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  issueId:
+                    type: number
+                    example: 715454
+        "500":
+          description: Error creating issue.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error creating issue
+      tags:
+        - issue microservice
+
+  /deleteIssue/{id}:
+    delete:
+      summary: Delete an issue
+      description: Deletes an issue with the specified ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the issue to delete
+          required: true
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+      responses:
+        "201":
+          description: "Issue successfully deleted"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                default: true
+              message:
+                type: "string"
+                default: "Issue successfully deleted"
+        "500":
+          description: "Error deleting issue"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                default: false
+              message:
+                type: "string"
+                default: "Error deleting issue"        
+      tags:
+        - issue microservice     
+
+  /updateIssue:
     post:
       summary: Updating issue 
       description: Update existing task based status, severity, priority and type
