@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const request = require('supertest')
 const app = require('./index')
 
@@ -14,34 +15,34 @@ describe('Issue Microservice', () => {
           project: 746745,
           subject: "testIssueNew",
           assigned_to: null,
-          description: "Implement API CALLs",
+          description: 'Implement API CALLs',
           is_closed: false,
-          priority: "Normal",
-          severity: "Critical",
-          status: "New",
-          type: "Bug"
+          priority: 'Normal',
+          severity: 'Critical',
+          status: 'New',
+          type: 'Bug'
         })
       expect(response.status).toBe(201)
       expect(response.body.success).toBe(true)
       expect(response.body.issueId).toBeDefined()
       issueCreated = response.body.issueId
-    },10000)
+    }, 10000)
     it('should return a 500 response', async () => {
       const response = await request(app)
         .post('/createIssue')
         .set('Accept', 'application/json')
         .send({
-            username: 'SERtestused',
-            password: 'testuser',
-            project: 7,
-            subject: "a",
-            assigned_to: null,
-            description: "Implement API CALLs",
-            is_closed: false,
-            priority: "Normal",
-            severity: "Critical",
-            status: "New",
-            type: "Bug"
+          username: 'SERtestused',
+          password: 'testuser',
+          project: 7,
+          subject: 'a',
+          assigned_to: null,
+          description: 'Implement API CALLs',
+          is_closed: false,
+          priority: 'Normal',
+          severity: 'Critical',
+          status: 'New',
+          type: 'Bug'
         })
       expect(response.status).toBe(500)
       expect(response.body.success).toBe(false)
@@ -75,7 +76,6 @@ describe('Issue Microservice', () => {
     })
   })
 
-
   describe('DELETE /deleteIssue/:id', () => {
     it('should return a 201 response', async () => {
       const response = await request(app)
@@ -102,4 +102,39 @@ describe('Issue Microservice', () => {
     })
   })
 
+  describe('PATCH /updateIssue', () => {
+    it('should return a 201 response', async () => {
+      const response = await request(app)
+        .patch('/updateIssue')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testProject',
+          issuename: 'ABC',
+          status: 'Postponed',
+          priority: 'High',
+          severity: 'Low',
+          type: 'Enhancement'
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.success).toBe(true)
+    })
+    it('should return a 500 response', async () => {
+      const response = await request(app)
+        .patch('/updateIssue')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testProject',
+          issuename: 'ABCDEF',
+          status: 'Postponed',
+          priority: 'High',
+          severity: 'Low',
+          type: 'Enhancement'
+        })
+      expect(response.status).toBe(500)
+    })
+  })
 })

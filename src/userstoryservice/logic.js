@@ -213,6 +213,22 @@ async function getPointValues (token, projectId) {
   }
 }
 
+async function getRoleId (authToken, projectId) {
+  try {
+    const TYPE_API_URL = `https://api.taiga.io/api/v1/roles?project=${projectId}`
+    const response = await axios.get(TYPE_API_URL,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    )
+    const roleIds = {}
+    response.data.forEach(element => {
+      roleIds[element.name] = element.id
+    })
+    return { success: true, message: 'successfully fetched issueTypes list', roleIds }
+  } catch (error) {
+    return { success: false, message: 'Error getting issueTypes list' }
+  }
+}
+
 module.exports = {
   createUserstory,
   updateUserstory,
@@ -220,5 +236,6 @@ module.exports = {
   getUserStoryDetails,
   getProjectBySlug,
   getUserStory,
-  getPointValues
+  getPointValues,
+  getRoleId
 }
