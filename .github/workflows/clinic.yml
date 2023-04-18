@@ -13,7 +13,7 @@ jobs:
       matrix:
         node-version: [14.x]
         dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/epicservice', 'src/memberservice', 'src/rolesservice']
-        steps:
+    steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
