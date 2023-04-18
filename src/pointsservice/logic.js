@@ -109,6 +109,29 @@ async function createPointsData (token, project, value) {
   }
 }
 
+
+//function for delete points
+async function deletePointsData (token, projectId) {
+  const PROJECT_POINTS_URL = POINTS_URL + '?project=' + projectId
+  try {
+    const response = await axios.delete(PROJECT_POINTS_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    const data = response.data
+    if (response.data.length) {
+      return {
+        success: true,
+        data
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error deleting points for the project' }
+  }
+}
+
+
+
 module.exports = {
   getToken,
   getProjectData,
