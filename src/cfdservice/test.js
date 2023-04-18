@@ -5,7 +5,7 @@ const password = 'testuser'
 
 describe('POST /cfd', () => {
   test('returns CFD data for the given project name', async () => {
-    const projectName = 'blank test'
+    const projectName = 'do not delete'
     const response = await request(app)
       .post('/cfd')
       .send({ projectName, username, password })
