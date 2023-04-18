@@ -2,9 +2,9 @@ name: Lint CI
 
 on:
   push:
-    branches: [develop, master ]
+    branches: [develop, master]
   pull_request:
-    branches: [ develop, master]
+    branches: [develop, master]
 
 jobs:
   linting:
@@ -12,7 +12,18 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/epicservice', 'src/memberservice', 'src/rolesservice', 'src/cfdservice'] 
+
+        dir: [
+        'src/authservice', 
+        'src/projectservice', 
+        'src/taskservice', 
+        'src/userstoryservice', 
+        'src/sprintservice', 
+        'src/epicservice', 
+        'src/memberservice', 
+        'src/rolesservice', 
+        'src/cfdservice'
+        ] 
 
     steps:
       - uses: actions/checkout@v3
@@ -22,10 +33,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Installing dependencies
         working-directory: ${{ matrix.dir }}
-        run : npm install
+        run: npm install
       - name: Configuring Environment
         working-directory: ${{ matrix.dir }}
-        run : npm init @eslint/config
+        run: npm init @eslint/config
       - name: Code Linting
         working-directory: ${{ matrix.dir }}
         run: npm run lint

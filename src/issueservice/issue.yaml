@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Issue Microservice
+  version: 1.0.0
+  description: Documentation for Issue Microservice.
+  contact:
+    name: Team Morpheus
+    email: asing499@asu.edu
+servers:
+  - url: http://localhost:3009
+  - url: http://localhost:8080
+
+paths:
+  /createTask:
+    post:
+      summary: Updating issue 
+      description: Update existing task based status, severity, priority and type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                projectname:
+                  type: string
+                issuename:
+                  type: string
+                status:
+                  type: string
+                priority:
+                  type: string
+                severity:
+                  type: string
+                type:
+                  type: string
+              required:
+                - username
+                - password
+                - projectname
+                - issuename
+                
+      responses:
+        "500":
+          description: Issue updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  issueId:
+                    type: string
+        "201":
+          description: Task Creation Failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      tags:
+        - issue service
