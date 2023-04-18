@@ -7,7 +7,8 @@ const {
   getUserStoryDetails,
   getUserStory,
   getPointValues,
-  getRoleId
+  getRoleId,
+  deleteUserStory
 } = require('./logic')
 
 const app = express()
@@ -148,7 +149,6 @@ app.patch('/updateUserstory', async (req, res) => {
     parameters.version = version
 
     const userstoryData = await updateUserstory(userstoryId, parameters, token)
-    console.log(userstoryData)
     if (!userstoryData.success) {
       return res.status(500).send({
         userstoryData
@@ -158,6 +158,33 @@ app.patch('/updateUserstory', async (req, res) => {
   }
 })
 
+app.delete('/deleteUserstory', async (req, res) => {
+  const username = req.body.username
+  const password = req.body.password
+  const projectname = req.body.projectname
+  const userstoryname = req.body.userstoryname
+  const token = await getToken(username, password)
+  const slugName = username.toLowerCase() + '-' + projectname.toLowerCase()
+  const userstoryDetails = await getUserStoryDetails(
+    token,
+    slugName,
+    userstoryname
+  )
+  if (!userstoryDetails.success) {
+    return res.status(500).send({
+      userstoryDetails
+    })
+  } else {
+    const userstoryId = userstoryDetails.parameters.id
+    const userstoryDelResponse = await deleteUserStory(token, userstoryId)
+    if (!userstoryDelResponse.success) {
+      return res.status(500).send({
+        userstoryDelResponse
+      })
+    }
+    return res.status(201).send(userstoryDelResponse)
+  }
+})
 // Start the server
 app.listen(port, () => {
   console.log(`User story microservice running at http://localhost:${port}`)

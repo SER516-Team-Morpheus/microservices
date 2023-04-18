@@ -241,9 +241,21 @@ async function getRoleId (authToken, projectId) {
     response.data.forEach(element => {
       roleIds[element.name] = element.id
     })
-    return { success: true, message: 'successfully fetched issueTypes list', roleIds }
+    return { success: true, message: 'successfully fetched role list', roleIds }
   } catch (error) {
-    return { success: false, message: 'Error getting issueTypes list' }
+    return { success: false, message: 'Error getting role list' }
+  }
+}
+
+async function deleteUserStory (token, userstoryId) {
+  try {
+    const DELETE_USERSTORY_URL = USERSTORY_API_URL + '/' + userstoryId
+    await axios.delete(DELETE_USERSTORY_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return { success: true, message: 'userstory successfully deleted'}
+  } catch (error) {
+    return { success: false, message: 'Not able to fetch points' }
   }
 }
 
@@ -255,5 +267,6 @@ module.exports = {
   getProjectBySlug,
   getUserStory,
   getPointValues,
-  getRoleId
+  getRoleId,
+  deleteUserStory
 }
