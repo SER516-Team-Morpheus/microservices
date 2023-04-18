@@ -6,7 +6,8 @@ const {
   getProjectList,
   editProject,
   deleteProject,
-  createProject
+  createProject,
+  getProjectID
 } = require('./logic')
 
 const app = express()
@@ -73,23 +74,18 @@ app.post('/createProject', async (req, res) => {
 })
 
 // Endpoint for deleting a project
-app.delete('/deleteProject/:projectID', async (req, res) => {
+app.delete('/deleteProject/:projectName', async (req, res) => {
+  const projectName = req.params.projectName
   let token = req.body.token
   if (!token) {
     const { username, password } = req.body
     token = await getToken(username, password)
   }
-  const projectID = req.params.projectID
+  const { project } = await getProjectID(token, projectName)
   try {
-    const status = await deleteProject(projectID, token)
-    const data = {
-      // eslint-disable-next-line quote-props
-      'status': status.message,
-      // eslint-disable-next-line quote-props
-      'TaigaAPIResponseStatus': status.success
-    }
+    const status = await deleteProject(project.id, token)
     if (status.success) {
-      res.status(201).send(data)
+      res.status(200).send()
     } else {
       res.status(500).send({
         message: 'Project ID is invalid'
@@ -101,18 +97,19 @@ app.delete('/deleteProject/:projectID', async (req, res) => {
 })
 
 // Endpoint for Updating a Project
-app.patch('/updateProject/:projectID', async (req, res) => {
+app.patch('/updateProject/:projectName', async (req, res) => {
   let token = req.body.token
+  const projectName = req.params.projectName
   if (!token) {
     const { username, password } = req.body
     token = await getToken(username, password)
   }
-  const projectID = req.params.projectID
+  const { project } = await getProjectID(token, projectName)
   const patch = req.body.patch
   try {
-    const projectData = await editProject(token, projectID, patch)
+    const projectData = await editProject(token, project.id, patch)
     // eslint-disable-next-line eqeqeq
-    if (projectData.status == 'success') {
+    if (projectData) {
       res.status(201).json(projectData.data)
     } else {
       res.status(500).json({

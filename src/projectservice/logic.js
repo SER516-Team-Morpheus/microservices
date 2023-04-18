@@ -71,8 +71,26 @@ async function getProjectList (token, memberId) {
       }
     }
   } catch (error) {
-    console.log(error)
     return { success: false, message: 'Error getting project details.' }
+  }
+}
+
+async function getProjectID (token, projectName) {
+  try {
+    const memberData = await getMember(token)
+    const memberId = memberData.memberId
+    const getProjectData = await getProjectList(token, memberId)
+    const projectData = getProjectData.projects.find(project => project.name === projectName)
+    if (projectData) {
+      return { project: projectData, success: true }
+    } else {
+      return {
+        error: 'No Project By This Name: ' + projectName,
+        success: false
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error getting project by name' }
   }
 }
 
@@ -171,16 +189,15 @@ async function editProject (token, projectID, patch) {
     // eslint-disable-next-line eqeqeq
     if (response.status == 200) {
       return {
-        status: 'success',
         data: response.data
       }
     }
-    console.log(response.status)
     return response.data
   } catch (error) {
     throw new Error('Error editing project')
   }
 }
+
 module.exports = {
   getProjectBySlug,
   getMember,
@@ -188,5 +205,6 @@ module.exports = {
   createProject,
   getToken,
   deleteProject,
-  editProject
+  editProject,
+  getProjectID
 }
