@@ -103,19 +103,7 @@ async function getTaskDetails (token, slugName, userstoryName, taskname) {
           parameters.user_story_extra_info = response.data[i].user_story_extra_info
           parameters.status_extra_info = response.data[i].status_extra_info
           parameters.assigned_to = response.data[i].assigned_to
-          if (response.data[i].status_extra_info.name.toLowerCase() === 'new') {
-            parameters.status_id = response.data[i].status
-          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'in progress') {
-            parameters.status_id = response.data[i].status - 1
-          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'ready for test') {
-            parameters.status_id = response.data[i].status - 2
-          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'closed') {
-            parameters.status_id = response.data[i].status - 3
-          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'needs info') {
-            parameters.status_id = response.data[i].status - 4
-          } else if (response.data[i].status_extra_info.name.toLowerCase() === 'done') {
-            parameters.status_id = response.data[i].status - 5
-          }
+          parameters.projectid = response.data[i].project
         }
       }
     }
@@ -222,6 +210,22 @@ async function deleteTask (token, taskId) {
   }
 }
 
+async function getTaskStatusCode (authToken, projectId) {
+  try {
+    const TASK_STATUS_API_URL = `https://api.taiga.io/api/v1/task-statuses?project=${projectId}`
+    const response = await axios.get(TASK_STATUS_API_URL,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    )
+    const taskIds = {}
+    response.data.forEach(element => {
+      taskIds[element.name.toLowerCase()] = element.id
+    })
+    return { success: true, message: 'successfully fetched role list', taskIds }
+  } catch (error) {
+    return { success: false, message: 'Error getting role list' }
+  }
+}
+
 module.exports = {
   createTask,
   getToken,
@@ -229,5 +233,6 @@ module.exports = {
   getTaskDetails,
   updateTaskDetails,
   deleteTask,
-  getUserStoryTasksDetails
+  getUserStoryTasksDetails,
+  getTaskStatusCode
 }
