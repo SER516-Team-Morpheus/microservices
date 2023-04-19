@@ -1,11 +1,11 @@
 const request = require('supertest')
 const { app, getEmptyStatusMatrix } = require('./index')
-const username = 'sertestuser'
+const username = 'taigatestser516'
 const password = 'testuser'
+const projectName = 'Test Project 1'
 
 describe('POST /cfd', () => {
   test('returns CFD data for the given project name', async () => {
-    const projectName = 'do not delete'
     const response = await request(app)
       .post('/cfd')
       .send({ projectName, username, password })
@@ -29,15 +29,13 @@ describe('POST /cfd', () => {
 
 describe('getEmptyStatusMatrix', () => {
   test('returns the task statuses for a valid project', async () => {
-    const slug = 'sertestuser-testproject'
-    const result = await getEmptyStatusMatrix(slug, username, password)
+    const result = await getEmptyStatusMatrix(projectName, username, password)
     expect(result.success).toBe(true)
     expect(result.statuses).toBeDefined()
   }, 60000)
 
   test('returns an error for an invalid project', async () => {
-    const slug = 'invalid-project'
-    const result = await getEmptyStatusMatrix(slug, username, password)
+    const result = await getEmptyStatusMatrix('invalidProjectName', username, password)
     expect(result.success).toBe(false)
     expect(result.error).toEqual('Error Finding Project')
   }, 60000)
