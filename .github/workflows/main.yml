@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/epicservice', 'src/memberservice',
+        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/sprintservice', 'src/epicservice', 'src/memberservice',
              'src/rolesservice', 'src/issueservice'] 
 
     steps:

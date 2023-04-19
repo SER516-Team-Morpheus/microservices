@@ -113,38 +113,24 @@ app.patch('/updateUserstory', async (req, res) => {
     if (req.body.tags !== undefined) {
       parameters.tags = req.body.tags
     }
-    const points = {}
+    const pointsValue = {}
     if (req.body.points !== undefined) {
       const rolelist = await getRoleId(token, projectId)
       if (!rolelist.success) {
         console.log('Error getting roles')
       }
       const roles = rolelist.roleIds
-      const userpoint = {
-        '?': 0,
-        0: 1,
-        '1/2': 2,
-        1: 3,
-        2: 4,
-        3: 5,
-        5: 6,
-        8: 7,
-        10: 8,
-        13: 9,
-        20: 10,
-        40: 11
+      const userpointList = await getPointValues(token, projectId)
+      if (!userpointList.success) {
+        console.log('Error getting userpoints')
       }
-
-      const pointDetails = await getPointValues(token, projectId)
-      const point = pointDetails.point_value
+      const points = userpointList.pointValues
       for (const key in req.body.points) {
-        const value = req.body.points[key]
         const newKey = roles[key]
-        const newValue = userpoint[value]
-        points[newKey] = point + newValue
+        const value = req.body.points[key]
+        pointsValue[newKey] = points[value]
       }
-
-      parameters.points = points
+      parameters.points = pointsValue
     }
     parameters.version = version
 

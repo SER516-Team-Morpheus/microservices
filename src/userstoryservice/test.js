@@ -10,7 +10,7 @@ describe('User story Microservices', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectName: 'testProject',
+          projectName: 'testIssue',
           subject: 'test US'
         })
       expect(response.status).toBe(201)
@@ -38,11 +38,11 @@ describe('User story Microservices', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          projectName: 'testProject'
+          projectName: 'testIssue'
         })
       expect(response.status).toBe(200)
       expect(response.body.userStory).toBeDefined()
-    }, 20000)
+    })
     it('should return a 500 response with an error message if user story is not created', async () => {
       const response = await request(app)
         .get('/getUserStory')
@@ -64,7 +64,7 @@ describe('User story Microservices', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectname: 'testProject',
+          projectname: 'testIssue',
           userstoryname: 'test US3'
         })
       expect(response.status).toBe(200)
@@ -77,7 +77,7 @@ describe('User story Microservices', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectname: 'testProject',
+          projectname: 'testIssue',
           userstoryname: 'test USTest'
         })
       expect(response.status).toBe(500)
@@ -92,7 +92,7 @@ describe('User story Microservices', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          projectname: 'testProject',
+          projectname: 'testIssue',
           userstoryname: 'test US3',
           tags: ['feature'],
           points: {
@@ -102,6 +102,61 @@ describe('User story Microservices', () => {
           }
         })
       expect(response.status).toBe(201)
+    }, 20000)
+  })
+
+  describe('POST /createUserstory', () => {
+    it('should return a 201 response with the user story id', async () => {
+      const response = await request(app)
+        .post('/createUserstory')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectName: 'testIssue',
+          subject: 'test US'
+        })
+      expect(response.status).toBe(201)
+      expect(response.body.userstoryId).toBeDefined()
+    })
+    it('should return a 500 response with an error message if user story is not created', async () => {
+      const response = await request(app)
+        .post('/createUserstory')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectName: 'noProject',
+          subject: 'test US4'
+        })
+      expect(response.status).toBe(500)
+    })
+  })
+
+  describe('DELETE /deleteUserstory', () => {
+    it('should return a 201 response with the message', async () => {
+      const response = await request(app)
+        .delete('/deleteUserstory')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testIssue',
+          userstoryname: 'test US'
+        })
+      expect(response.status).toBe(201)
+    })
+    it('should return a 500 response with an error message', async () => {
+      const response = await request(app)
+        .delete('/deleteUserstory')
+        .set('Accept', 'application/json')
+        .send({
+          username: 'SERtestuser',
+          password: 'testuser',
+          projectname: 'testIssue',
+          userstoryname: 'test US11'
+        })
+      expect(response.status).toBe(500)
     })
   })
 })
