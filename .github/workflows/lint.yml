@@ -23,6 +23,7 @@ jobs:
             'src/memberservice',
             'src/rolesservice',
             'src/pointsservice',
+            'src/issueservice'
           ]
 
     steps:
