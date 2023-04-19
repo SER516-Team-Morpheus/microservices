@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 const express = require('express')
 const {
-  getHeaders, getToken, getTaskStatuses, getProjectID, getTasks, getTasksHistory, getTaskStatus
+  getHeaders, getToken, getTaskStatuses, getProject, getTasks, getTasksHistory, getTaskStatus
 } = require('./logic')
 const app = express()
 const port = 3012
@@ -19,12 +19,13 @@ app.use((req, res, next) => {
   next()
 })
 
-async function getEmptyStatusMatrix (slug, userName, password) {
+async function getEmptyStatusMatrix (name, userName, password) {
   token = await getToken(userName, password)
   headers = getHeaders(token.token)
-  res = await getProjectID(headers, slug)
+  res = await getProject(headers, name)
   if (res.success) {
-    return { statuses: await getTaskStatuses(headers, res.projectId), success: true }
+    project = res.project
+    return { project, statuses: await getTaskStatuses(headers, project.id), success: true }
   } else {
     return { error: 'Error Finding Project', success: false }
   }
@@ -39,17 +40,16 @@ app.post('/cfd', async (req, res) => {
   const endDate = new Date(today.getTime())
   const sevenDays = 6 * oneDay
   const startDate = new Date(today.getTime() - sevenDays)
-  let { projectName } = req.body
+  const { projectName } = req.body
   if (!projectName) {
     return res.status(500).send({
       error: 'Project name not sent in body.'
     })
   }
-  projectName = projectName.replace(/\s+/g, '-')
-  const slug = `${userName.toLowerCase()}-${projectName.toLowerCase()}`
   const cfd = {}
-  const statusData = await getEmptyStatusMatrix(slug, userName, password)
+  const statusData = await getEmptyStatusMatrix(projectName, userName, password)
   if (statusData.success) {
+    slug = statusData.project.slug
     emptyStatusMatrix = statusData.statuses
 
     // loop through each date between the start and end dates and add it to the list
@@ -59,9 +59,19 @@ app.post('/cfd', async (req, res) => {
     }
 
     const tasks = await getTasks(headers, slug)
+    const promises = tasks.map(task => getTasksHistory(headers, task.id))
+    const taskHistories = await Promise.all(promises)
+    const taskHistoryObject = {}
+    for (let i = 0; i < tasks.length; i++) {
+      taskHistoryObject[tasks[i].id] = {
+        task_data: tasks[i],
+        task_history: taskHistories[i]
+      }
+    }
     try {
-      for (const task of tasks) {
-        let taskHistory = await getTasksHistory(headers, task.id)
+      for (const [, data] of Object.entries(taskHistoryObject)) {
+        task = data.task_data
+        let taskHistory = data.task_history
         taskHistory = taskHistory.filter(obj => obj.values_diff && obj.values_diff.status)
         const createdDate = new Date(task.created_date)
 

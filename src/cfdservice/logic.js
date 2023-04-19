@@ -1,6 +1,7 @@
 const axios = require('axios')
 
 const TAIGA_BASE = 'https://api.taiga.io/api/v1'
+const MEMBER_URL = `${TAIGA_BASE}/users/me`
 
 function getHeaders (token) {
   return {
@@ -47,30 +48,73 @@ async function getToken (username, password) {
   }
 }
 
-async function getProjectID (headers, slug) {
-  const PROJECT_SLUG_URL = TAIGA_BASE + '/projects/by_slug?slug=' + slug
+async function getMember (headers) {
   try {
-    const response = await axios.get(PROJECT_SLUG_URL, {
-      headers
-    })
+    const response = await axios.get(MEMBER_URL,
+      { headers }
+    )
     if (response.data.id) {
       return {
         success: true,
-        projectId: response.data.id
+        memberId: response.data.id
       }
     } else {
       return {
         success: false,
-        message: 'Project Not Found'
+        message: 'No member found.'
       }
     }
   } catch (error) {
-    return { success: false, message: 'Error getting project by name' }
+    return { success: false, message: error.response.data }
+  }
+}
+
+async function getProjectByName (headers, memberId, name) {
+  const GET_MEMBER_PROJECT = TAIGA_BASE + '/projects' + '?member=' + memberId
+  try {
+    const response = await axios.get(GET_MEMBER_PROJECT, { headers })
+
+    const newResponse = []
+    for (let i = 0; i < response.data.length; i++) {
+      if (response.data[i].name === name) {
+        const { name, description, id, slug } = response.data[i]
+        newResponse.push({ name, description, id, slug })
+      }
+    }
+
+    if (newResponse.length) {
+      return {
+        success: true,
+        projects: newResponse
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Authentication issue.'
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    return { success: false, message: 'Error getting project details.' }
+  }
+}
+
+async function getProject (headers, name) {
+  const memberData = await getMember(headers)
+  if (!memberData.success) {
+    return { success: false, error: 'Memmer ID could not retrived' }
+  }
+  const memberId = memberData.memberId
+  const project = await getProjectByName(headers, memberId, name)
+  if (project.success) {
+    return { project: project.projects[0], success: true }
+  } else {
+    return { success: false }
   }
 }
 
 async function getTasks (headers, projectSlug) {
-  const url = `${TAIGA_BASE}/tasks?project__slug=${projectSlug}`
+  const url = `${TAIGA_BASE}/tasks?project__slug=${projectSlug}&page_size=100000`
   const res = await axios.get(url, { headers })
   return res.data
 }
@@ -94,4 +138,4 @@ async function getTaskStatuses (headers, projectID) {
   }
 }
 
-module.exports = { getHeaders, getToken, getProjectID, getTaskStatuses, getTasks, getTasksHistory, getTaskStatus }
+module.exports = { getHeaders, getToken, getProject, getTaskStatuses, getTasks, getTasksHistory, getTaskStatus }
