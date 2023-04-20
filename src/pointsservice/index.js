@@ -65,7 +65,7 @@ app.post('/createPoints', async (req, res) => {
 })
 
 
-// Endpoint for deleting a member
+// Endpoint for deleting points
 app.delete('/deletePointsData/:id', async (req, res) => {
   const { token, projectId} = req.body
   //const memberId = req.params.id
