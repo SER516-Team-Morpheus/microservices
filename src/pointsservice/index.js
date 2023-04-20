@@ -64,6 +64,20 @@ app.post('/createPoints', async (req, res) => {
   return res.status(201).send(pointsData)
 })
 
+
+// Endpoint for deleting a member
+app.delete('/deletePointsData/:id', async (req, res) => {
+  const { token, projectId} = req.body
+  //const memberId = req.params.id
+  const memberData = await deletePointsData(token, projectId)
+  if (!memberData.success) {
+    return res.status(500).send({
+      success: false,
+      message: 'Error deleting points data'
+    })
+  }
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Points microservice running at http://localhost:${port}`)
