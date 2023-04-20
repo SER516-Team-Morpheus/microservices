@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Installing dependencies
+      - name: Installing dependencies 
         working-directory: ${{ matrix.dir }}
         run : npm install 
-      - name: install clinic for micservice
+      - name: install clinic for micservices
         working-directory: ${{ matrix.dir }}
         run: npm install -g clinic
       - name: clinic for micservice
