@@ -21,6 +21,12 @@ apiEndpoints:
     host: localhost
     paths: "/getProject"
     appendQueryString: true
+  deleteProject:
+    host: localhost
+    paths: "/deleteProject"
+  editProject:
+    host: localhost
+    paths: "/updateProject"
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
@@ -136,6 +142,8 @@ pipelines:
       - projectservice
       - getProjectByslug
       - getProject
+      - updateProject
+      - deleteProject
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:

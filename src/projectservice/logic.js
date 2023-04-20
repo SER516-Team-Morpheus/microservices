@@ -71,8 +71,26 @@ async function getProjectList (token, memberId) {
       }
     }
   } catch (error) {
-    console.log(error)
     return { success: false, message: 'Error getting project details.' }
+  }
+}
+
+async function getProjectID (token, projectName) {
+  try {
+    const memberData = await getMember(token)
+    const memberId = memberData.memberId
+    const getProjectData = await getProjectList(token, memberId)
+    const projectData = getProjectData.projects.find(project => project.name === projectName)
+    if (projectData) {
+      return { project: projectData, success: true }
+    } else {
+      return {
+        error: 'No Project By This Name: ' + projectName,
+        success: false
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error getting project by name' }
   }
 }
 
@@ -134,10 +152,59 @@ async function createProject (name, description, token) {
   }
 }
 
+// Function to delete project
+async function deleteProject (projectID, token) {
+  try {
+    const DELETE_URL = PROJECT_API_URL + '/' + projectID
+    const response = await axios.delete(
+      DELETE_URL,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+
+    // eslint-disable-next-line eqeqeq
+    if (response.status == 204) {
+      return {
+        success: true,
+        message: 'Project Deleted Successfully'
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong will deleting project'
+      }
+    }
+  } catch (error) {
+    return { success: false, message: 'Error deleting project' }
+  }
+}
+
+//
+async function editProject (token, projectID, patch) {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+    const response = await axios.patch(`${PROJECT_API_URL}/${projectID}`, patch, { headers })
+    // eslint-disable-next-line eqeqeq
+    if (response.status == 200) {
+      return {
+        data: response.data
+      }
+    }
+    return response.data
+  } catch (error) {
+    throw new Error('Error editing project')
+  }
+}
+
 module.exports = {
   getProjectBySlug,
   getMember,
   getProjectList,
   createProject,
-  getToken
+  getToken,
+  deleteProject,
+  editProject,
+  getProjectID
 }
