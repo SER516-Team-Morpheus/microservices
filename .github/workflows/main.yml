@@ -18,7 +18,6 @@ jobs:
             'src/authservice',
             'src/projectservice',
             'src/taskservice',
-            'src/userstoryservice',
             'src/sprintservice',
             'src/epicservice',
             'src/memberservice',
