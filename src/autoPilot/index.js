@@ -4,8 +4,16 @@ require('dotenv').config({ path: '../.env' })
 
 const app = express()
 const port = 3015
+var globalTasks = []
+var globalSprintId = -1
+var lastTaskId = -1
+var minStatus = -1
+var maxStatus = -1
 
 app.use(express.json())
+
+const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
+const TASK_API_URL = `${process.env.TAIGA_API_BASE_URL}/tasks`
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -397,7 +405,123 @@ app.post('/autoPilot', async (req, res) => {
     sol: 'Try different project name.',
   })
 })
+app.post('/moveTasks', async (req, res) => {
+  const { username, password, roll, strategy, projectName, sprintId } = req.body
+  const token = await getToken(username, password)
+  if (!token.success) {
+    return res.status(401).send(token)
+  }
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`  
+  const PROJECT_SLUG_URL = PROJECT_API_URL + '/by_slug?slug=' + slugName
+  const response = await axios.get(PROJECT_SLUG_URL, {
+      headers: { Authorization: `Bearer ${token.token}` }
+  })
+  const projectId = response.data.id
+  if(globalTasks.length == 0){
+    try{
+      const TASKS_URL = `${process.env.TAIGA_API_BASE_URL}/tasks?project=${projectId}&milestone=${sprintId}&order_by=us_order`
+      console.log(TASKS_URL)
+      const response2 = await axios.get(TASKS_URL,{
+        headers: { Authorization: `Bearer ${token.token}` }
+      })
+      const data = response2.data
+      if(data.length == 0){
+        return ({
+          success: false,
+          message: 'Error peforming simulation since there are no tasks',
+        })
+      }
+      globalTasks = data.map(task => ({
+        id: task.id,
+        status: task.status,
+        status_name: task.status_extra_info.name,
+        subject: task.subject,
+        version: task.version
+      }))
+      minStatus = globalTasks[0].status
+      maxStatus = minStatus+3
+      console.log(globalTasks)
+    }catch (error) {
+      console.log(error)
+      return ({
+        success: false,
+        message: 'Error peforming simulation',
+      })
+    }
+    }
+    if(strategy === "pull"){
+      var currTask = -1;
+      if(lastTaskId == -1){
+        lastTaskId = 0
+      }
+      currTask = globalTasks[lastTaskId];
+      console.log(currTask)
+      console.log(maxStatus)
+      if(roll > maxStatus-currTask.status){
+          var leftOver = roll - (maxStatus-currTask.status)
+          var leftOver2 = -1
+          if(leftOver>3){
+            leftOver2 = leftOver - 3
+            leftOver = 3
+          }
+          await updateTask(currTask, projectId, token, maxStatus)
+          if(lastTaskId +1 < globalTasks.length){
+            lastTaskId = lastTaskId + 1
+          }else{
+            return res.status(201).send({success:true, message:"No more tasks lest for simulation"})
+          }
+          currTask = globalTasks[lastTaskId]
+          await updateTask(currTask, projectId, token, currTask.status + leftOver)
+          if(leftOver2 != -1){
+            if(lastTaskId +1 < globalTasks.length){
+              lastTaskId = lastTaskId + 1
+            }else{
+              return res.status(201).send({success:true, message:"No more tasks lest for simulation"})
+            }
+            currTask = globalTasks[lastTaskId]
+            await updateTask(currTask, projectId, token, currTask.status + leftOver2)
+          }else{
+            if(globalTasks[lastTaskId].status == maxStatus){
+              if(lastTaskId +1 < globalTasks.length){
+                lastTaskId = lastTaskId + 1
+              }else{
+                return res.status(201).send({success:true, message:"No more tasks lest for simulation"})
+              }
+            }
+          }
+      }else if(roll == maxStatus - currTask.status){
+        await updateTask(currTask, projectId, token, maxStatus)
+        if(lastTaskId +1 < globalTasks.length){
+          lastTaskId = lastTaskId + 1
+        }else{
+          return res.status(201).send({success:true, message:"No more tasks lest for simulation"})
+        }
+      }else{
+          await updateTask(currTask, projectId, token, currTask.status + roll)
+      }
 
+    }else if(strategy === "push"){
+
+    }
+    return res.status(201).send({success:true})
+})
+
+async function updateTask(currTask, projectId, token, status){
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token.token}`
+  };
+  const data = {
+    project: projectId,
+    subject: currTask.subject,
+    status: status,
+    version: currTask.version
+  };
+  const response = await axios.patch(TASK_API_URL + "/"+ currTask.id, data, { headers })
+  globalTasks[lastTaskId].version = response.data.version
+  globalTasks[lastTaskId].status = response.data.status
+  globalTasks[lastTaskId].status_name = response.data.status_extra_info.name  
+}
 // Start the server
 app.listen(port, () => {
   console.log(`Project microservice running at http://localhost:${port}`)
