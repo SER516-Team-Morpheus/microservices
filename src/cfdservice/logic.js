@@ -69,14 +69,14 @@ async function getMember (headers) {
   }
 }
 
-async function getProjectByName (headers, memberId, name) {
+async function getProjectByName (headers, memberId, projectId) {
   const GET_MEMBER_PROJECT = TAIGA_BASE + '/projects' + '?member=' + memberId
   try {
     const response = await axios.get(GET_MEMBER_PROJECT, { headers })
 
     const newResponse = []
     for (let i = 0; i < response.data.length; i++) {
-      if (response.data[i].name === name) {
+      if (+response.data[i].id === +projectId) {
         const { name, description, id, slug } = response.data[i]
         newResponse.push({ name, description, id, slug })
       }

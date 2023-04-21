@@ -19,10 +19,10 @@ app.use((req, res, next) => {
   next()
 })
 
-async function getEmptyStatusMatrix (name, userName, password) {
+async function getEmptyStatusMatrix (ID, userName, password) {
   token = await getToken(userName, password)
   headers = getHeaders(token.token)
-  res = await getProject(headers, name)
+  res = await getProject(headers, ID)
   if (res.success) {
     project = res.project
     return { project, statuses: await getTaskStatuses(headers, project.id), success: true }
@@ -40,14 +40,14 @@ app.post('/cfd', async (req, res) => {
   const endDate = new Date(today.getTime())
   const sevenDays = 6 * oneDay
   const startDate = new Date(today.getTime() - sevenDays)
-  const { projectName } = req.body
-  if (!projectName) {
+  const { projectId } = req.body
+  if (!projectId) {
     return res.status(500).send({
-      error: 'Project name not sent in body.'
+      error: 'Project ID not sent in body.'
     })
   }
   const cfd = {}
-  const statusData = await getEmptyStatusMatrix(projectName, userName, password)
+  const statusData = await getEmptyStatusMatrix(projectId, userName, password)
   if (statusData.success) {
     slug = statusData.project.slug
     emptyStatusMatrix = statusData.statuses
@@ -72,12 +72,16 @@ app.post('/cfd', async (req, res) => {
       for (const [, data] of Object.entries(taskHistoryObject)) {
         task = data.task_data
         let taskHistory = data.task_history
-        taskHistory = taskHistory.filter(obj => obj.values_diff && obj.values_diff.status)
+        taskHistory = taskHistory.filter(
+          (obj) => obj.values_diff && obj.values_diff.status
+        )
         const createdDate = new Date(task.created_date)
 
         let reducedObjects = taskHistory.reduce((acc, curr) => {
           const currDate = new Date(curr.created_at).toLocaleDateString()
-          const accDate = acc[currDate] ? new Date(acc[currDate].created_at) : null
+          const accDate = acc[currDate]
+            ? new Date(acc[currDate].created_at)
+            : null
           const currDateTime = new Date(curr.created_at)
 
           // If there's no object for this date, or this object is newer than the existing one, replace it
@@ -89,13 +93,29 @@ app.post('/cfd', async (req, res) => {
         }, {})
         reducedObjects = Object.values(reducedObjects)
         for (const [key, value] of Object.entries(cfd)) {
-          const status = getTaskStatus(reducedObjects, new Date(key), createdDate)
+          const status = getTaskStatus(
+            reducedObjects,
+            new Date(key),
+            createdDate
+          )
           if (status) {
             value[status] += 1
           }
         }
       }
-      return res.status(200).send(cfd)
+      const labels = Object.keys(cfd).map((date) =>
+        new Date(date).toDateString()
+      )
+      const statusNames = Object.keys(cfd[Object.keys(cfd)[1]])
+      const datasets = statusNames.map((statusName, i) => ({
+        key: statusName,
+        value: Object.keys(cfd).map((date) => cfd[date][statusName])
+      }))
+      const returnCFD = {
+        dates: labels,
+        status: datasets
+      }
+      return res.status(200).send(returnCFD)
     } catch (err) {
       return res.status(500).send({ error: 'Error occured while calculating CFD MATRIX' })
     }
