@@ -1,6 +1,9 @@
 const express = require('express')
 const axios = require('axios')
+
 require('dotenv').config({ path: '../.env' })
+
+const {updateTaskPush} = require('./logic')
 
 const app = express()
 const port = 3015
@@ -420,7 +423,7 @@ app.post('/moveTasks', async (req, res) => {
   if(globalTasks.length == 0){
     try{
       const TASKS_URL = `${process.env.TAIGA_API_BASE_URL}/tasks?project=${projectId}&milestone=${sprintId}&order_by=us_order`
-      console.log(TASKS_URL)
+      //console.log(TASKS_URL)
       const response2 = await axios.get(TASKS_URL,{
         headers: { Authorization: `Bearer ${token.token}` }
       })
@@ -440,9 +443,8 @@ app.post('/moveTasks', async (req, res) => {
       }))
       minStatus = globalTasks[0].status
       maxStatus = minStatus+3
-      console.log(globalTasks)
     }catch (error) {
-      console.log(error)
+      //console.log(error)
       return ({
         success: false,
         message: 'Error peforming simulation',
@@ -501,6 +503,104 @@ app.post('/moveTasks', async (req, res) => {
       }
 
     }else if(strategy === "push"){
+      if(app.settings.currentTask === undefined){
+        app.set('currentTask', 0);
+      }
+      try{
+        const TASKS_URL = `${process.env.TAIGA_API_BASE_URL}/tasks?project=${projectId}&milestone=${sprintId}&order_by=us_order`
+        const response2 = await axios.get(TASKS_URL,{
+          headers: { Authorization: `Bearer ${token.token}` }
+        })
+        const data = response2.data
+        if(data.length == 0){
+          return ({
+            success: false,
+            message: 'Error peforming simulation since there are no tasks',
+          })
+        }
+        globalTasks = data.map(task => ({
+          id: task.id,
+          status: task.status,
+          status_name: task.status_extra_info.name,
+          subject: task.subject,
+          version: task.version
+        }))
+      }catch (error) {
+        return ({
+          success: false,
+          message: 'Error peforming simulation',
+        })
+      }
+      numberOfTask = globalTasks.length
+
+      currentTaskNumber = app.settings.currentTask%numberOfTask
+      currTask = globalTasks[currentTaskNumber]
+      const TASK_STATUS_API_URL = `https://api.taiga.io/api/v1/task-statuses?project=${projectId}`
+      const response = await axios.get(TASK_STATUS_API_URL,
+        { headers: { Authorization: `Bearer ${token.token}` } }
+      )
+      minStatus = response.data[0].id
+      maxStatus = minStatus + 3
+      while(currTask.status === maxStatus)
+      {
+        currentTaskNumber = currentTaskNumber + 1;
+        currTask = globalTasks[currentTaskNumber]
+        if(currentTaskNumber === numberOfTask - 1)
+        {
+          return res.status(201).send({success:true, message:"No task left to do simulation"})
+        }
+      }
+      
+      if(roll <= maxStatus-currTask.status){
+        newStatus = currTask.status + roll
+        const taskUpdateDetails = await updateTaskPush(currTask, projectId, token, newStatus)
+        if(taskUpdateDetails.success)
+        {
+
+          currentTaskNumber = currentTaskNumber + 1
+          app.set('currentTask', currentTaskNumber);
+          return res.status(201).send({success:true, message:"Task moved to new location"})  
+        }
+        else{
+          return res.status(500).send({success:false, message:"Error moving tasks"})  
+        }
+    }
+    else
+    {
+      var taskUpdateDetails
+      var leftRoll = roll
+       while(leftRoll > 0)
+       {
+        currentTaskNumber = currentTaskNumber%numberOfTask
+        currTask = globalTasks[currentTaskNumber]
+        if(leftRoll > maxStatus-currTask.status)
+        {
+          taskUpdateDetails = await updateTaskPush(currTask, projectId, token, maxStatus)
+          leftRoll = leftRoll - (maxStatus-currTask.status)
+          currentTaskNumber = currentTaskNumber + 1;
+          
+        }
+        else
+        {
+          newStatus = currTask.status + leftRoll
+          taskUpdateDetails = await updateTaskPush(currTask, projectId, token, newStatus)
+          leftRoll = leftRoll - (newStatus - currTask.status)
+          currentTaskNumber = currentTaskNumber + 1;   
+          
+        }
+       }
+
+        if(taskUpdateDetails.success)
+        {
+          app.set('currentTask', currentTaskNumber);
+          return res.status(201).send({success:true, message:"Task moved to new location"})  
+        }
+        else{
+          return res.status(500).send({success:false, message:"Error moving tasks"})  
+        }
+        
+        
+    }
 
     }
     return res.status(201).send({success:true})
@@ -511,6 +611,7 @@ async function updateTask(currTask, projectId, token, status){
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token.token}`
   };
+  console.log(currTask)
   const data = {
     project: projectId,
     subject: currTask.subject,
