@@ -22,7 +22,8 @@ jobs:
             'src/epicservice',
             'src/memberservice',
             'src/rolesservice',
-            'src/pointsservice'
+            'src/pointsservice',
+            'src/cfdservice'
           ]
     steps:
       - uses: actions/checkout@v3
