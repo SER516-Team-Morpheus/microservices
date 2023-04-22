@@ -1,7 +1,7 @@
 const axios = require('axios')
 
 const TAIGA_BASE = 'https://api.taiga.io/api/v1'
-const MEMBER_URL = `${TAIGA_BASE}/users/me`
+const PROJECT_URL = 'https://api.taiga.io/api/v1/projects/'
 
 function getHeaders (token) {
   return {
@@ -48,49 +48,19 @@ async function getToken (username, password) {
   }
 }
 
-async function getMember (headers) {
-  try {
-    const response = await axios.get(MEMBER_URL,
-      { headers }
-    )
-    if (response.data.id) {
-      return {
-        success: true,
-        memberId: response.data.id
-      }
-    } else {
-      return {
-        success: false,
-        message: 'No member found.'
-      }
-    }
-  } catch (error) {
-    return { success: false, message: error.response.data }
-  }
-}
-
-async function getProjectByName (headers, memberId, projectId) {
-  const GET_MEMBER_PROJECT = TAIGA_BASE + '/projects' + '?member=' + memberId
+async function getProjectByID (headers, projectId) {
+  const GET_MEMBER_PROJECT = PROJECT_URL + projectId
   try {
     const response = await axios.get(GET_MEMBER_PROJECT, { headers })
-
-    const newResponse = []
-    for (let i = 0; i < response.data.length; i++) {
-      if (+response.data[i].id === +projectId) {
-        const { name, description, id, slug } = response.data[i]
-        newResponse.push({ name, description, id, slug })
-      }
-    }
-
-    if (newResponse.length) {
+    if (response.status === 200) {
       return {
         success: true,
-        projects: newResponse
+        project: response.data
       }
     } else {
       return {
         success: false,
-        message: 'Authentication issue.'
+        message: 'Error In Retriving project. Did you enter correct projectID'
       }
     }
   } catch (error) {
@@ -99,25 +69,16 @@ async function getProjectByName (headers, memberId, projectId) {
   }
 }
 
-async function getProject (headers, name) {
-  const memberData = await getMember(headers)
-  if (!memberData.success) {
-    return { success: false, error: 'Memmer ID could not retrived' }
-  }
-  const memberId = memberData.memberId
-  const project = await getProjectByName(headers, memberId, name)
-  if (project.success) {
-    return { project: project.projects[0], success: true }
-  } else {
-    return { success: false }
+async function getTasks (headers, projectSlug) {
+  try {
+    const url = `${TAIGA_BASE}/tasks?project__slug=${projectSlug}&page_size=100000`
+    const res = await axios.get(url, { headers })
+    return { data: res.data, success: true }
+  } catch (error) {
+    return { error, success: false }
   }
 }
 
-async function getTasks (headers, projectSlug) {
-  const url = `${TAIGA_BASE}/tasks?project__slug=${projectSlug}&page_size=100000`
-  const res = await axios.get(url, { headers })
-  return res.data
-}
 async function getTasksHistory (headers, ID) {
   const url = `${TAIGA_BASE}/history/task/${ID}`
   const res = await axios.get(url, { headers })
@@ -138,4 +99,12 @@ async function getTaskStatuses (headers, projectID) {
   }
 }
 
-module.exports = { getHeaders, getToken, getProject, getTaskStatuses, getTasks, getTasksHistory, getTaskStatus }
+module.exports = {
+  getHeaders,
+  getToken,
+  getTaskStatuses,
+  getTasks,
+  getTasksHistory,
+  getTaskStatus,
+  getProjectByID
+}
