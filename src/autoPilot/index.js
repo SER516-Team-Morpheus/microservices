@@ -567,6 +567,7 @@ app.post('/moveTasks', async (req, res) => {
     }
     else
     {
+      try{
       var taskUpdateDetails
       var leftRoll = roll
        while(leftRoll > 0)
@@ -599,9 +600,12 @@ app.post('/moveTasks', async (req, res) => {
           return res.status(500).send({success:false, message:"Error moving tasks"})  
         }
         
-        
+      }
+    catch(error)
+    {
+      return res.status(500).send({success:false, message:"No more task left to move"})  
     }
-
+  }
     }
     return res.status(201).send({success:true})
 })
