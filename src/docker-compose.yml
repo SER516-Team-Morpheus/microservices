@@ -8,7 +8,7 @@ services:
       - .env
     networks:
       - my-network
-  autoPilot:
+  autopilot:
     build: ./autoPilot
     ports:
       - '3015:3015'
@@ -88,5 +88,6 @@ services:
       - memberservice
       - taskservice
       - rolesservice
+      - autopilot
 networks:
   my-network:
