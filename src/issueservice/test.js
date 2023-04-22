@@ -12,8 +12,8 @@ describe('Issue Microservice', () => {
         .send({
           username: 'SERtestuser',
           password: 'testuser',
-          project: 746745,
-          subject: 'testIssue99',
+          projectName: 'testProject',
+          subject: "testIssueNew",
           assigned_to: null,
           description: 'Implement API CALLs',
           is_closed: false,
@@ -34,7 +34,7 @@ describe('Issue Microservice', () => {
         .send({
           username: 'SERtestused',
           password: 'testuser',
-          project: 7,
+          projectName: 'Nonexisiting',
           subject: 'a',
           assigned_to: null,
           description: 'Implement API CALLs',
@@ -58,7 +58,7 @@ describe('Issue Microservice', () => {
         .query({
           username: 'SERtestuser',
           password: 'testuser',
-          projectId: 746745
+          projectName: 'testProject'
         })
       expect(response.status).toBe(201)
       expect(response.body.data).toBeDefined()
@@ -70,7 +70,7 @@ describe('Issue Microservice', () => {
         .query({
           username: 'SERtestuserxyaa',
           password: 'testuser',
-          projectId: 720
+          projectName: 'blabber'
         })
       expect(response.status).toBe(500)
     })

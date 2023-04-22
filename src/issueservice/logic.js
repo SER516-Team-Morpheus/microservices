@@ -4,6 +4,7 @@ require('dotenv').config({ path: '../.env' })
 
 const AUTH_API_URL = 'https://api.taiga.io/api/v1/auth'
 const ISSUE_API_URL = 'https://api.taiga.io/api/v1/issues'
+const PROJECT_API_URL = `${process.env.TAIGA_API_BASE_URL}/projects`
 
 async function getItemId (apiEndpoint, projectId, itemName, authToken) {
   const response = await axios.get(`https://api.taiga.io${apiEndpoint}?project=${projectId}`,
@@ -25,7 +26,7 @@ async function getItemName (apiEndpoint, projectId, itemId, authToken) {
   return item ? item.name : null
 }
 
-async function createIssue (username, password, assigned_to, blocked_note, description, project
+async function createIssue (username, password, assigned_to, blocked_note, description, slugName
   , severity, status, subject, is_blocked, priority, type, is_closed) {
   try {
     const response1 = await axios.post(AUTH_API_URL, {
@@ -34,6 +35,11 @@ async function createIssue (username, password, assigned_to, blocked_note, descr
       password
     })
     const authToken = response1.data.auth_token
+    const PROJECT_SLUG_URL = PROJECT_API_URL + '/by_slug?slug=' + slugName
+    const response2 = await axios.get(PROJECT_SLUG_URL, {
+        headers: { Authorization: `Bearer ${authToken}` }
+    })
+    const project = response2.data.id
     const typeApiEndpoint = '/api/v1/issue-types'
     const typeId = await getItemId(typeApiEndpoint, project, type, authToken)
     const severityApiEndpoint = '/api/v1/severities'
@@ -48,7 +54,7 @@ async function createIssue (username, password, assigned_to, blocked_note, descr
         assigned_to,
         blocked_note,
         description,
-        project,
+        project: project,
         severity: severityId,
         status: statusId,
         subject,
@@ -72,7 +78,7 @@ async function createIssue (username, password, assigned_to, blocked_note, descr
   }
 }
 
-async function getIssues (username, password, projectId) {
+async function getIssues (username, password, slugName) {
   try {
     const response1 = await axios.post(AUTH_API_URL, {
       type: 'normal',
@@ -80,7 +86,7 @@ async function getIssues (username, password, projectId) {
       password
     })
     const token = response1.data.auth_token
-    const ISSUES_API_URL = `${ISSUE_API_URL}?project=${projectId}`
+    const ISSUES_API_URL = `${ISSUE_API_URL}?project__slug=${slugName}`
     const response = await axios.get(ISSUES_API_URL, {
       headers: { Authorization: `Bearer ${token}` }
     })

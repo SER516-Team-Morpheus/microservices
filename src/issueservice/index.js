@@ -23,10 +23,11 @@ app.use((req, res, next) => {
 // Endpoint for creating a new issue
 app.post('/createIssue', async (req, res) => {
   const {
-    username, password, assigned_to, blocked_note = null, description, project
+    username, password, assigned_to, blocked_note = null, description, projectName
     , severity, status, subject, is_blocked = false, priority, type, is_closed = false
   } = req.body
-  const issueData = await createIssue(username, password, assigned_to, blocked_note, description, project
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const issueData = await createIssue(username, password, assigned_to, blocked_note, description, slugName
     , severity, status, subject, is_blocked, priority, type, is_closed)
   if (!issueData.success) {
     return res.status(500).send({
@@ -40,8 +41,9 @@ app.post('/createIssue', async (req, res) => {
 
 // Endpoint for getting  all issues details
 app.get('/getIssues', async (req, res) => {
-  const { username, password, projectId } = req.query
-  const issueData = await getIssues(username, password, projectId)
+  const { username, password, projectName } = req.query
+  const slugName = `${username.toLowerCase()}-${projectName.toLowerCase()}`
+  const issueData = await getIssues(username, password, slugName)
   if (issueData.success) {
     const result = issueData.data.map(issue => ({
       id: issue.id,

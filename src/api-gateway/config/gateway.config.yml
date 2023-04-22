@@ -90,7 +90,19 @@ apiEndpoints:
 
   issueservice:
     host: localhost
-    paths: "/issueservice"    
+    paths: "/createIssue"
+  getIssues:
+    host: localhost
+    paths: "/getIssues"
+  getIssueById:
+    host: localhost
+    paths: "/getIssueById"    
+  deleteIssue:
+    host: localhost
+    paths: "/deleteIssue/:id"
+  updateIssue:
+    host: localhost
+    paths: "/updateIssue"    
 
 serviceEndpoints:
   httpbin:
@@ -244,6 +256,10 @@ pipelines:
   issuePipeline:
     apiEndpoints:
       - issueservice
+      - getIssues
+      - getIssueById 
+      - deleteIssue
+      - updateIssue     
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
