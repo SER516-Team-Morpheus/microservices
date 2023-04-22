@@ -1,9 +1,17 @@
-version: "3"
+version: '3'
 services:
   authservice:
     build: ./authservice
     ports:
-      - "3001:3001"
+      - '3001:3001'
+    env_file:
+      - .env
+    networks:
+      - my-network
+  autoPilot:
+    build: ./autoPilot
+    ports:
+      - '3015:3015'
     env_file:
       - .env
     networks:
@@ -11,15 +19,16 @@ services:
   projectservice:
     build: ./projectservice
     ports:
-      - "3002:3002"
+      - '3002:3002'
     env_file:
       - .env
     networks:
       - my-network
+
   rolesservice:
     build: ./rolesservice
     ports:
-      - "3008:3008"
+      - '3008:3008'
     env_file:
       - .env
     networks:
@@ -27,15 +36,15 @@ services:
   userstoryservice:
     build: ./userstoryservice
     ports:
-      - "3003:3003"
+      - '3003:3003'
     env_file:
       - .env
     networks:
       - my-network
   taskservice:
-    build: ./taskservice 
+    build: ./taskservice
     ports:
-      - "3005:3005"
+      - '3005:3005'
     env_file:
       - .env
     networks:
@@ -43,7 +52,7 @@ services:
   epicservice:
     build: ./epicservice
     ports:
-      - "3006:3006"
+      - '3006:3006'
     env_file:
       - .env
     networks:
@@ -51,23 +60,23 @@ services:
   memberservice:
     build: ./memberservice
     ports:
-      - "3004:3004"
+      - '3004:3004'
     env_file:
-      - .env    
+      - .env
     networks:
-      - my-network   
+      - my-network
   sprintservice:
     build: ./sprintservice
     ports:
-      - "3010:3010"
+      - '3010:3010'
     env_file:
-      - .env    
+      - .env
     networks:
-      - my-network   
+      - my-network
   api-gateway:
     build: ./api-gateway
     ports:
-      - "8080:8080"
+      - '8080:8080'
     env_file:
       - .env
     networks:
@@ -81,4 +90,3 @@ services:
       - rolesservice
 networks:
   my-network:
-
