@@ -2,7 +2,13 @@
 /* eslint-disable no-undef */
 const express = require('express')
 const {
-  getHeaders, getToken, getTaskStatuses, getProjectByID, getTasks, getTasksHistory, getTaskStatus
+  getHeaders,
+  getToken,
+  getTaskStatuses,
+  getProjectByID,
+  getTasks,
+  getTasksHistory,
+  getTaskStatus
 } = require('./logic')
 const app = express()
 const port = 3012
@@ -50,8 +56,10 @@ app.post('/cfd', async (req, res) => {
     const today = new Date()
     const oneDay = 24 * 60 * 60 * 1000
     const endDate = new Date(today.getTime())
+    endDate.setHours(23, 59, 59, 0)
     const thirtyDays = 29 * oneDay
     const startDate = new Date(today.getTime() - thirtyDays)
+    startDate.setHours(23, 59, 59, 0)
     const { projectId } = req.body
     if (!projectId) {
       return res.status(500).send({

@@ -11,15 +11,19 @@ function getHeaders (token) {
 }
 
 function getTaskStatus (historyObject, date, createdDate) {
-  historyObject.sort((a, b) => {
-    return Date.parse(b.created_at) - Date.parse(a.created_at)
+  historyObject = historyObject.filter((obj) => {
+    const createdAt = new Date(obj.created_at)
+    return createdAt.getTime() <= date.getTime()
   })
   let status = ''
-  historyObject.forEach(obj => {
-    if (new Date(obj.created_at) <= date) {
-      status = obj.values_diff.status[obj.values_diff.status.length - 1]
-    }
-  })
+  if (historyObject.length) {
+    historyObject.sort((a, b) => {
+      return Date.parse(b.created_at) - Date.parse(a.created_at)
+    })
+    status = historyObject[0].values_diff.status[
+      historyObject[0].values_diff.status.length - 1
+    ]
+  }
   if (status) {
     return status
   } else {
