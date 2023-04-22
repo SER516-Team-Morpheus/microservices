@@ -44,7 +44,7 @@ async function getToken (username, password) {
     const data = res.data
     return { token: data.auth_token, success: true }
   } catch (err) {
-    return { error: err, success: false }
+    return { error: err.response.data._error_message, success: false }
   }
 }
 

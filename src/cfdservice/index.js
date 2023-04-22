@@ -41,6 +41,11 @@ app.post('/cfd', async (req, res) => {
     if (!token) {
       const tokenResponse = await getToken(userName, password)
       token = tokenResponse.token
+      if (!token) {
+        return res.status(404).send({
+          error: tokenResponse.error
+        })
+      }
     }
     const today = new Date()
     const oneDay = 24 * 60 * 60 * 1000
@@ -120,9 +125,10 @@ app.post('/cfd', async (req, res) => {
             }
           }
         }
-        const labels = Object.keys(cfd).map((date) =>
+        let labels = Object.keys(cfd).map((date) =>
           new Date(date).toDateString()
         )
+        labels = labels.map((str) => str.slice(4))
         const statusNames = Object.keys(cfd[Object.keys(cfd)[1]])
         const datasets = statusNames.map((statusName, i) => ({
           key: statusName,
