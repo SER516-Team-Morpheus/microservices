@@ -21,6 +21,12 @@ apiEndpoints:
     host: localhost
     paths: "/getProject"
     appendQueryString: true
+  deleteProject:
+    host: localhost
+    paths: "/deleteProject"
+  editProject:
+    host: localhost
+    paths: "/updateProject"
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
@@ -78,6 +84,10 @@ apiEndpoints:
     host: localhost
     paths: "/deleteSprintByName"
 
+  cfdservice:
+    host: localhost
+    paths: "/cfd" 
+
   issueservice:
     host: localhost
     paths: "/createIssue"
@@ -93,6 +103,7 @@ apiEndpoints:
   updateIssue:
     host: localhost
     paths: "/updateIssue"    
+
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -110,8 +121,13 @@ serviceEndpoints:
     url: "http://memberservice:3004"
   sprintservice:
     url: "http://sprintservice:3010"
+
+  cfdservice:
+    url: "http://cfdservice:3012"
+
   issueservice:
     url: "http://issueservice:3009"  
+
 policies:
   - basic-auth
   - cors
@@ -148,6 +164,8 @@ pipelines:
       - projectservice
       - getProjectByslug
       - getProject
+      - updateProject
+      - deleteProject
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -233,7 +251,7 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: sprintservice
-              changeOrigin: true  
+              changeOrigin: true              
 
   issuePipeline:
     apiEndpoints:
@@ -246,7 +264,17 @@ pipelines:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
       - proxy:
-          - action:
+          - action:           
               serviceEndpoint: issueservice
-              changeOrigin: true                          
+              changeOrigin: true      
+  cfdPipeline:
+    apiEndpoints:
+      - cfd
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:           
+              serviceEndpoint: cfdservice
+              changeOrigin: true      
 
