@@ -8,7 +8,6 @@ const {updateTaskPush} = require('./logic')
 const app = express()
 const port = 3015
 var globalTasks = []
-var globalSprintId = -1
 var lastTaskId = -1
 var minStatus = -1
 var maxStatus = -1
@@ -623,6 +622,19 @@ async function updateTask(currTask, projectId, token, status){
   globalTasks[lastTaskId].status = response.data.status
   globalTasks[lastTaskId].status_name = response.data.status_extra_info.name  
 }
+
+app.post('/endSimulation', async (req, res) => {
+  const { username, password } = req.body
+  const token = await getToken(username, password)
+  if (!token.success) {
+    return res.status(401).send(token)
+  }
+  globalTasks = []
+  lastTaskId = -1
+  minStatus = -1
+  maxStatus = -1
+  return res.status(200).send({success:true})
+})
 // Start the server
 app.listen(port, () => {
   console.log(`Project microservice running at http://localhost:${port}`)
