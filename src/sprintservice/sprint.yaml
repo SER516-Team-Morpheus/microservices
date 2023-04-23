@@ -12,7 +12,7 @@ servers:
 
 paths:
   /sprints:
-    get:
+    post:
       summary: List all the sprints unde a specific project.
       description: List the sprints objects under a specific project.
       parameters:
@@ -118,7 +118,7 @@ paths:
         - sprint microservice
     
   /sprintByName:
-    get:
+    post:
       summary: Get one sprint by name.
       description: Get one sprint by name under a specific project.
       parameters:

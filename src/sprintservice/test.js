@@ -43,7 +43,7 @@ describe('Fetch Sprints', () => {
   describe('GET /sprints', () => {
     it('should return 500 if project ID is not sent in request body', async () => {
       const response = await request(app)
-        .get('/sprints')
+        .post('/sprints')
         .send({ username, password })
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'Project ID is not sent in request body.', success: false })
@@ -51,7 +51,7 @@ describe('Fetch Sprints', () => {
 
     it('should return 200 and list of sprints if request is valid', async () => {
       const response = await request(app)
-        .get('/sprints')
+        .post('/sprints')
         .send({ username, password, projectID })
         .expect(200)
       expect(response.status).toBe(200)
@@ -61,7 +61,7 @@ describe('Fetch Sprints', () => {
 
     it('should return 500 if error occurs while retrieving sprints', async () => {
       const response = await request(app)
-        .get('/sprints')
+        .post('/sprints')
         .send({ username, password, projectID: 'dummy' })
         .expect(500)
       expect(response.body).toEqual({ error: 'Error retrieving sprints.', success: false })
@@ -73,7 +73,7 @@ describe('Fetch Sprint by Name', () => {
   describe('GET /sprintByName', () => {
     it('should return 200 and sprint data if sprint is found', async () => {
       const response = await request(app)
-        .get('/sprintByName')
+        .post('/sprintByName')
         .send({ username, password, sprintName: sprintname, projectID })
         .expect(200)
 
@@ -86,7 +86,7 @@ describe('Fetch Sprint by Name', () => {
 
     it('should return 500 if an error occurs while retrieving the sprint', async () => {
       const response = await request(app)
-        .get('/sprintByName')
+        .post('/sprintByName')
         .send({ username, password, sprintName: 'random_name', projectID })
         .expect(500)
 
