@@ -22,6 +22,12 @@ services:
       - "3012:3012"
     networks:
       - my-network
+  cfdservice:
+    build: ./sprintburndownservice
+    ports:
+      - "3020:3020"
+    networks:
+      - my-network
   rolesservice:
     build: ./rolesservice
     ports:
