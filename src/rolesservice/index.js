@@ -74,9 +74,9 @@ app.patch('/updateroles', async (req, res) => {
   if (!projectData.success) {
     return res.status(404).send(projectData)
   }
-  const roleId = projectData.roles.find(
-    (role) => role.roleName === roleName
-  )?.roleId
+
+  const roleId = projectData.roles.find(role => role.roleName === roleName)?.roleId
+
   if (!roleId) {
     return res.status(404).send({ success: false, message: 'Role not found' })
   }
