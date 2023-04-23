@@ -22,7 +22,7 @@ services:
       - "3012:3012"
     networks:
       - my-network
-  cfdservice:
+  sprintburndownservice:
     build: ./sprintburndownservice
     ports:
       - "3020:3020"
