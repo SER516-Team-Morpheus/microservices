@@ -151,7 +151,7 @@ async function deleteEpic (epicId, token) {
     const response = await axios.delete(`${EPIC_API_URL}/${epicId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    if (response.data) {
+    if (response.status === 204) {
       return {
         success: true,
         epic: response.data
