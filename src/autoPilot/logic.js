@@ -48,6 +48,7 @@ async function createProject(token) {
     if (response.data.id) {
       return {
         success: true,
+        projectName: name,
         projectId: response.data.id,
         roles: response.data.roles,
         points: response.data.points,
