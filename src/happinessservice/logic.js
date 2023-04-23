@@ -51,4 +51,5 @@ async function AddHappiness(name, project, token) {
 
 module.exports = {
   AddHappiness
+  getToken
 };

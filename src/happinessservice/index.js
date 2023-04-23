@@ -1,5 +1,5 @@
 const express = require("express");
-const { AddHappiness } = require("./logic");
+const { AddHappiness, getToken } = require("./logic");
 
 const app = express();
 const port = 3030;
