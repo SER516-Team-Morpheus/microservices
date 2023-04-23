@@ -86,7 +86,11 @@ apiEndpoints:
 
   cfdservice:
     host: localhost
-    paths: "/cfd" 
+    paths: "/cfd"
+
+  sprintburndownservice:
+    host: localhost
+    paths: "/sb" 
 
   issueservice:
     host: localhost
@@ -124,6 +128,9 @@ serviceEndpoints:
 
   cfdservice:
     url: "http://cfdservice:3012"
+
+  sprintburndownservice:
+    url: "http://cfdservice:3020"
 
   issueservice:
     url: "http://issueservice:3009"  
@@ -276,5 +283,16 @@ pipelines:
       - proxy:
           - action:           
               serviceEndpoint: cfdservice
-              changeOrigin: true      
+              changeOrigin: true     
+
+  sbPipeline:
+    apiEndpoints:
+      - sb
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:           
+              serviceEndpoint: sprintburndownservice
+              changeOrigin: true  
 

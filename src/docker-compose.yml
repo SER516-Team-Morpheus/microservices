@@ -24,16 +24,18 @@ services:
       - .env
     networks:
       - my-network
-<<<<<<< HEAD
-
-=======
   cfdservice:
     build: ./cfdservice
     ports:
       - "3012:3012"
     networks:
       - my-network
->>>>>>> f1c4c9e631d93cd7b0c216cf3b3ff05dc64388d5
+  sprintburndownservice:
+    build: ./sprintburndownservice
+    ports:
+      - "3020:3020"
+    networks:
+      - my-network
   rolesservice:
     build: ./rolesservice
     ports:
@@ -82,8 +84,6 @@ services:
       - .env
     networks:
       - my-network
-<<<<<<< HEAD
-=======
   issueservice:
     build: ./issueservice
     ports:
@@ -92,7 +92,6 @@ services:
       - .env    
     networks:
       - my-network           
->>>>>>> f1c4c9e631d93cd7b0c216cf3b3ff05dc64388d5
   api-gateway:
     build: ./api-gateway
     ports:
@@ -108,10 +107,7 @@ services:
       - memberservice
       - taskservice
       - rolesservice
-<<<<<<< HEAD
       - autopilot
-=======
       - issueservice
->>>>>>> f1c4c9e631d93cd7b0c216cf3b3ff05dc64388d5
 networks:
   my-network:

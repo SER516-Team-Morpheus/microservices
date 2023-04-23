@@ -22,7 +22,8 @@ jobs:
         'src/epicservice', 
         'src/memberservice', 
         'src/rolesservice', 
-        'src/cfdservice'
+        'src/cfdservice',
+        'src/sprintburndownservice'
         ] 
 
     steps:
