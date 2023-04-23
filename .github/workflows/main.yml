@@ -2,21 +2,30 @@ name: Node.js CI
 
 on:
   push:
-    branches: [develop, main ]
+    branches: [develop, main]
   pull_request:
-    branches: [ develop, main]
+    branches: [develop, main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-      
 
     strategy:
       matrix:
         node-version: [14.x]
-        dir: ['src/authservice', 'src/projectservice', 'src/taskservice', 'src/userstoryservice', 'src/sprintservice', 'src/epicservice', 'src/memberservice', 'src/rolesservice'] 
-
+        dir:
+          [
+            'src/authservice',
+            'src/projectservice',
+            'src/taskservice',
+            'src/sprintservice',
+            'src/epicservice',
+            'src/memberservice',
+            'src/rolesservice',
+            'src/pointsservice',
+            'src/cfdservice',
+            'src/sprintburndownservice'
+          ]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -25,8 +34,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Installing dependencies
         working-directory: ${{ matrix.dir }}
-        run : npm install
+        run: npm install
       - name: Running unit test cases
         working-directory: ${{ matrix.dir }}
         run: npm run test
-

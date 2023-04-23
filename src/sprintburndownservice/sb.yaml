@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Sprint Burn Down Chart Microservice
+  version: 1.0.0
+  description: Documentation for SBC (Sprint Burndown Chart) Microservice
+  contact:
+    name: Raumil Dhandhukia
+    email: rdhandhu@asu.edu
+servers:
+  - url: http://localhost:3020
+  - url: http://localhost:8080
+paths:
+  /sb:
+    post:
+      summary: Get tasks SB Data.
+      description: Based upon Sprint, SB Data is returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sprintID: 
+                  type: string
+                  description: Sprint Id
+                  example: 722202
+                username: 
+                  type: string
+                  description: User Name
+                  example: sertestuser
+                password: 
+                  type: string
+                  description: Password
+                  example: test
+                
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              example:
+                daysLabels: 
+                  ["Tue Apr 11 2023",
+                  
+                  "Wed Apr 12 2023",
+                  
+                  "Thu Apr 13 2023"]
+                openPoints: [
+                    10, 20, 30
+                  ]
+                optimalPoints: [
+                    12, 18, 31
+                  ]
+                 
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Sprint not found
+      tags:
+        - CFD Microservice

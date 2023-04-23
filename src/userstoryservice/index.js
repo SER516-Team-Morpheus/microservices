@@ -6,7 +6,9 @@ const {
   updateUserstory,
   getUserStoryDetails,
   getUserStory,
-  getPointValues
+  getPointValues,
+  getRoleId,
+  deleteUserStory
 } = require('./logic')
 
 const app = express()
@@ -111,44 +113,28 @@ app.patch('/updateUserstory', async (req, res) => {
     if (req.body.tags !== undefined) {
       parameters.tags = req.body.tags
     }
-    const points = {}
+    const pointsValue = {}
     if (req.body.points !== undefined) {
-      const roles = {
-        UX: userstoryDetails.parameters.point,
-        Design: userstoryDetails.parameters.point + 1,
-        Front: userstoryDetails.parameters.point + 2,
-        Back: userstoryDetails.parameters.point + 3
+      const rolelist = await getRoleId(token, projectId)
+      if (!rolelist.success) {
+        console.log('Error getting roles')
       }
-      const userpoint = {
-        '?': 0,
-        0: 1,
-        '1/2': 2,
-        1: 3,
-        2: 4,
-        3: 5,
-        5: 6,
-        8: 7,
-        10: 8,
-        13: 9,
-        20: 10,
-        40: 11
+      const roles = rolelist.roleIds
+      const userpointList = await getPointValues(token, projectId)
+      if (!userpointList.success) {
+        console.log('Error getting userpoints')
       }
-
-      const pointDetails = await getPointValues(token, projectId)
-      const point = pointDetails.point_value
+      const points = userpointList.pointValues
       for (const key in req.body.points) {
-        const value = req.body.points[key]
         const newKey = roles[key]
-        const newValue = userpoint[value]
-        points[newKey] = point + newValue
+        const value = req.body.points[key]
+        pointsValue[newKey] = points[value]
       }
-
-      parameters.points = points
+      parameters.points = pointsValue
     }
     parameters.version = version
 
     const userstoryData = await updateUserstory(userstoryId, parameters, token)
-    console.log(userstoryData)
     if (!userstoryData.success) {
       return res.status(500).send({
         userstoryData
@@ -158,6 +144,33 @@ app.patch('/updateUserstory', async (req, res) => {
   }
 })
 
+app.delete('/deleteUserstory', async (req, res) => {
+  const username = req.body.username
+  const password = req.body.password
+  const projectname = req.body.projectname
+  const userstoryname = req.body.userstoryname
+  const token = await getToken(username, password)
+  const slugName = username.toLowerCase() + '-' + projectname.toLowerCase()
+  const userstoryDetails = await getUserStoryDetails(
+    token,
+    slugName,
+    userstoryname
+  )
+  if (!userstoryDetails.success) {
+    return res.status(500).send({
+      userstoryDetails
+    })
+  } else {
+    const userstoryId = userstoryDetails.parameters.id
+    const userstoryDelResponse = await deleteUserStory(token, userstoryId)
+    if (!userstoryDelResponse.success) {
+      return res.status(500).send({
+        userstoryDelResponse
+      })
+    }
+    return res.status(201).send(userstoryDelResponse)
+  }
+})
 // Start the server
 app.listen(port, () => {
   console.log(`User story microservice running at http://localhost:${port}`)

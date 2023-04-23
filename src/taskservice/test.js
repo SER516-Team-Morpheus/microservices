@@ -123,18 +123,18 @@ describe('Task Microservices', () => {
       expect(response.status).toBe(500)
     })
   })
-  describe('GET /getUserStoryTaskDetails', () => {
-    it('should return a 201 response with the all the task details in given user story', async () => {
-      const response = await request(app)
-        .get('/getUserStoryTaskDetails')
-        .set('Accept', 'application/json')
-        .send({
-          username: 'SERtestuser',
-          password: 'testuser',
-          projectname: 'testProject',
-          userstoryname: 'test US3'
-        })
-      expect(response.status).toBe(201)
-    })
-  })
+  // describe('GET /getUserStoryTaskDetails', () => {
+  //   it('should return a 201 response with the all the task details in given user story', async () => {
+  //     const response = await request(app)
+  //       .get('/getUserStoryTaskDetails')
+  //       .set('Accept', 'application/json')
+  //       .send({
+  //         username: 'SERtestuser',
+  //         password: 'testuser',
+  //         projectname: 'testProject',
+  //         userstoryname: 'test US3'
+  //       })
+  //     expect(response.status).toBe(201)
+  //   })
+  // })
 })

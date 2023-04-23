@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  happinessservice:
+    host: localhost
+    paths: "/AddHappiness"
   getProjectByslug:
     host: localhost
     paths: "/getProjectByslug"
@@ -21,6 +24,12 @@ apiEndpoints:
     host: localhost
     paths: "/getProject"
     appendQueryString: true
+  deleteProject:
+    host: localhost
+    paths: "/deleteProject"
+  editProject:
+    host: localhost
+    paths: "/updateProject"
   userstoryservice:
     host: localhost
     paths: "/createUserstory"
@@ -77,6 +86,31 @@ apiEndpoints:
   deleteSprintByName:
     host: localhost
     paths: "/deleteSprintByName"
+
+  cfdservice:
+    host: localhost
+    paths: "/cfd"
+
+  sprintburndownservice:
+    host: localhost
+    paths: "/sb" 
+
+  issueservice:
+    host: localhost
+    paths: "/createIssue"
+  getIssues:
+    host: localhost
+    paths: "/getIssues"
+  getIssueById:
+    host: localhost
+    paths: "/getIssueById"    
+  deleteIssue:
+    host: localhost
+    paths: "/deleteIssue/:id"
+  updateIssue:
+    host: localhost
+    paths: "/updateIssue"    
+
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -94,6 +128,16 @@ serviceEndpoints:
     url: "http://memberservice:3004"
   sprintservice:
     url: "http://sprintservice:3010"
+
+  cfdservice:
+    url: "http://cfdservice:3012"
+
+  sprintburndownservice:
+    url: "http://cfdservice:3020"
+
+  issueservice:
+    url: "http://issueservice:3009"  
+
 policies:
   - basic-auth
   - cors
@@ -130,6 +174,8 @@ pipelines:
       - projectservice
       - getProjectByslug
       - getProject
+      - updateProject
+      - deleteProject
     policies:
       # Uncomment `key-auth:` when instructed to in the Getting Started guide.
       # - key-auth:
@@ -216,4 +262,40 @@ pipelines:
           - action:
               serviceEndpoint: sprintservice
               changeOrigin: true              
+
+  issuePipeline:
+    apiEndpoints:
+      - issueservice
+      - getIssues
+      - getIssueById 
+      - deleteIssue
+      - updateIssue     
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:           
+              serviceEndpoint: issueservice
+              changeOrigin: true      
+  cfdPipeline:
+    apiEndpoints:
+      - cfd
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:           
+              serviceEndpoint: cfdservice
+              changeOrigin: true     
+
+  sbPipeline:
+    apiEndpoints:
+      - sb
+    policies:
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      # - key-auth:
+      - proxy:
+          - action:           
+              serviceEndpoint: sprintburndownservice
+              changeOrigin: true  
 
