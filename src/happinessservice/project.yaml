@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: Happiness Microservice
+  version: 1.0.0
+  description: Documentation for Happiness Microservice.
+  contact:
+    name: Team Morpheus
+    email: vchavhan@asu.edu
+servers:
+  - url: http://localhost:3030
+
+paths:
+  /AddHappiness:
+    get:
+      summary: Add happiness attribute
+      description: Add the happiness attribute to project which is customized
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: Username of the Taiga account
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          description: Password of the Taiga account
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  projects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: My Project
+                        description:
+                          type: string
+                          example: description of the project
+                        id:
+                          type: number
+                          example: 720797
+        "404":
+          description: Error response from the API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Authorization header must contain two space-delimited values.
+                        code:
+                          type: string
+                          example: bad_authorization_header
+      tags:
+        - happiness microservice

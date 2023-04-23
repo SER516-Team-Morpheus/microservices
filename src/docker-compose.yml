@@ -44,6 +44,14 @@ services:
       - .env
     networks:
       - my-network
+  happinessservice:
+    build: ./happinessservice
+    ports:
+      - "3030:3030"
+    env_file:
+      - .env
+    networks:
+      - my-network
   userstoryservice:
     build: ./userstoryservice
     ports:

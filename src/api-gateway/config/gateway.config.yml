@@ -13,6 +13,9 @@ apiEndpoints:
   projectservice:
     host: localhost
     paths: "/createProject"
+  happinessservice:
+    host: localhost
+    paths: "/AddHappiness"
   getProjectByslug:
     host: localhost
     paths: "/getProjectByslug"
