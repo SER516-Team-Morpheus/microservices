@@ -126,7 +126,8 @@ app.post('/cfd', async (req, res) => {
             const status = getTaskStatus(
               reducedObjects,
               new Date(key),
-              createdDate
+              createdDate,
+              task
             )
             if (status) {
               value[status] += 1
