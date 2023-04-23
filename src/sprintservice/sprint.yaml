@@ -4,7 +4,7 @@ info:
   version: 1.0.3
   description: Documentation for Sprint Microservice.
   contact:
-    name: Team Morpheus
+    name: Raumil Bharatbhai Dhandhukia
     email: rdhandhu@asu.edu
 servers:
   - url: http://localhost:3010
@@ -15,25 +15,25 @@ paths:
     post:
       summary: List all the sprints unde a specific project.
       description: List the sprints objects under a specific project.
-      parameters:
-        - name: username
-          in: query
-          required: true
-          description: Username of the Taiga account
-          schema:
-            type: string
-        - name: password
-          in: query
-          required: true
-          description: Password of the Taiga account
-          schema:
-            type: string
-        - name: projectID
-          in: query
-          required: true
-          description: ProjectID of the project
-          schema:
-            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                projectID:
+                  type: integer
+                  description: project ID of project
+                  example: 5656564
       responses:
         "200":
           description: OK
@@ -121,31 +121,30 @@ paths:
     post:
       summary: Get one sprint by name.
       description: Get one sprint by name under a specific project.
-      parameters:
-        - name: username
-          in: query
-          required: true
-          description: Username of the Taiga account
-          schema:
-            type: string
-        - name: password
-          in: query
-          required: true
-          description: Password of the Taiga account
-          schema:
-            type: string
-        - name: sprintName
-          in: query
-          required: true
-          description: sprint name 
-          schema:
-            type: string
-        - name: projectID
-          in: query
-          required: true
-          description: ProjectID of the project
-          schema:
-            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Taiga username
+                  example: SERtestuser
+                password:
+                  type: string
+                  description: Taiga password
+                  example: testuser
+                projectID:
+                  type: integer
+                  description: project ID of project
+                  example: 5656564
+                sprintName: 
+                  type: string
+                  description: Name of sprint
+                  example: Test 1
+        
       responses:
         "200":
           description: OK
@@ -331,7 +330,7 @@ paths:
       tags:
         - sprint microservice
 
-  /editSprint:
+  /editSprintByName:
     patch:
       summary: Edit Sprint.
       description: Edit a sprint by providing the username, password, sprint name, projectID, and patch object in the request body..
@@ -446,7 +445,7 @@ paths:
       tags:
         - sprint microservice
 
-  /deleteSprint:
+  /deleteSprintByName:
     post:
       summary: Delete Sprint.
       description: Delete a sprint by providing the username, password, sprint name, projectID in the request body..
