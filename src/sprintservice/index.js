@@ -19,7 +19,7 @@ app.use(
   })
 )
 
-app.get('/sprints', async (req, res) => {
+app.post('/sprints', async (req, res) => {
   let token = req.body.token
   if (!token) {
     const { username, password } = req.body
@@ -69,7 +69,7 @@ async function getSprintByName (sprintName, token, projectID) {
   }
 };
 
-app.get('/sprintByName', async (req, res) => {
+app.post('/sprintByName', async (req, res) => {
   let token = req.body.token
   if (!token) {
     const { username, password } = req.body
