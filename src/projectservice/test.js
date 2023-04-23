@@ -1,6 +1,14 @@
+/* eslint-disable no-undef */
 const request = require('supertest')
 const app = require('./index')
 
+const username = 'SERtestuser'
+const password = 'testuser'
+
+// eslint-disable-next-line quote-props
+const patch = { 'name': 'RenamebyAPI' }
+// eslint-disable-next-line no-unused-vars
+let projName = ''
 describe('Project Microservice', () => {
   describe('POST /createProject', () => {
     it('should return a 201 response', async () => {
@@ -11,8 +19,8 @@ describe('Project Microservice', () => {
         .post('/createProject')
         .set('Accept', 'application/json')
         .send({
-          username: 'SERtestuser',
-          password: 'testuser',
+          username: username,
+          password: password,
           name: projectName,
           description: 'testProject'
         })
@@ -22,14 +30,15 @@ describe('Project Microservice', () => {
       expect(response.body.projectName).toBeDefined()
       expect(response.body.slugName).toBeDefined()
       expect(response.body.description).toBeDefined()
+      projName = response.body.projectName
     })
     it('should return a 500 response', async () => {
       const response = await request(app)
         .post('/createProject')
         .set('Accept', 'application/json')
         .send({
-          username: 'SERtestuser',
-          password: 'tetuser',
+          username: username,
+          password: password,
           name: 'testProject',
           description: 'testProject'
         })
@@ -97,6 +106,46 @@ describe('Project Microservice', () => {
       expect(response.status).toBe(404)
       expect(response.body.success).toBe(false)
       expect(response.body.message).toBeDefined()
+    })
+  })
+
+  // testcase for Update
+  describe('Update Project Name', () => {
+    describe('PATCH /updateProject/:projectID', () => {
+      it('should return 201 if patch is successful', async () => {
+        const response = await request(app)
+          .patch(`/updateProject/${projName}`)
+          .send({ username, password, patch })
+          .expect(201)
+        expect(response.body.name).toEqual(patch.name)
+        projName = response.body.name
+      })
+
+      it('should return 500 if an error occurs during patching', async () => {
+        const response = await request(app)
+          .patch('/updateProject/dummy')
+          .send({ patch, username, password })
+          .expect(500)
+        expect(response.body).toEqual({ error: 'Error editing project' })
+      })
+    })
+  })
+
+  // testcase for delete
+  describe('Delete Project', () => {
+    describe('DELETE /deleteProject/:projectID', () => {
+      it('should return 200', async () => {
+        const response = await request(app)
+          .delete(`/deleteProject/${projName}`)
+          .send({ username, password })
+        expect(response.status).toBe(200)
+      })
+      it('should return 500 if there is an error deleting the project', async () => {
+        const response = await request(app)
+          .delete('/deleteProject/dummy')
+          .send({ username, password })
+        expect(response.status).toBe(500)
+      })
     })
   })
 })

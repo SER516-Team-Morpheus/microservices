@@ -252,6 +252,7 @@ app.post('/moveTasks', async (req, res) => {
     } else {
       await updateTask(currTask, projectId, token, currTask.status + roll)
     }
+<<<<<<< HEAD
   } else if (strategy === 'push') {
     if (app.settings.currentTask === undefined) {
       app.set('currentTask', 0)
@@ -321,6 +322,11 @@ app.post('/moveTasks', async (req, res) => {
           .send({ success: false, message: 'Error moving tasks' })
       }
     } else {
+=======
+    else
+    {
+      try{
+>>>>>>> f1c4c9e631d93cd7b0c216cf3b3ff05dc64388d5
       var taskUpdateDetails
       var leftRoll = roll
       while (leftRoll > 0) {
@@ -348,6 +354,7 @@ app.post('/moveTasks', async (req, res) => {
         }
       }
 
+<<<<<<< HEAD
       if (taskUpdateDetails.success) {
         app.set('currentTask', currentTaskNumber)
         return res
@@ -361,6 +368,25 @@ app.post('/moveTasks', async (req, res) => {
     }
   }
   return res.status(201).send({ success: true })
+=======
+        if(taskUpdateDetails.success)
+        {
+          app.set('currentTask', currentTaskNumber);
+          return res.status(201).send({success:true, message:"Task moved to new location"})  
+        }
+        else{
+          return res.status(500).send({success:false, message:"Error moving tasks"})  
+        }
+        
+      }
+    catch(error)
+    {
+      return res.status(500).send({success:false, message:"No more task left to move"})  
+    }
+  }
+    }
+    return res.status(201).send({success:true})
+>>>>>>> f1c4c9e631d93cd7b0c216cf3b3ff05dc64388d5
 })
 
 async function updateTask(currTask, projectId, token, status) {

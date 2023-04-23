@@ -2,7 +2,8 @@ const express = require('express')
 // const { createTask } = require("./logic");
 // const { getUserStoryDetails } = require("./logic");
 const {
-  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask, getUserStoryTasksDetails
+  getToken, getTaskDetails, getUserStoryDetails, createTask, updateTaskDetails, deleteTask,
+  getUserStoryTasksDetails, getTaskStatusCode
 } = require('./logic')
 
 const app = express()
@@ -59,21 +60,13 @@ app.post('/updateTask', async (req, res) => {
       taskDetails
     })
   }
-  const statusId = taskDetails.parameters.status_id
-
+  const projectid = taskDetails.parameters.projectid
   const taskId = taskDetails.parameters.id
   const parameters = {}
   if (req.body.status !== undefined) {
-    const status = {
-      new: statusId,
-      'in progress': statusId + 1,
-      'ready for test': statusId + 2,
-      closed: statusId + 3,
-      done: statusId + 4,
-      'needs info': statusId + 5
-
-    }
-    parameters.status = status[req.body.status.toLowerCase()]
+    const status = await getTaskStatusCode(token, projectid)
+    console.log(status)
+    parameters.status = status.taskIds[req.body.status.toLowerCase()]
   }
   if (req.body.description !== undefined) {
     parameters.description = req.body.description

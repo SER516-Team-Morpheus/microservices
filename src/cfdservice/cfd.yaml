@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: CFD Microservice
+  version: 1.0.0
+  description: Documentation for CFD (Cumulative Flow Diagram) Microservice
+  contact:
+    name: Raumil Dhandhukia
+    email: rdhandhu@asu.edu
+servers:
+  - url: http://localhost:3012
+  - url: http://localhost:8080
+paths:
+  /cfd:
+    post:
+      summary: Get tasks status matrix for to create CFD.
+      description: Based upon Project Name, status matrix for past seven days will be returned to the called to create CFD.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId: 
+                  type: string
+                  description: Project Id
+                  example: 722202
+                username: 
+                  type: string
+                  description: User Name
+                  example: sertestuser
+                password: 
+                  type: string
+                  description: Password
+                  example: test
+                
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              example:
+                dates: 
+                  ["Tue Apr 11 2023",
+                  
+                  "Wed Apr 12 2023",
+                  
+                  "Thu Apr 13 2023"]
+                status: [
+                    {
+                      "key":"new",
+                      "value": [4,5,6]
+                    },
+                    {
+                      "key":"in progress",
+                      "value": [2,1,5]
+                    },
+                    {
+                      "key":"done",
+                      "value": [10,12,15]
+                    }
+                  ]
+                 
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Project not found
+      tags:
+        - CFD Microservice

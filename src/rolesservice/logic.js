@@ -99,7 +99,6 @@ async function updateRole (token, roleId, newRoleName) {
         headers: { Authorization: `Bearer ${token}` }
       }
     )
-    console.log(response.data)
     if (response.data.id) {
       return {
         success: true,

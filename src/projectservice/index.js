@@ -4,7 +4,10 @@ const {
   getProjectBySlug,
   getMember,
   getProjectList,
-  createProject
+  editProject,
+  deleteProject,
+  createProject,
+  getProjectID
 } = require('./logic')
 
 const app = express()
@@ -70,9 +73,59 @@ app.post('/createProject', async (req, res) => {
   })
 })
 
+// Endpoint for deleting a project
+app.delete('/deleteProject/:projectName', async (req, res) => {
+  const projectName = req.params.projectName
+  let token = req.body.token
+  if (!token) {
+    const { username, password } = req.body
+    token = await getToken(username, password)
+  }
+  const { project } = await getProjectID(token, projectName)
+  try {
+    const status = await deleteProject(project.id, token)
+    if (status.success) {
+      res.status(200).send()
+    } else {
+      res.status(500).send({
+        message: 'Project ID is invalid'
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Endpoint for Updating a Project
+app.patch('/updateProject/:projectName', async (req, res) => {
+  let token = req.body.token
+  const projectName = req.params.projectName
+  if (!token) {
+    const { username, password } = req.body
+    token = await getToken(username, password)
+  }
+  const { project } = await getProjectID(token, projectName)
+  const patch = req.body.patch
+  try {
+    const projectData = await editProject(token, project.id, patch)
+    // eslint-disable-next-line eqeqeq
+    if (projectData) {
+      res.status(201).json(projectData.data)
+    } else {
+      res.status(500).json({
+        message: 'Error in editing project name'
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error editing project' })
+  }
+})
+
 // Start the server
 app.listen(port, () => {
-  console.log(`Project microservice running at http://localhost:${port}`)
+  console.log(
+    `Create Project microservice running at http://localhost:${port}`
+  )
 })
 
 module.exports = app
