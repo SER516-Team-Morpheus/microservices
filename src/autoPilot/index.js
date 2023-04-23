@@ -42,7 +42,6 @@ app.use((req, res, next) => {
 // Endpoint for autopilot mode
 app.post('/autoPilot', async (req, res) => {
   const { username, password } = req.body
-
   // authenticate user
   const token = await getToken(username, password)
   if (!token.success) {
@@ -90,7 +89,6 @@ app.post('/autoPilot', async (req, res) => {
   if (!createPointsData.success) {
     return res.status(500).send(createPointsData)
   }
-
   console.log('Points 1 to 6 were created success')
 
   // update task statues
@@ -99,7 +97,6 @@ app.post('/autoPilot', async (req, res) => {
   if (!taskStatusData.success) {
     return res.status(500).send(taskStatusData)
   }
-
   console.log('Task statuses name updated successfully')
 
   // create sprints
@@ -113,7 +110,6 @@ app.post('/autoPilot', async (req, res) => {
   if (!userStoryData.success) {
     return res.status(500).send(userStoryData)
   }
-
   console.log('User stories created')
 
   // Move task to current sprint
@@ -129,12 +125,23 @@ app.post('/autoPilot', async (req, res) => {
   if (!moveUserStoryData.success) {
     return res.status(500).send(moveUserStoryData)
   }
-
   console.log('User stories moved to sprint 1')
 
   // Create two tasks for each user story
   const taskData = await createTask(token.token, projectId, userStoryIds)
-  return res.send(taskData)
+  res.send({
+    token,
+    projectData,
+    roleData,
+    deleteRoleData,
+    pointsData,
+    createPointsData,
+    taskStatusData,
+    sprintData,
+    userStoryData,
+    moveUserStoryData,
+    taskData,
+  })
 })
 
 app.post('/moveTasks', async (req, res) => {
