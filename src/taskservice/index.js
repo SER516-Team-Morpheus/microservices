@@ -122,7 +122,7 @@ app.get('/getTaskDetails', async (req, res) => {
   return res.status(201).send(taskDetails)
 })
 
-app.posts('/getUserStoryTaskDetails', async (req, res) => {
+app.post('/getUserStoryTaskDetails', async (req, res) => {
   const {
     username, password, projectname, userstoryname
   } = req.body
