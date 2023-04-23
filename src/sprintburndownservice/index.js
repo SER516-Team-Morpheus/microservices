@@ -62,6 +62,7 @@ app.post('/sb', async (req, res) => {
       const completedUS = stats.data.completed_userstories
       const totalTasks = stats.data.total_tasks
       const totalUS = stats.data.total_userstories
+      const { name } = stats.data
 
       return res.status(200).send({
         dayLabels,
@@ -71,7 +72,8 @@ app.post('/sb', async (req, res) => {
         completedTasks,
         completedUS,
         totalTasks,
-        totalUS
+        totalUS,
+        name
       })
     } else {
       return res.status(500).send({
