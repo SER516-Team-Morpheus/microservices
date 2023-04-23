@@ -33,7 +33,8 @@ async function getToken(username, password) {
 //Function to create project
 async function createProject(token) {
   try {
-    const name = 'Simulation'
+    const randomNumber = Math.floor(Math.random() * 100)
+    const name = 'Simulation' + randomNumber
     const description = 'Testing simulation'
     const response = await axios.post(
       `${TAIGA_API_URL}/projects`,
