@@ -401,6 +401,7 @@ async function createUserstory(token, project) {
       )
       if (response.data.id) {
         newResponse.push({
+          userStoryName: userStory.subject,
           userstoryId: response.data.id,
           message: `${userStory.subject} successfully created.`,
         })
