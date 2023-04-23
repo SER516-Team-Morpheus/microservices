@@ -10,7 +10,7 @@ function getHeaders (token) {
   }
 }
 
-function getTaskStatus (historyObject, date, createdDate) {
+function getTaskStatus (historyObject, date, createdDate, task) {
   historyObject = historyObject.filter((obj) => {
     const createdAt = new Date(obj.created_at)
     return createdAt.getTime() <= date.getTime()
@@ -28,7 +28,7 @@ function getTaskStatus (historyObject, date, createdDate) {
     return status
   } else {
     if (createdDate < date) {
-      return 'New'
+      return task.status_extra_info.name
     } else {
       return ''
     }
