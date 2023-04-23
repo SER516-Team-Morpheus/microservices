@@ -1,19 +1,19 @@
 openapi: 3.0.0
 info:
-  title: CFD Microservice
+  title: Sprint Burn Down Chart Microservice
   version: 1.0.0
-  description: Documentation for CFD (Cumulative Flow Diagram) Microservice
+  description: Documentation for SBC (Sprint Burndown Chart) Microservice
   contact:
     name: Raumil Dhandhukia
     email: rdhandhu@asu.edu
 servers:
-  - url: http://localhost:3012
+  - url: http://localhost:3020
   - url: http://localhost:8080
 paths:
-  /cfd:
+  /sb:
     post:
-      summary: Get tasks status matrix for to create CFD.
-      description: Based upon Project Name, status matrix for past seven days will be returned to the called to create CFD.
+      summary: Get tasks SB Data.
+      description: Based upon Sprint, SB Data is returned.
       requestBody:
         required: true
         content:
@@ -21,9 +21,9 @@ paths:
             schema:
               type: object
               properties:
-                projectId: 
+                sprintID: 
                   type: string
-                  description: Project Id
+                  description: Sprint Id
                   example: 722202
                 username: 
                   type: string
@@ -40,25 +40,17 @@ paths:
           content:
             application/json:
               example:
-                dates: 
+                daysLabels: 
                   ["Tue Apr 11 2023",
                   
                   "Wed Apr 12 2023",
                   
                   "Thu Apr 13 2023"]
-                status: [
-                    {
-                      "key":"new",
-                      "value": [4,5,6]
-                    },
-                    {
-                      "key":"in progress",
-                      "value": [2,1,5]
-                    },
-                    {
-                      "key":"done",
-                      "value": [10,12,15]
-                    }
+                openPoints: [
+                    10, 20, 30
+                  ]
+                optimalPoints: [
+                    12, 18, 31
                   ]
                  
         "500":
@@ -70,6 +62,6 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Project not found
+                    example: Sprint not found
       tags:
         - CFD Microservice
