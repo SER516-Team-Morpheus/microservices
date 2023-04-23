@@ -27,7 +27,23 @@ app.post("/AddHappiness", async (req, res) => {
 });
 
 
-
+// Function to get auth token from authenticate api
+async function getToken (username, password) {
+  try {
+    const response = await axios.post(AUTH_URL, {
+      type: 'normal',
+      username,
+      password
+    })
+    if (response.data.auth_token) {
+      return response.data.auth_token
+    } else {
+      return { auth_token: 'NULL' }
+    }
+  } catch (error) {
+    return { auth_token: 'NULL' }
+  }
+}
 
 
 // Start the server
