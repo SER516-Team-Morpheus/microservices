@@ -458,7 +458,7 @@ async function createTask(token, project, userStories) {
       let subject = 'Task' + j
       console.log(subject)
       const response = await axios.post(
-        `${TAIGA_API_URL}/userstories`,
+        `${TAIGA_API_URL}/tasks`,
         {
           project,
           user_story,
