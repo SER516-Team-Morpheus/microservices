@@ -179,7 +179,6 @@ async function getUserStoryDetails (token, slugName, userstoryName) {
     const response = await axios.get(USERSTORY_DETAILS_API_URL, {
       headers: { Authorization: `Bearer ${token}` }
     })
-
     const parameters = {}
     for (let i = 0; i < response.data.length; i++) {
       if (response.data[i].subject === userstoryName) {
@@ -187,8 +186,6 @@ async function getUserStoryDetails (token, slugName, userstoryName) {
         parameters.version = response.data[i].version
         parameters.ref = response.data[i].ref
         parameters.projectId = response.data[i].project
-        const points = response.data[i].points
-        parameters.point = Math.min(...Object.keys(points).map(Number))
       }
     }
     if (parameters.id) {
@@ -214,18 +211,39 @@ async function getPointValues (token, projectId) {
     const response = await axios.get(PROJECT_POINTS_DETAILS_URL, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    if (response.data.length > 0) {
-      let pointValue = 0
-      for (let i = 0; i < response.data.length; i += 1) {
-        if (response.data[i].order === 1) {
-          pointValue = response.data[i].id
-          break
-        }
-      }
-      return { success: true, message: 'found all the details', point_value: pointValue }
-    } else {
-      return { success: false, message: 'Not project found with given details' }
-    }
+    const pointValues = {}
+    response.data.forEach(element => {
+      pointValues[element.name] = element.id
+    })
+    return { success: true, message: 'successfully fetched points list', pointValues }
+  } catch (error) {
+    return { success: false, message: 'Not able to fetch points' }
+  }
+}
+
+async function getRoleId (authToken, projectId) {
+  try {
+    const TYPE_API_URL = `https://api.taiga.io/api/v1/roles?project=${projectId}`
+    const response = await axios.get(TYPE_API_URL,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    )
+    const roleIds = {}
+    response.data.forEach(element => {
+      roleIds[element.name] = element.id
+    })
+    return { success: true, message: 'successfully fetched role list', roleIds }
+  } catch (error) {
+    return { success: false, message: 'Error getting role list' }
+  }
+}
+
+async function deleteUserStory (token, userstoryId) {
+  try {
+    const DELETE_USERSTORY_URL = USERSTORY_API_URL + '/' + userstoryId
+    await axios.delete(DELETE_USERSTORY_URL, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return { success: true, message: 'userstory successfully deleted' }
   } catch (error) {
     return { success: false, message: 'Not able to fetch points' }
   }
@@ -238,5 +256,7 @@ module.exports = {
   getUserStoryDetails,
   getProjectBySlug,
   getUserStory,
-  getPointValues
+  getPointValues,
+  getRoleId,
+  deleteUserStory
 }

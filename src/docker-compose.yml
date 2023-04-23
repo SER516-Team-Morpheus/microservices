@@ -16,6 +16,12 @@ services:
       - .env
     networks:
       - my-network
+  cfdservice:
+    build: ./cfdservice
+    ports:
+      - "3012:3012"
+    networks:
+      - my-network
   rolesservice:
     build: ./rolesservice
     ports:
@@ -63,7 +69,15 @@ services:
     env_file:
       - .env    
     networks:
-      - my-network   
+      - my-network
+  issueservice:
+    build: ./issueservice
+    ports:
+      - "3009:3009"
+    env_file:
+      - .env    
+    networks:
+      - my-network           
   api-gateway:
     build: ./api-gateway
     ports:
@@ -79,6 +93,7 @@ services:
       - memberservice
       - taskservice
       - rolesservice
+      - issueservice
 networks:
   my-network:
 
