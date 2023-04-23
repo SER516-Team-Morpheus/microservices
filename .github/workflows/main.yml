@@ -23,7 +23,8 @@ jobs:
             'src/memberservice',
             'src/rolesservice',
             'src/pointsservice',
-            'src/cfdservice'
+            'src/cfdservice',
+            'src/sprintburndownservice'
           ]
     steps:
       - uses: actions/checkout@v3
