@@ -53,10 +53,25 @@ app.post('/sb', async (req, res) => {
       const optimalPoints = daysStats.map((day) =>
         parseFloat(day.optimal_points.toFixed(2))
       )
+      let AUC = 0
+      for (let i = 0; i < dayLabels.length; i++) {
+        AUC += Math.abs(openPoints[i] - optimalPoints[i])
+      }
+      AUC = AUC.toFixed(2)
+      const completedTasks = stats.data.completed_tasks
+      const completedUS = stats.data.completed_userstories
+      const totalTasks = stats.data.total_tasks
+      const totalUS = stats.data.total_userstories
+
       return res.status(200).send({
         dayLabels,
         openPoints,
-        optimalPoints
+        optimalPoints,
+        AUC,
+        completedTasks,
+        completedUS,
+        totalTasks,
+        totalUS
       })
     } else {
       return res.status(500).send({
