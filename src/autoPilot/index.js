@@ -128,7 +128,10 @@ app.post('/autoPilot', async (req, res) => {
   console.log('User stories moved to sprint 1')
 
   // Create two tasks for each user story
-  const taskData = await createTask(token.token, projectId, userStoryIds)
+  const userStoryNames = userStories.map((userStory) => userStory.userStoryName)
+  console.log(userStoryNames)
+  const taskData = await createTask(token.token, projectId, userStoryIds, userStoryNames)
+
   res.send({
     token,
     projectData,

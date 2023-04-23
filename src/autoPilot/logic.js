@@ -450,14 +450,13 @@ async function moveUserStory(token, projectId, milestoneId, userStoryIds) {
 }
 
 //Function to create task
-async function createTask(token, project, userStories) {
+async function createTask(token, project, userStories, userStoryNames) {
   let newResponse = []
   for (let i = 0; i < userStories.length; i++) {
-    console.log(userStories[i])
     user_story = userStories[i]
+    userStoryName = userStoryNames[i]
     for (let j = 1; j <= 2; j++) {
       let subject = 'Task' + j
-      console.log(subject)
       const response = await axios.post(
         `${TAIGA_API_URL}/tasks`,
         {
@@ -468,6 +467,8 @@ async function createTask(token, project, userStories) {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       newResponse.push({
+        userStoryName: userStoryName,
+        userStoryId: user_story,
         taskName: subject,
         taskId: response.data.id,
         status: response.data.status_extra_info.name,
