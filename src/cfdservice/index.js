@@ -32,7 +32,8 @@ async function getEmptyStatusMatrix (ID, token) {
   res = await getProjectByID(headers, ID)
   if (res.success) {
     project = res.project
-    return { project, statuses: await getTaskStatuses(headers, project.id), success: true }
+    statuses = await getTaskStatuses(headers, project.id)
+    return { project, statuses, success: true }
   } else {
     return { error: res.message, success: false }
   }
@@ -74,7 +75,8 @@ app.post('/cfd', async (req, res) => {
     const statusData = await getEmptyStatusMatrix(projectId, token)
     if (statusData.success) {
       slug = statusData.project.slug
-      const emptyStatusMatrix = statusData.statuses
+      const emptyStatusMatrix = statusData.statuses.emptyMatrix
+      const firstOrderStatus = statusData.statuses.firstOrderStatus[0].name
 
       // loop through each date between the start and end dates and add it to the list
       // eslint-disable-next-line no-unmodified-loop-condition
@@ -127,7 +129,8 @@ app.post('/cfd', async (req, res) => {
               reducedObjects,
               new Date(key),
               createdDate,
-              task
+              task,
+              firstOrderStatus
             )
             if (status) {
               value[status] += 1
