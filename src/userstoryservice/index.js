@@ -13,7 +13,7 @@ const {
 } = require('./logic')
 
 const app = express()
-const port = 3066
+const port = 3003
 
 app.use(express.json())
 
