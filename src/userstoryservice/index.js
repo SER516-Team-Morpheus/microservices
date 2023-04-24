@@ -8,11 +8,12 @@ const {
   getUserStory,
   getPointValues,
   getRoleId,
-  deleteUserStory
+  deleteUserStory,
+  moveUserStory
 } = require('./logic')
 
 const app = express()
-const port = 3003
+const port = 3066
 
 app.use(express.json())
 
@@ -24,6 +25,19 @@ app.use((req, res, next) => {
   )
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
   next()
+})
+
+
+// Endpoint for moving user story to sprint 
+app.post('/moveUserStory', async (req, res) => {
+  const { username, password, projectId, sprintId, userStoryID } = req.body
+  const token = await getToken(username, password)
+  const moveUserStoryData = await moveUserStory(token, projectId, sprintId, userStoryID)
+  if (moveUserStoryData.success) {
+    return res.status(201).send(moveUserStoryData)
+  } else {
+    return res.status(500).send(moveUserStoryData)
+  }
 })
 
 // Endpoint for creating a new user story

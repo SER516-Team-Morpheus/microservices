@@ -26,6 +26,34 @@ async function getToken (username, password) {
   }
 }
 
+async function moveUserStory(token, projectId, milestoneId, userStoryIds) {
+  try {
+    const MOVE_URL =  `${USERSTORY_API_URL}/bulk_update_backlog_order`
+    const response = await axios.post(MOVE_URL,
+      {
+        project_id: projectId,
+        bulk_userstories: userStoryIds,
+        milestone_id: milestoneId,
+      },  
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    if (response.data[0].id) {
+      return {
+        success: true,
+        message: `User stories moved to sprint ${milestoneId}`,
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong while moving user stories',
+      }
+    }
+  } catch (error) {
+    console.error(error)
+    return { success: false, message: 'Error moving user stories' }
+  }
+}
+
 // Function to get the projects by slug name
 async function getProjectBySlug (token, slugName) {
   const PROJECT_SLUG_URL = PROJECT_API_URL + '/by_slug?slug=' + slugName
@@ -258,5 +286,6 @@ module.exports = {
   getUserStory,
   getPointValues,
   getRoleId,
-  deleteUserStory
+  deleteUserStory,
+  moveUserStory
 }
