@@ -397,6 +397,25 @@ app.post('/endSimulation', async (req, res) => {
   maxStatus = -1
   return res.status(200).send({ success: true })
 })
+
+app.get('/getTasks', async (req, res) => {
+  const { username, password, projectId } = req.query
+  const token = await getToken(username, password)
+
+  const response = await axios.get(`https://api.taiga.io/api/v1/tasks?project=${projectId}`, {
+    headers: {
+      Authorization: token.token
+    }
+  });
+  const data = response.data.map(task => ({
+    userStoryName: task.user_story_extra_info.subject,
+    userStoryId: task.user_story_extra_info.id,
+    taskId: task.id,
+    taskName: task.subject,
+    status: task.status_extra_info.name
+  }))
+  console.log(data)
+})
 // Start the server
 app.listen(port, () => {
   console.log(`Project microservice running at http://localhost:${port}`)
