@@ -195,7 +195,7 @@ app.post('/deleteEpic/', async (req, res) => {
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
-  return res.status(204).send(epicData)
+  return res.status(200).send(epicData)
 })
 
 // Endpoint for bulk creation of epics
@@ -387,7 +387,7 @@ app.delete('/deleteRelatedUserStory/', async (req, res) => {
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
-  return res.status(204).send(epicData)
+  return res.status(200).send(epicData)
 })
 
 // Endpoint for bulk create related user stories
