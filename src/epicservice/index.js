@@ -3,6 +3,7 @@ const { getToken, createEpic, listEpics, getEpic, editEpic, deleteEpic, createBu
 
 const app = express()
 const port = 3006
+let globalToken
 
 app.use(express.json())
 
@@ -71,7 +72,11 @@ app.post('/createEpic', async (req, res) => {
   const { username, password, projectId, name, description } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await createEpic(name, projectId, description, token)
   if (!epicData.success) {
@@ -101,7 +106,11 @@ app.post('/listEpics', async (req, res) => {
   const { username, password, projectId, projectSlug, assignedTo, isClosed } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicList = await listEpics(token, projectId, projectSlug, assignedTo, isClosed)
   if (!epicList.success) {
@@ -122,7 +131,11 @@ app.post('/getEpic/', async (req, res) => {
   const { username, password, epicId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await getEpic(token, epicId)
   if (!epicData.success) {
@@ -147,7 +160,11 @@ app.post('/editEpic/', async (req, res) => {
   const { username, password, epicId, name, version } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await editEpic(epicId, name, version, token)
   if (!epicData.success) {
@@ -168,13 +185,17 @@ app.post('/deleteEpic/', async (req, res) => {
   const { username, password, epicId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await deleteEpic(epicId, token)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
-  return res.status(204).send(epicData)
+  return res.status(200).send(epicData)
 })
 
 // Endpoint for bulk creation of epics
@@ -197,7 +218,11 @@ app.post('/createBulkEpics', async (req, res) => {
   const { username, password, epics, projectId, statusId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await createBulkEpics(projectId, epics, token)
   if (!epicData.success) {
@@ -218,7 +243,11 @@ app.post('/filtersData', async (req, res) => {
   const { username, password, projectId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await getFiltersData(token, projectId)
   if (!epicData.success) {
@@ -239,7 +268,11 @@ app.post('/listRelatedUserStories/', async (req, res) => {
   const { username, password, epicId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await listRelatedUserStories(token, epicId)
   if (!epicData.success) {
@@ -266,7 +299,11 @@ app.post('/addRelatedUserStory/', async (req, res) => {
   const { username, password, epicId, userStoryId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await addRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
@@ -287,7 +324,11 @@ app.post('/getRelatedUserStory/', async (req, res) => {
   const { username, password, epicId, userStoryId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await getRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
@@ -311,7 +352,11 @@ app.put('/editRelatedUserStory/', async (req, res) => {
   const { username, password, epicId, userStoryId, order } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await editRelatedUserStory(token, epicId, userStoryId, order)
   if (!epicData.success) {
@@ -332,13 +377,17 @@ app.delete('/deleteRelatedUserStory/', async (req, res) => {
   const { username, password, epicId, userStoryId } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await deleteRelatedUserStory(token, epicId, userStoryId)
   if (!epicData.success) {
     return res.status(500).send(epicData)
   }
-  return res.status(204).send(epicData)
+  return res.status(200).send(epicData)
 })
 
 // Endpoint for bulk create related user stories
@@ -359,7 +408,11 @@ app.post('/bulkCreateRelatedUserStories/', async (req, res) => {
   const { username, password, projectId, epicId, userStories } = req.body
   let { token } = req.body
   if (!token) {
-    token = await getToken(username, password)
+    if (globalToken) token = globalToken
+    else {
+      token = await getToken(username, password)
+      globalToken = token
+    }
   }
   const epicData = await bulkCreateRelatedUserStories(token, projectId, epicId, userStories)
   if (!epicData.success) {
