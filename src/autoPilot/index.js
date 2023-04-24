@@ -415,6 +415,7 @@ app.get('/getTasks', async (req, res) => {
     status: task.status_extra_info.name
   }))
   console.log(data)
+  res.status(200).send(data)
 })
 // Start the server
 app.listen(port, () => {
