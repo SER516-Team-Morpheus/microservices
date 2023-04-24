@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Documentation for CFD (Cumulative Flow Diagram) Microservice
   contact:
-    name: Raumil Dhandhukia
+    name: Raumil B Dhandhukia
     email: rdhandhu@asu.edu
 servers:
   - url: http://localhost:3012
