@@ -10,7 +10,8 @@ function getHeaders (token) {
   }
 }
 
-function getTaskStatus (historyObject, date, createdDate, task) {
+function getTaskStatus (historyObject, date, createdDate, task, firstOrderStatus) {
+  const initialHistoryObj = [...historyObject]
   historyObject = historyObject.filter((obj) => {
     const createdAt = new Date(obj.created_at)
     return createdAt.getTime() <= date.getTime()
@@ -28,7 +29,11 @@ function getTaskStatus (historyObject, date, createdDate, task) {
     return status
   } else {
     if (createdDate < date) {
-      return task.status_extra_info.name
+      if (initialHistoryObj.length) {
+        return firstOrderStatus
+      } else {
+        return task.status_extra_info.name
+      }
     } else {
       return ''
     }
@@ -97,7 +102,9 @@ async function getTaskStatuses (headers, projectID) {
     for (const status of statuses) {
       emptyMatrix[status.name] = 0
     }
-    return emptyMatrix
+    // eslint-disable-next-line eqeqeq
+    const firstOrderStatus = statuses.filter(status => status.order == 1)
+    return { success: true, emptyMatrix, firstOrderStatus }
   } catch (error) {
     return { success: false, message: 'Error getting project by name' }
   }
